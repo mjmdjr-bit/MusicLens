@@ -1,518 +1,445 @@
-<!doctype html>
-<html lang="ja">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>音楽嗜好→あなたの潜在能力（Liquid Glass UI）</title>
-<meta name="color-scheme" content="dark light" />
-<style>
-/* =========================
-   Liquid Glass Design System
-   ========================= */
-:root{
-  /* アクセントはApple系の澄んだブルー。必要に応じて変更可 */
-  --accent:#0a84ff;
-  --accent-2:#64d2ff;
-  --bg-1:#05060b;
-  --bg-2:#0a0b12;
-  --txt:#eaf2ff;
-  --muted:#a9b4c7;
-  --glass-bg:rgba(255,255,255,.08);
-  --glass-stroke:rgba(255,255,255,.18);
-  --glass-inner:rgba(255,255,255,.05);
-  --chip:rgba(255,255,255,.10);
-  --success:#30d158;
-}
-
-/* ベース */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  color:var(--txt);
-  font-family:ui-sans-serif, system-ui, -apple-system, "SF Pro Text", "Hiragino Sans", "Noto Sans JP", Roboto, "Segoe UI", sans-serif;
-  background:
-    radial-gradient(1200px 600px at 10% -10%, #3a48ff22, transparent),
-    radial-gradient(800px 500px at 90% 10%, #00ffd522, transparent),
-    linear-gradient(180deg,var(--bg-1),var(--bg-2));
-  overflow-x:hidden;
-}
-
-/* 背景のリキッド・グロー（奥でゆっくり動く） */
-.bg-orb{position:fixed;inset:0;pointer-events:none;z-index:-1;filter:blur(40px) saturate(140%);}
-.bg-orb::before,.bg-orb::after{
-  content:"";position:absolute;border-radius:50%;
-  width:48vw;height:48vw;opacity:.55;
-  background:radial-gradient(circle at 30% 30%, #7bf0ff, transparent 60%),
-             radial-gradient(circle at 70% 70%, #7c5cff, transparent 60%);
-  mix-blend-mode:screen;
-}
-.bg-orb::before{left:-10vw;top:-6vw;animation:float1 18s ease-in-out infinite alternate}
-.bg-orb::after{right:-8vw;bottom:-10vw;animation:float2 22s ease-in-out infinite alternate}
-@keyframes float1{to{transform:translate3d(3vw,2vh,0) scale(1.05)}}
-@keyframes float2{to{transform:translate3d(-2vw,-3vh,0) scale(1.07)}}
-@media (prefers-reduced-motion: reduce){
-  .bg-orb::before,.bg-orb::after{animation:none}
-}
-
-/* コンテナ */
-.container{max-width:1080px;margin:40px auto;padding:0 20px}
-
-/* ヘッダー（クリスタルバー） */
-.header{
-  position:sticky;top:16px;backdrop-filter:saturate(170%) blur(20px);-webkit-backdrop-filter:saturate(170%) blur(20px);
-  background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
-  border:1px solid var(--glass-stroke);
-  border-radius:22px;padding:12px 16px;margin-bottom:18px;
-  box-shadow:0 10px 30px rgba(0,0,0,.25), inset 0 1px rgba(255,255,255,.25);
-}
-.brand{display:flex;align-items:center;gap:10px}
-.brand .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(180deg,var(--accent),var(--accent-2));box-shadow:0 0 12px var(--accent)}
-.brand h1{font-size:18px;letter-spacing:.2px;margin:0}
-.subtitle{margin:2px 0 0;color:var(--muted);font-size:13px}
-
-/* ガラスカード */
-.panel{
-  position:relative;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.05)) /* ガラス層 */,
-    linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,0)) /* 内部の柔らかい照り */;
-  border:1px solid var(--glass-stroke);
-  border-radius:22px;padding:18px;
-  backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);
-  box-shadow:
-    0 15px 40px rgba(0,0,0,.35),
-    inset 0 1px 0 rgba(255,255,255,.25);
-}
-.panel + .panel{margin-top:16px}
-
-/* レイアウト */
-.row{display:flex;gap:16px;flex-wrap:wrap}
-.col{flex:1 1 340px;min-width:300px}
-
-/* 入力群 */
-label{display:block;margin:.5rem 0 .4rem;color:#e5ecff;font-weight:700}
-.input-wrap{
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center
-}
-input[type=text]{
-  flex:1 1 420px;min-width:260px;
-  padding:14px 16px;border-radius:14px;
-  border:1px solid rgba(255,255,255,.22);
-  background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-  color:#fff;outline:none;
-  backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);
-  box-shadow:inset 0 1px rgba(255,255,255,.35);
-}
-input::placeholder{color:#b7c2d8}
-
-/* ボタン（液体ガラス） */
-button{
-  appearance:none;cursor:pointer;border:none;border-radius:14px;
-  padding:12px 16px;font-weight:800;color:white;letter-spacing:.2px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.25), rgba(255,255,255,.12)),
-    linear-gradient(180deg, var(--accent), var(--accent-2));
-  box-shadow:0 12px 28px rgba(10,132,255,.35), inset 0 1px 0 rgba(255,255,255,.4);
-  transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
-}
-button:hover{transform:translateY(-1px);box-shadow:0 16px 36px rgba(10,132,255,.45), inset 0 1px 0 rgba(255,255,255,.5)}
-button:active{transform:translateY(0);filter:saturate(120%)}
-button:disabled{opacity:.6;cursor:not-allowed}
-
-/* チップ */
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 6px}
-.chip{
-  background:linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,.08));
-  border:1px solid rgba(255,255,255,.22); padding:8px 10px;border-radius:999px;
-  display:flex; gap:8px; align-items:center; color:#eaf2ff;
-  backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);
-}
-.chip .x{cursor:pointer; opacity:.85}
-
-/* 見出し/ラベル */
-.section-title{font-size:14px;letter-spacing:.3px;color:#e5ecff;margin:2px 0 10px;font-weight:800;text-transform:uppercase}
-
-/* KPIバー（ガラス面＋発光フィル） */
-.kpi{display:grid;grid-template-columns:1fr auto;gap:6px;margin:6px 0}
-.bar{height:12px;background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.22);border-radius:999px;overflow:hidden;backdrop-filter:blur(8px)}
-.fill{height:100%;background:linear-gradient(90deg, var(--accent), var(--accent-2));box-shadow:0 0 18px rgba(10,132,255,.55) inset}
-
-/* ピルバッジ */
-.badge{
-  background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
-  border:1px solid rgba(255,255,255,.22); color:#eaf2ff;
-  padding:6px 10px;border-radius:999px;font-size:12px;backdrop-filter:blur(8px)
-}
-
-/* グリッドとカード */
-.grid{display:grid;gap:12px}
-.grid-2{grid-template-columns:1fr 1fr}
-.card{
-  background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
-  border:1px solid rgba(255,255,255,.22); border-radius:16px; padding:12px;
-  backdrop-filter:blur(16px)
-}
-.small{color:var(--muted);font-size:12px}
-
-/* フッター */
-.footer{color:#93a5bf;margin-top:18px;font-size:12px}
-
-/* a11y */
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:12px}
-
-/* Light mode（システムに追従） */
-@media (prefers-color-scheme: light){
-  :root{
-    --txt:#0b1220; --muted:#536079;
-    --bg-1:#eaf2ff; --bg-2:#f7fbff;
-    --glass-bg:rgba(255,255,255,.6); --glass-stroke:rgba(0,0,0,.08); --glass-inner:rgba(255,255,255,.9);
-  }
-  body{
-    background:
-      radial-gradient(1200px 600px at 10% -10%, #7bb5ff33, transparent),
-      radial-gradient(800px 500px at 90% 10%, #7cf9ff33, transparent),
-      linear-gradient(180deg,#eaf2ff,#fbfdff);
-  }
-}
-
-/* 細部 */
-ul{margin:.4rem 0 .2rem; padding-left:1rem}
-li{margin:.2rem 0}
-hr{border:0;border-top:1px solid rgba(255,255,255,.18);margin:12px 0}
-</style>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.1">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #e5eeff; -webkit-text-stroke: #e5eeff}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #e5eeff; -webkit-text-stroke: #e5eeff; min-height: 15.0px}
+    span.s1 {font-kerning: none}
+  </style>
 </head>
 <body>
-<div class="bg-orb"></div>
-
-<div class="container">
-  <div class="header panel" style="padding:10px 14px">
-    <div class="brand">
-      <span class="dot"></span>
-      <div>
-        <h1>音楽嗜好から読み解く：あなたの特徴・潜在能力・成長レコメンド</h1>
-        <p class="subtitle">Liquid Glass UI — 透過・ぼかし・微細なハイライトで構成。分析ロジックは既存MVPと同一です。</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <label for="inputBox">あなたの好きなアーティスト／ジャンル（最大10件）</label>
-    <div class="input-wrap">
-      <input id="inputBox" type="text" inputmode="search" autocomplete="off" placeholder="例）Daft Punk, FKJ, Tom Misch, BLACKPINK, Vaudou Game, Indie, Electronic" />
-      <button id="analyzeBtn" aria-label="分析する">分析する</button>
-      <span class="badge" id="countBadge">0 / 10</span>
-    </div>
-    <div class="small" style="margin-top:6px">Enter/カンマで追加。曖昧な綴りも自動マッチ。未登録名はジャンル推定します。</div>
-    <div class="chips" id="chips" aria-live="polite"></div>
-  </div>
-
-  <div class="row" style="margin-top:16px">
-    <div class="col panel">
-      <div class="section-title">あなたの音楽ベクトル（平均）</div>
-      <div id="profileBars"></div>
-      <div class="grid grid-2" style="margin-top:10px">
-        <div class="card">
-          <div class="section-title">ジャンル構成</div>
-          <div id="genreDist"></div>
-        </div>
-        <div class="card">
-          <div class="section-title">地域・時代バランス</div>
-          <div id="regionEra"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col panel">
-      <div class="section-title">性格傾向 / 仕事の潜在能力</div>
-      <div id="abilities"></div>
-    </div>
-  </div>
-
-  <div class="panel" style="margin-top:16px">
-    <div class="section-title">成長のための推薦アーティスト</div>
-    <div id="recs" class="grid grid-2" aria-live="polite"></div>
-  </div>
-
-  <p class="footer">
-    設計根拠：PDFレポートの「グルーヴ三原則（リズム/洗練/実験性）」「エネルギー×洗練度」「ジャンル別の意味付け／体験ヒント」「推奨アーティスト群」をスコアリングに反映しています（p.11–14,16–17,19,21–23,24）。 [oai_citation:1‡daijiro_music嗜好分析＋.pdf](sediment://file_0000000099b461fabd808f7fa764b779)
-  </p>
-</div>
-
-<script>
-/** =========================
- *  1) データ定義（前MVPと同じ）
- *  =======================*/
-const BASE_GENRE = {
-  "Electronic": {energy:.7, sophistication:.7, groove:.6, structure:.8, experimentation:.55, urban:.35, global:.55},
-  "R&B":        {energy:.5, sophistication:.6, groove:.8, structure:.5, experimentation:.45, urban:.8,  global:.45},
-  "Soul":       {energy:.55,sophistication:.6, groove:.85,structure:.5, experimentation:.45, urban:.8,  global:.45},
-  "Funk":       {energy:.7, sophistication:.55,groove:.9, structure:.45,experimentation:.4, urban:.75, global:.5},
-  "Indie":      {energy:.5, sophistication:.5, groove:.55,structure:.55,experimentation:.7, urban:.45, global:.45},
-  "Alternative":{energy:.55,sophistication:.5, groove:.55,structure:.55,experimentation:.7, urban:.45, global:.45},
-  "Post-rock":  {energy:.45,sophistication:.6, groove:.5, structure:.6, experimentation:.7, urban:.4,  global:.45},
-  "K-Pop":      {energy:.85,sophistication:.8, groove:.65,structure:.9, experimentation:.55, urban:.65, global:.95},
-  "Hip-hop":    {energy:.7, sophistication:.55,groove:.85,structure:.5, experimentation:.6, urban:.8,  global:.6},
-  "World":      {energy:.7, sophistication:.45,groove:.85,structure:.45,experimentation:.6, urban:.65, global:.9},
-  "Global":     {energy:.7, sophistication:.45,groove:.85,structure:.45,experimentation:.6, urban:.65, global:.9}
-};
-
-const ARTISTS = [
-  A("Daft Punk","FR",["Electronic"],"1990s",{energy:.75,sophistication:.85,groove:.7,structure:.9, experimentation:.6, urban:.4,global:.6}),
-  A("Justice","FR",["Electronic"],"2000s",{energy:.8,sophistication:.7,groove:.8,structure:.7, experimentation:.5, urban:.4,global:.6}),
-  A("FKJ","FR",["R&B","Electronic"],"2010s",{energy:.45,sophistication:.75,groove:.7,structure:.6, experimentation:.6, urban:.7,global:.7}),
-  A("Disclosure","UK",["Electronic"],"2010s",{energy:.7,sophistication:.7,groove:.7,structure:.8, experimentation:.5, urban:.5,global:.6}),
-  A("Fred again..","UK",["Electronic","Pop"],"2020s",{energy:.8,sophistication:.65,groove:.75,structure:.6, experimentation:.6, urban:.5,global:.7}),
-  A("The Chemical Brothers","UK",["Electronic"],"1990s",{energy:.85,sophistication:.6,groove:.65,structure:.7, experimentation:.7, urban:.4,global:.6}),
-  A("Rei Harakami","JP",["Electronic"],"2000s",{energy:.3,sophistication:.85,groove:.5,structure:.8, experimentation:.75,urban:.45,global:.6}),
-  A("Kan Sano","JP",["R&B","Soul"],"2010s",{energy:.55,sophistication:.7,groove:.8,structure:.6, experimentation:.5, urban:.85,global:.55}),
-  A("Tom Misch","UK",["R&B","Indie"],"2010s",{energy:.55,sophistication:.7,groove:.85,structure:.6, experimentation:.45,urban:.85,global:.6}),
-  A("Jamiroquai","UK",["Funk","R&B"],"1990s",{energy:.75,sophistication:.6,groove:.9,structure:.5, experimentation:.5, urban:.8,global:.55}),
-  A("James Blake","UK",["R&B","Electronic"],"2010s",{energy:.35,sophistication:.8,groove:.5,structure:.65, experimentation:.8, urban:.6,global:.65}),
-  A("SZA","US",["R&B"],"2010s",{energy:.5,sophistication:.6,groove:.6,structure:.5, experimentation:.4,urban:.85,global:.55}),
-  A("Thundercat","US",["Funk","R&B"],"2010s",{energy:.7,sophistication:.65,groove:.85,structure:.55, experimentation:.6,urban:.7,global:.6}),
-  A("Skrillex","US",["Electronic"],"2010s",{energy:.9,sophistication:.55,groove:.8,structure:.65, experimentation:.6,urban:.5,global:.7}),
-  A("ODESZA","US",["Electronic"],"2010s",{energy:.75,sophistication:.65,groove:.7,structure:.65, experimentation:.5,urban:.55,global:.7}),
-  A("Peggy Gou","KR",["Electronic"],"2010s",{energy:.75,sophistication:.7,groove:.8,structure:.7, experimentation:.55,urban:.55,global:.75}),
-  A("Vaudou Game","TG/FR",["World","Funk"],"2010s",{energy:.85,sophistication:.45,groove:.9,structure:.4, experimentation:.55,urban:.6,global:.9}),
-  A("African Head Charge","UK",["World","Dub"],"1980s",{energy:.6,sophistication:.5,groove:.8,structure:.5, experimentation:.7,urban:.6,global:.85}),
-  A("Tyla","ZA",["World","Pop"],"2020s",{energy:.65,sophistication:.6,groove:.8,structure:.55, experimentation:.55,urban:.8,global:.85}),
-  A("J Balvin","CO",["World","Pop"],"2010s",{energy:.8,sophistication:.55,groove:.85,structure:.55, experimentation:.55,urban:.7,global:.9}),
-  A("Altın Gün","NL/TR",["World","Indie"],"2010s",{energy:.7,sophistication:.55,groove:.8,structure:.55, experimentation:.65,urban:.6,global:.85}),
-  A("BLACKPINK","KR",["K-Pop"],"2010s",{energy:.9,sophistication:.85,groove:.7,structure:.9, experimentation:.55,urban:.7,global:.95}),
-  A("NewJeans","KR",["K-Pop"],"2020s",{energy:.7,sophistication:.8,groove:.65,structure:.9, experimentation:.55,urban:.7,global:.95}),
-  A("LE SSERAFIM","KR",["K-Pop"],"2020s",{energy:.8,sophistication:.8,groove:.65,structure:.9, experimentation:.55,urban:.7,global:.9}),
-  A("XG","JP/KR",["K-Pop","Hip-hop"],"2020s",{energy:.85,sophistication:.75,groove:.75,structure:.85, experimentation:.6,urban:.7,global:.9}),
-  A("BABYMONSTER","KR",["K-Pop"],"2020s",{energy:.85,sophistication:.8,groove:.7,structure:.88, experimentation:.55,urban:.7,global:.9}),
-  A("Jung Kook","KR",["K-Pop","Pop"],"2020s",{energy:.8,sophistication:.8,groove:.7,structure:.85, experimentation:.55,urban:.7,global:.9}),
-  A("Gorillaz","UK",["Alternative","Electronic"],"2000s",{energy:.7,sophistication:.7,groove:.7,structure:.65, experimentation:.8,urban:.6,global:.8}),
-  A("Khruangbin","US",["Indie","World"],"2010s",{energy:.5,sophistication:.7,groove:.75,structure:.55, experimentation:.6,urban:.55,global:.7}),
-  A("Ginger Root","US",["Indie","Funk"],"2020s",{energy:.6,sophistication:.65,groove:.75,structure:.55, experimentation:.55,urban:.6,global:.6}),
-  A("Bonobo","UK",["Electronic","Chill"],"2000s",{energy:.6,sophistication:.75,groove:.7,structure:.7, experimentation:.6,urban:.6,global:.8}),
-  A("Four Tet","UK",["Electronic","Experimental"],"2000s",{energy:.65,sophistication:.7,groove:.65,structure:.7, experimentation:.85,urban:.55,global:.8}),
-  A("Bicep","UK",["Electronic","House"],"2010s",{energy:.75,sophistication:.75,groove:.8,structure:.8, experimentation:.65,urban:.55,global:.7}),
-  A("Tycho","US",["Electronic","Ambient"],"2010s",{energy:.45,sophistication:.75,groove:.55,structure:.75, experimentation:.6,urban:.5,global:.65}),
-  A("Kaytranada","CA",["R&B","Electronic"],"2010s",{energy:.7,sophistication:.7,groove:.9,structure:.6, experimentation:.6,urban:.85,global:.7}),
-  A("Robert Glasper","US",["Jazz","R&B"],"2000s",{energy:.5,sophistication:.8,groove:.85,structure:.6, experimentation:.6,urban:.85,global:.6}),
-  A("BADBADNOTGOOD","CA",["Jazz","R&B"],"2010s",{energy:.55,sophistication:.7,groove:.85,structure:.6, experimentation:.65,urban:.75,global:.65}),
-  A("Nubya Garcia","UK",["Jazz","R&B"],"2010s",{energy:.65,sophistication:.75,groove:.85,structure:.6, experimentation:.65,urban:.7,global:.7}),
-  A("KOKOROKO","UK",["Jazz","R&B"],"2010s",{energy:.6,sophistication:.7,groove:.85,structure:.6, experimentation:.6,urban:.7,global:.7}),
-  A("Alfa Mist","UK",["Jazz","R&B"],"2010s",{energy:.45,sophistication:.75,groove:.8,structure:.6, experimentation:.65,urban:.75,global:.65}),
-  A("Vulfpeck","US",["Funk"],"2010s",{energy:.75,sophistication:.6,groove:.9,structure:.55, experimentation:.5,urban:.75,global:.6}),
-  A("Jungle","UK",["Funk","Pop"],"2010s",{energy:.8,sophistication:.65,groove:.9,structure:.55, experimentation:.55,urban:.7,global:.6}),
-  A("Parcels","AU/DE",["Funk","Indie"],"2010s",{energy:.7,sophistication:.65,groove:.85,structure:.6, experimentation:.55,urban:.7,global:.7}),
-  A("Cimafunk","CU",["Funk","World"],"2010s",{energy:.8,sophistication:.55,groove:.95,structure:.5, experimentation:.6,urban:.75,global:.9}),
-  A("RÜFÜS DU SOL","AU",["Electronic","House"],"2010s",{energy:.8,sophistication:.7,groove:.7,structure:.8, experimentation:.6,urban:.55,global:.7}),
-  A("Roosevelt","DE",["Electronic","Pop"],"2010s",{energy:.7,sophistication:.65,groove:.7,structure:.7, experimentation:.55,urban:.6,global:.65}),
-  A("TOKiMONSTA","US",["Electronic"],"2010s",{energy:.7,sophistication:.6,groove:.7,structure:.6, experimentation:.75,urban:.6,global:.7}),
-  A("Dorian Concept","AT",["Electronic","Experimental"],"2010s",{energy:.7,sophistication:.7,groove:.6,structure:.6, experimentation:.85,urban:.55,global:.7}),
-  A("Floating Points","UK",["Electronic","Experimental"],"2010s",{energy:.6,sophistication:.85,groove:.65,structure:.75, experimentation:.85,urban:.55,global:.75}),
-];
-function A(name,region,genres,era,features){return {name,region,genres,era,features};}
-
-/** =========================
- *  2) ユーティリティ
- *  =======================*/
-const clamp = (n)=>Math.max(0,Math.min(1,n));
-function avg(objs){
-  const keys=Object.keys(objs[0]||{}), out={};
-  for(const k of keys) out[k]=objs.reduce((s,o)=>s+o[k],0)/objs.length;
-  return out;
-}
-function cosine(a,b){
-  const keys=Object.keys(a), dot=keys.reduce((s,k)=>s+a[k]*b[k],0);
-  const na=Math.sqrt(keys.reduce((s,k)=>s+a[k]*a[k],0));
-  const nb=Math.sqrt(keys.reduce((s,k)=>s+b[k]*b[k],0));
-  return dot/(na*nb||1);
-}
-function fuzzyFindArtist(token){
-  token=token.toLowerCase().trim();
-  let best=null,score=0;
-  for(const a of ARTISTS){
-    const s = similarity(token,a.name.toLowerCase());
-    if(s>score){score=s;best=a;}
-  }
-  return score>=0.55?best:null;
-}
-function similarity(a,b){
-  const A=new Set(a.split(/\s+/)), B=new Set(b.split(/\s+/));
-  const inter=[...A].filter(x=>B.has(x)).length;
-  const union=new Set([...A,...B]).size;
-  return inter/(union||1);
-}
-function findGenre(token){
-  const key = Object.keys(BASE_GENRE).find(g=>g.toLowerCase()===token.toLowerCase());
-  return key?key:null;
-}
-
-/** =========================
- *  3) プロファイル計算
- *  =======================*/
-function computeProfile(inputs){
-  const used=new Set();
-  const items=[];
-  const genresCount={};
-  const regionsCount={};
-  const erasCount={};
-
-  for(const raw of inputs){
-    const t = raw.trim();
-    if(!t) continue;
-    if(used.has(t.toLowerCase())) continue;
-    used.add(t.toLowerCase());
-    let item = fuzzyFindArtist(t);
-    if(item){
-      items.push(item);
-      for(const g of item.genres){genresCount[g]=(genresCount[g]||0)+1;}
-      regionsCount[item.region]=(regionsCount[item.region]||0)+1;
-      erasCount[item.era]=(erasCount[item.era]||0)+1;
-    }else{
-      const g=findGenre(t) || "Indie";
-      items.push({name:t,region:"-",genres:[g],era:"-",features:BASE_GENRE[g]});
-      genresCount[g]=(genresCount[g]||0)+1;
-    }
-  }
-
-  const vecs = items.map(x=>x.features);
-  const user = avg(vecs.length?vecs:[BASE_GENRE["Indie"]]);
-
-  // 多様性（Structured Diversityの簡易値）
-  const genreDiversity = 1 - Math.max(0,...Object.values(genresCount))/Math.max(1,items.length);
-  const regionDiversity = 1 - Math.max(0,...Object.values(regionsCount))/Math.max(1,items.length);
-  const structuredDiversity = clamp((genreDiversity+regionDiversity)/2);
-
-  return {items,user,genresCount,regionsCount,erasCount,structuredDiversity};
-}
-
-/** =========================
- *  4) 能力推定（PDFの概念→仕事言語）
- *  =======================*/
-function toAbilities(p){
-  const v=p.user, div=p.structuredDiversity;
-  const abilities = [
-    {key:"system", label:"構造化・情報設計力（構築美×洗練）", score: clamp(0.6*v.structure + 0.4*v.sophistication),
-      why:"Electronic指向と洗練の高さ（p.11, p.17）が、要件整理・情報設計の強みとして現れます。"},
-    {key:"grooveLead", label:"チーム推進・ファシリテーション（リズム）", score: clamp(0.5*v.groove + 0.3*v.energy),
-      why:"“リズム”が高い人は協働でテンポを作れる（p.16）。"},
-    {key:"innovation", label:"実験駆動のR&D/新規事業（実験性）", score: clamp(0.7*v.experimentation + 0.2*v.structure + 0.1*v.global),
-      why:"“実験性”の高さは探索・試作の推進力に直結（p.16）。"},
-    {key:"empathy", label:"共感・関係性設計（都市的温度）", score: clamp(0.6*v.urban + 0.2*(1-v.energy) + 0.2*v.groove),
-      why:"R&B/Soulの『都市的温度』は関係性デザインの資質（p.12）。"},
-    {key:"global", label:"越境協業・多文化統合（グローバル×ローカル）", score: clamp(0.7*v.global + 0.3*div),
-      why:"World/Global傾向と分布の多様性が越境力に（p.14, p.19, p.24）。"},
-    {key:"execution", label:"実行ドライブ（エネルギー）", score: v.energy,
-      why:"エネルギーは行動の立ち上がりを司る（p.17）。"},
-    {key:"orchestration", label:"品質統率・演出（洗練×構築力/K‑Pop）", score: clamp(0.5*v.sophistication + 0.35*v.structure + 0.15*v.groove),
-      why:"K‑Pop的な構築力と発信性を業務演出へ（p.13）。"}
-  ];
-  for(const a of abilities) a.percent=Math.round(a.score*100);
-  return abilities.sort((a,b)=>b.percent-a.percent);
-}
-
-/** =========================
- *  5) レコメンド（近接＋伸びしろ）
- *  =======================*/
-function recommend(p){
-  const user=p.user;
-  const have=new Set(p.items.map(i=>i.name.toLowerCase()));
-  const cands=ARTISTS.filter(a=>!have.has(a.name.toLowerCase()));
-  cands.forEach(c=>{
-    const sim = cosine(user,c.features);
-    const growth = 0.3*(c.features.experimentation-user.experimentation)
-                 + 0.2*(c.features.global-user.global)
-                 + 0.2*(c.features.urban-user.urban);
-    c._score = sim + Math.max(0,growth);
-  });
-  const top = cands.sort((a,b)=>b._score-a._score).slice(0,50);
-  const picked=[], usedGenres=new Set();
-  for(const c of top){
-    const gKey=c.genres[0];
-    if(picked.length>=8) break;
-    const penalty = usedGenres.has(gKey)?0.07:0;
-    if((c._score-penalty)>0.6){picked.push(c); usedGenres.add(gKey);}
-  }
-  return picked.map(c=>{
-    const reasons=[];
-    if(c.features.experimentation>user.experimentation+0.07) reasons.push("実験性が一段高く、発想の幅を拡げます");
-    if(c.features.global>user.global+0.07) reasons.push("多文化・越境性が強く、視野を広げます");
-    if(c.features.urban>user.urban+0.07) reasons.push("都市的温度が高く、共感の解像度を上げます");
-    if(reasons.length===0) reasons.push("あなたの中核ベクトルに近く、深掘りに最適です");
-    return {...c, why:reasons.join(" / ")};
-  });
-}
-
-/** =========================
- *  6) UI ハンドラ
- *  =======================*/
-const inputBox=document.getElementById("inputBox");
-const chipsEl=document.getElementById("chips");
-const countBadge=document.getElementById("countBadge");
-const profileBars=document.getElementById("profileBars");
-const genreDist=document.getElementById("genreDist");
-const regionEra=document.getElementById("regionEra");
-const abilitiesEl=document.getElementById("abilities");
-const recsEl=document.getElementById("recs");
-const analyzeBtn=document.getElementById("analyzeBtn");
-
-let tokens=[];
-
-inputBox.addEventListener("keydown",e=>{
-  if(e.key==="Enter"||e.key===","){e.preventDefault(); addToken(inputBox.value); inputBox.value=""; renderChips();}
-});
-function addToken(t){
-  t=t.trim(); if(!t) return;
-  if(tokens.length>=10) return;
-  tokens.push(t);
-  renderChips();
-}
-function removeToken(i){tokens.splice(i,1); renderChips();}
-function renderChips(){
-  chipsEl.innerHTML=tokens.map((t,i)=>`<span class="chip"><b>${escapeHtml(t)}</b><span class="x" onclick="removeToken(${i})" aria-label="削除">✕</span></span>`).join("");
-  countBadge.textContent=`${tokens.length} / 10`;
-}
-function escapeHtml(s){return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-
-analyzeBtn.addEventListener("click",()=>{
-  if(tokens.length===0){addToken("Electronic");}
-  const res = computeProfile(tokens);
-  drawProfile(res);
-  drawAbilities(res);
-  drawRecs(res);
-  analyzeBtn.blur();
-});
-
-function drawProfile(p){
-  const v=p.user;
-  const keys=[["energy","エネルギー"],["sophistication","洗練"],["groove","グルーヴ"],["structure","構築力"],["experimentation","実験性"],["urban","都市的温度"],["global","越境性"]];
-  profileBars.innerHTML = keys.map(([k,ja])=>bar(ja,Math.round(v[k]*100))).join("");
-  genreDist.innerHTML = distList(p.genresCount,"ジャンル");
-  regionEra.innerHTML = `<div class='kpi'><span>地域多様性</span><span class='badge'>${Math.round(p.structuredDiversity*100)}%</span></div>`
-    + distList(p.regionsCount,"地域") + distList(p.erasCount,"時代");
-}
-function bar(label,percent){return `<div class="kpi"><div>${label}</div><div class="badge" style="padding:2px 8px">${percent}%</div></div><div class="bar"><div class="fill" style="width:${percent}%"></div></div>`}
-function distList(obj,title){
-  const total=Object.values(obj).reduce((s,n)=>s+n,0)||1;
-  if(total===1 && Object.keys(obj).length===0) return `<div class="small">—</div>`;
-  return `<ul class="small">${Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<li>${escapeHtml(k)}：${Math.round(n/total*100)}%</li>`).join("")}</ul>`;
-}
-function drawAbilities(p){
-  const abs = toAbilities(p);
-  abilitiesEl.innerHTML = abs.map(a=>`
-    <div class="card">
-      <div class="kpi"><div><strong>${a.label}</strong></div><div class="badge">${a.percent}%</div></div>
-      <div class="small">${a.why}</div>
-    </div>
-  `).join("");
-}
-function drawRecs(p){
-  const recs = recommend(p);
-  recsEl.innerHTML = recs.map(r=>`
-    <div class="card">
-      <strong>${r.name}</strong> <span class="badge">${r.genres.join(" / ")}</span>
-      <div class="small" style="margin-top:6px">${r.why}</div>
-    </div>
-  `).join("");
-}
-</script>
+<p class="p1"><span class="s1">&lt;!doctype html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="ja"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;meta charset="utf-8" /&gt;</span></p>
+<p class="p1"><span class="s1">&lt;meta name="viewport" content="width=device-width,initial-scale=1" /&gt;</span></p>
+<p class="p1"><span class="s1">&lt;title&gt;Music Personality Glass — Open Catalog + Motion&lt;/title&gt;</span></p>
+<p class="p1"><span class="s1">&lt;style&gt;</span></p>
+<p class="p1"><span class="s1">:root{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>--accent:#ffcc33; --accent-2:#ff8800; --glow:rgba(255,180,60,.45);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>--txt:#eef2ff; --muted:#a9b2c7; --bg1:#0e1018; --bg2:#15192a;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>--mx:0px; --my:0px; /* mouse parallax */</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">*{box-sizing:border-box}</span></p>
+<p class="p1"><span class="s1">body{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>margin:0;color:var(--txt);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",Roboto,Segoe UI,sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>background:</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>radial-gradient(1200px 600px at 10% -10%, #ffd96622, transparent),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>radial-gradient(900px 600px at 90% 10%, #ff8a0022, transparent),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>linear-gradient(180deg,var(--bg1),var(--bg2));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>overflow-x:hidden;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* 背景オーブ（ゆるいモーション＋マウス追従） */</span></p>
+<p class="p1"><span class="s1">.bg{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>position:fixed;inset:-10% -10% -10% -10%;z-index:-1;pointer-events:none;filter:blur(40px) saturate(130%);</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">.bg::before,.bg::after{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>content:"";position:absolute;border-radius:50%;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>width:50vw;height:50vw;opacity:.55;mix-blend-mode:screen;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>background:</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>radial-gradient(circle at 30% 30%, #ffe07a, transparent 60%),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>radial-gradient(circle at 70% 70%, #ff8a00, transparent 60%);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>transform:translate3d(calc(var(--mx)*.03),calc(var(--my)*.03),0);</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">.bg::before{left:-8vw;top:-6vw;animation:float1 18s ease-in-out infinite alternate}</span></p>
+<p class="p1"><span class="s1">.bg::after{right:-8vw;bottom:-10vw;animation:float2 22s ease-in-out infinite alternate}</span></p>
+<p class="p1"><span class="s1">@keyframes float1{to{transform:translate3d(2vw,1vh,0) scale(1.05)}}</span></p>
+<p class="p1"><span class="s1">@keyframes float2{to{transform:translate3d(-2vw,-2vh,0) scale(1.07)}}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* コンテナ */</span></p>
+<p class="p1"><span class="s1">.container{max-width:1100px;margin:34px auto;padding:0 18px}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* パネル（ガラス） */</span></p>
+<p class="p1"><span class="s1">.panel{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>position:relative;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>border:1px solid rgba(255,255,255,.18);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>border-radius:22px;padding:18px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>backdrop-filter:saturate(180%) blur(18px);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>box-shadow:0 12px 36px rgba(0,0,0,.35), inset 0 1px rgba(255,255,255,.25);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">.panel:hover{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>transform:translateY(-2px);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>border-color:rgba(255,200,80,.55);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>box-shadow:0 18px 44px rgba(255,170,40,.25), inset 0 1px rgba(255,255,255,.35);</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* ふわっと出現 */</span></p>
+<p class="p1"><span class="s1">.reveal{opacity:0;transform:translateY(10px);transition:opacity .5s ease, transform .5s ease}</span></p>
+<p class="p1"><span class="s1">.reveal.show{opacity:1;transform:none}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">h1{margin:0 0 6px;font-size:26px}</span></p>
+<p class="p1"><span class="s1">.subtitle{margin:0 0 12px;color:var(--muted);font-size:13px}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* 入力/ボタン */</span></p>
+<p class="p1"><span class="s1">label{display:block;margin:.5rem 0 .4rem;font-weight:700}</span></p>
+<p class="p1"><span class="s1">input[type=text]{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>width:100%;padding:12px 14px;border-radius:12px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>border:1px solid rgba(255,255,255,.2);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>background:rgba(255,255,255,.08);color:#fff;outline:none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>transition:border-color .2s ease, box-shadow .2s ease;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">input[type=text]:focus{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>border-color:rgba(255,200,80,.6);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>box-shadow:0 0 0 4px rgba(255,200,80,.12);</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">button{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>appearance:none;border:none;border-radius:14px;padding:10px 16px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>color:white;font-weight:800;cursor:pointer;position:relative;overflow:hidden;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>background:linear-gradient(90deg,var(--accent),var(--accent-2));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>box-shadow:0 0 22px var(--glow);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>transition:transform .15s ease, filter .2s ease, box-shadow .2s ease;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">button:hover{transform:translateY(-1px);filter:brightness(1.06);box-shadow:0 0 28px var(--glow)}</span></p>
+<p class="p1"><span class="s1">/* ボタンのシーン光 */</span></p>
+<p class="p1"><span class="s1">button::after{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>content:"";position:absolute;inset:-100% -40% -100% -40%;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>background:linear-gradient(120deg,transparent,rgba(255,255,255,.5),transparent);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>transform:translateX(-60%) skewX(-15deg);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>animation:sheen 3.6s linear infinite;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>pointer-events:none;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">@keyframes sheen{to{transform:translateX(60%) skewX(-15deg)}}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* チップ（ホバーで微拡大＋発光枠） */</span></p>
+<p class="p1"><span class="s1">.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}</span></p>
+<p class="p1"><span class="s1">.chip{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>background:rgba(255,255,255,.1);border-radius:999px;padding:6px 10px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>border:1px solid rgba(255,255,255,.18);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>transition:transform .12s ease, border-color .2s ease, box-shadow .2s ease;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">.chip:hover{transform:scale(1.04);border-color:rgba(255,200,80,.55);box-shadow:0 0 16px rgba(255,190,70,.25)}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* レイアウト */</span></p>
+<p class="p1"><span class="s1">.row{display:flex;gap:16px;flex-wrap:wrap}</span></p>
+<p class="p1"><span class="s1">.col{flex:1 1 340px;min-width:300px}</span></p>
+<p class="p1"><span class="s1">.section-title{font-size:14px;font-weight:800;margin-bottom:8px;color:#ffd36b}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* KPIバー（アニメ） */</span></p>
+<p class="p1"><span class="s1">.kpi{display:grid;grid-template-columns:1fr auto;gap:6px;margin:6px 0}</span></p>
+<p class="p1"><span class="s1">.bar{height:10px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden}</span></p>
+<p class="p1"><span class="s1">.fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>box-shadow:0 0 18px var(--glow) inset; width:0%}</span></p>
+<p class="p1"><span class="s1">.badge{background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px;font-size:12px}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* カード（リフト＆ハイライト） */</span></p>
+<p class="p1"><span class="s1">.card{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>background:rgba(255,255,255,.08);border-radius:16px;padding:12px;border:1px solid rgba(255,255,255,.16);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">.card:hover{transform:translateY(-2px);border-color:rgba(255,200,80,.5);box-shadow:0 10px 26px rgba(255,180,70,.2)}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* リンク */</span></p>
+<p class="p1"><span class="s1">a.link{color:#ffe28a;text-decoration:underline;transition:color .15s ease}</span></p>
+<p class="p1"><span class="s1">a.link:hover{color:#fff0b5}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* スイッチ */</span></p>
+<p class="p1"><span class="s1">.headerRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}</span></p>
+<p class="p1"><span class="s1">.small{color:var(--muted);font-size:12px}</span></p>
+<p class="p1"><span class="s1">.badge.pill{background:rgba(255,200,80,.18)}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* フッター */</span></p>
+<p class="p1"><span class="s1">.footer{color:var(--muted);text-align:center;font-size:12px;margin:16px 0 6px}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* モーション抑制（OS設定 or トグル） */</span></p>
+<p class="p1"><span class="s1">@media (prefers-reduced-motion: reduce){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.bg::before,.bg::after, button::after{animation:none}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>.panel, .chip, .card, button{transition:none}</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">.no-motion .bg::before, .no-motion .bg::after, .no-motion button::after{animation:none}</span></p>
+<p class="p1"><span class="s1">.no-motion .panel, .no-motion .chip, .no-motion .card, .no-motion button{transition:none}</span></p>
+<p class="p1"><span class="s1">&lt;/style&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;div class="bg"&gt;&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">&lt;div class="container"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="panel reveal"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="headerRow"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;h1&gt;🎧 Music Personality Glass — Open Catalog&lt;/h1&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;span class="badge pill"&gt;Liquid Glass + Motion&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;label class="small" style="display:inline-flex;gap:8px;align-items:center;margin-left:auto"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;input id="onlineToggle" type="checkbox"/&gt; Online Mode</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/label&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;label class="small" style="display:inline-flex;gap:8px;align-items:center"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;input id="motionToggle" type="checkbox" checked/&gt; Motion</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/label&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;p class="subtitle"&gt;Enter up to 10 artists/genres → analyze your traits → limitless web-based recommendations.&lt;/p&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;label for="inputBox"&gt;Artists / Genres&lt;/label&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;input id="inputBox" type="text" placeholder="e.g. Daft Punk, FKJ, Tom Misch, BLACKPINK, Indie, House" /&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="headerRow" style="margin-top:8px"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;button id="addBtn"&gt;Add&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;button id="analyzeBtn"&gt;Analyze&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;span class="badge" id="countBadge"&gt;0 / 10&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;span id="status" class="small"&gt;&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="chips" id="chips"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="row"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="col panel reveal"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="section-title"&gt;Your Music Vector&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div id="profileBars"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="card" style="margin-top:10px"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="section-title"&gt;Genre Distribution&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="genreDist" class="small"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="col panel reveal"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="section-title"&gt;Personality &amp; Today&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div id="personality"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="panel reveal"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="section-title"&gt;Work Strengths&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="abilities"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="panel reveal"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="section-title"&gt;Open-Web Recommendations&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="recs" class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;p class="footer"&gt;Sources: iTunes Search API / MusicBrainz. Fallback to local seed. Motion respects “prefers-reduced-motion”.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">&lt;script&gt;</span></p>
+<p class="p1"><span class="s1">/* ============ Utils ============ */</span></p>
+<p class="p1"><span class="s1">const clamp=n=&gt;Math.max(0,Math.min(1,n));</span></p>
+<p class="p1"><span class="s1">function avg(objs){const k=Object.keys(objs[0]||{}),o={};for(const x of k)o[x]=objs.reduce((s,v)=&gt;s+v[x],0)/objs.length;return o;}</span></p>
+<p class="p1"><span class="s1">function cosine(a,b){const K=Object.keys(a),d=K.reduce((s,k)=&gt;s+a[k]*b[k],0),na=Math.sqrt(K.reduce((s,k)=&gt;s+a[k]*a[k],0)),nb=Math.sqrt(K.reduce((s,k)=&gt;s+b[k]*b[k],0));return d/(na*nb||1);}</span></p>
+<p class="p1"><span class="s1">const sleep=ms=&gt;new Promise(r=&gt;setTimeout(r,ms));</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* ============ Feature Model ============ */</span></p>
+<p class="p1"><span class="s1">const BASE_GENRE={</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"Electronic":{energy:.7,sophistication:.7,groove:.6,structure:.8,experiment:.55,urban:.35,global:.55},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"R&amp;B":{energy:.5,sophistication:.6,groove:.8,structure:.5,experiment:.45,urban:.8,global:.45},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"Soul":{energy:.55,sophistication:.6,groove:.85,structure:.5,experiment:.45,urban:.8,global:.45},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"Funk":{energy:.7,sophistication:.55,groove:.9,structure:.45,experiment:.4,urban:.75,global:.5},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"Indie":{energy:.5,sophistication:.5,groove:.55,structure:.55,experiment:.7,urban:.45,global:.45},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"Alternative":{energy:.55,sophistication:.5,groove:.55,structure:.55,experiment:.7,urban:.45,global:.45},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"Hip-hop":{energy:.7,sophistication:.55,groove:.85,structure:.5,experiment:.6,urban:.8,global:.6},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"K-Pop":{energy:.85,sophistication:.8,groove:.65,structure:.9,experiment:.55,urban:.65,global:.95},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"World":{energy:.7,sophistication:.45,groove:.85,structure:.45,experiment:.6,urban:.65,global:.9},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"Jazz":{energy:.45,sophistication:.85,groove:.8,structure:.6,experiment:.6,urban:.7,global:.6},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"Pop":{energy:.7,sophistication:.6,groove:.65,structure:.75,experiment:.45,urban:.65,global:.7},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"Rock":{energy:.75,sophistication:.5,groove:.55,structure:.6,experiment:.55,urban:.5,global:.55},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>"House":{energy:.75,sophistication:.65,groove:.85,structure:.75,experiment:.55,urban:.6,global:.7}</span></p>
+<p class="p1"><span class="s1">};</span></p>
+<p class="p1"><span class="s1">const GENRE_MAP=[</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>[/hip.?hop|rap/i,"Hip-hop"],[/r.?&amp;.?b|soul/i,"R&amp;B"],[/electro|edm|dance|techno|house|club/i,"Electronic"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>[/k-?pop/i,"K-Pop"],[/world|afro|latin|reggae|balkan/i,"World"],[/jazz/i,"Jazz"],[/indie|alt/i,"Indie"],</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>[/funk|boogie|disco/i,"Funk"],[/pop/i,"Pop"],[/rock|metal|punk/i,"Rock"],[/house|garage|breakbeat/i,"House"]</span></p>
+<p class="p1"><span class="s1">];</span></p>
+<p class="p1"><span class="s1">const LOCAL_SEED=[</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>{name:"Daft Punk",genres:["Electronic"]},{name:"FKJ",genres:["R&amp;B","Electronic"]},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>{name:"Tom Misch",genres:["R&amp;B","Indie"]},{name:"Peggy Gou",genres:["Electronic"]},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>{name:"Vulfpeck",genres:["Funk"]},{name:"Bonobo",genres:["Electronic"]},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>{name:"Kaytranada",genres:["R&amp;B","Electronic"]},{name:"Parcels",genres:["Funk","Indie"]}</span></p>
+<p class="p1"><span class="s1">];</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* ============ Open Web Adapters ============ */</span></p>
+<p class="p1"><span class="s1">async function fetchITunesArtists(term,limit=10){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const url=`https://itunes.apple.com/search?term=${encodeURIComponent(term)}&amp;entity=musicArtist&amp;limit=${limit}`;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const r=await fetch(url); const j=await r.json();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return (j.results||[]).map(x=&gt;({name:x.artistName,genres:[mapGenre(x.primaryGenreName)]}));</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">async function fetchMBArtists(term,limit=8){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const url=`https://musicbrainz.org/ws/2/artist?query=${encodeURIComponent(term)}&amp;limit=${limit}&amp;fmt=json`;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const r=await fetch(url); if(!r.ok) return [];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const j=await r.json();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const base=(j.artists||[]).map(a=&gt;({name:a.name,id:a.id}));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const out=[];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>for(const a of base){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>try{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const t=await fetch(`https://musicbrainz.org/ws/2/artist/${a.id}?inc=tags&amp;fmt=json`);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const tj=await t.json(); const tags=(tj.tags||[]).map(z=&gt;z.name);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>out.push({name:a.name,genres:tagsToGenres(tags)}); await sleep(110);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}catch{ out.push({name:a.name,genres:[]}); }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return out;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">function tagsToGenres(tags){const txt=(tags||[]).join(" ").toLowerCase(); for(const [re,g] of GENRE_MAP){if(re.test(txt)) return [g];} return [];}</span></p>
+<p class="p1"><span class="s1">function mapGenre(s){if(!s) return "Indie"; for(const [re,g] of GENRE_MAP){if(re.test(String(s))) return g;} return "Indie";}</span></p>
+<p class="p1"><span class="s1">async function buildOpenCatalog(keys){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const map=new Map();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const add=arr=&gt;arr.forEach(a=&gt;{const k=a.name.toLowerCase(); map.set(k,{name:a.name,genres:(a.genres&amp;&amp;a.genres.length?a.genres:["Indie"])})});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>for(const k of keys){ add(await fetchITunesArtists(k,12).catch(()=&gt;[])); add(await fetchMBArtists(k,8).catch(()=&gt;[])); }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(map.size&lt;12){ add(await fetchITunesArtists("electronic",10).catch(()=&gt;[])); add(await fetchITunesArtists("funk",10).catch(()=&gt;[])); }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return [...map.values()];</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* ============ Profiling / Personality ============ */</span></p>
+<p class="p1"><span class="s1">function toVec(gs){const v=gs.map(g=&gt;BASE_GENRE[g]||BASE_GENRE.Indie); return avg(v);}</span></p>
+<p class="p1"><span class="s1">function profileFromInputs(tokens){return toVec(tokens.map(t=&gt;mapGenre(t)));}</span></p>
+<p class="p1"><span class="s1">function toAbilities(v){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return [</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{label:"構造化・情報設計力",score:clamp(0.6*v.structure+0.4*v.sophistication)},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{label:"共感・関係性設計力",score:clamp(0.55*v.urban+0.35*v.groove)},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{label:"実験・創造推進力",score:clamp(0.7*v.experiment+0.2*v.global)},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{label:"推進・行動エネルギー",score:v.energy},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{label:"越境・多文化統合力",score:clamp(0.7*v.global+0.2*v.experiment)}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>];</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">function detectType(v){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(v.experiment&gt;0.65&amp;&amp;v.global&gt;0.6) return "Curious Innovator";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(v.groove&gt;0.7&amp;&amp;v.urban&gt;0.6) return "Empathic Connector";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(v.structure&gt;0.7&amp;&amp;v.sophistication&gt;0.6) return "System Architect";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(v.energy&gt;0.7&amp;&amp;v.groove&gt;0.6) return "Dynamic Performer";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return "Serene Observer";</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">function todayAdvice(t){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>switch(t){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>case "Curious Innovator":return "今日は未知の音や景色に触れてみよう。小さな回り道が発想の種に。";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>case "Empathic Connector":return "ペースを落として温かな会話を。心のリズムが整う日。";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>case "System Architect":return "整理・設計に最適。机やタスクを整えると次の一手がクリアに。";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>case "Dynamic Performer":return "まず体を動かしてスイッチON。勢いで小さな勝ちを積もう。";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>default:return "静けさを味方に。お気に入りの曲を背景にリズムを整えよう。";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* ============ Recommendation ============ */</span></p>
+<p class="p1"><span class="s1">function vecFromArtist(a){return toVec(a.genres&amp;&amp;a.genres.length?a.genres:["Indie"]);}</span></p>
+<p class="p1"><span class="s1">function recommend(userVec, have, catalog){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const pool=catalog.filter(a=&gt;!have.has(a.name.toLowerCase()));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>pool.forEach(a=&gt;{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const v=vecFromArtist(a);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const sim=cosine(userVec,v);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const growth=0.3*Math.max(0,v.experiment-userVec.experiment)+0.2*Math.max(0,v.global-userVec.global)+0.2*Math.max(0,v.urban-userVec.urban);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>a._score=sim+growth;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const top=pool.sort((a,b)=&gt;b._score-a._score);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const picked=[], used=new Set();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>for(const a of top){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const g=(a.genres&amp;&amp;a.genres[0])||"Indie"; const penalty=used.has(g)?0.08:0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>if(picked.length&lt;10 &amp;&amp; a._score-penalty&gt;0.55){picked.push(a); used.add(g);}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return picked;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* ============ UI glue ============ */</span></p>
+<p class="p1"><span class="s1">const inputEl=document.getElementById("inputBox");</span></p>
+<p class="p1"><span class="s1">const addBtn=document.getElementById("addBtn");</span></p>
+<p class="p1"><span class="s1">const analyzeBtn=document.getElementById("analyzeBtn");</span></p>
+<p class="p1"><span class="s1">const chipsEl=document.getElementById("chips");</span></p>
+<p class="p1"><span class="s1">const profileBars=document.getElementById("profileBars");</span></p>
+<p class="p1"><span class="s1">const abilitiesEl=document.getElementById("abilities");</span></p>
+<p class="p1"><span class="s1">const recsEl=document.getElementById("recs");</span></p>
+<p class="p1"><span class="s1">const personalityEl=document.getElementById("personality");</span></p>
+<p class="p1"><span class="s1">const countBadge=document.getElementById("countBadge");</span></p>
+<p class="p1"><span class="s1">const statusEl=document.getElementById("status");</span></p>
+<p class="p1"><span class="s1">const onlineToggle=document.getElementById("onlineToggle");</span></p>
+<p class="p1"><span class="s1">const motionToggle=document.getElementById("motionToggle");</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">let tokens=[];</span></p>
+<p class="p1"><span class="s1">let openCatalogCache=null;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">inputEl.addEventListener("keydown",e=&gt;{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(e.key==="Enter"||e.key===","){e.preventDefault(); addToken(inputEl.value); inputEl.value=""; }</span></p>
+<p class="p1"><span class="s1">});</span></p>
+<p class="p1"><span class="s1">addBtn.addEventListener("click",()=&gt;{addToken(inputEl.value); inputEl.value="";});</span></p>
+<p class="p1"><span class="s1">analyzeBtn.addEventListener("click",runAnalysis);</span></p>
+<p class="p1"><span class="s1">motionToggle.addEventListener("change",()=&gt;{document.body.classList.toggle("no-motion",!motionToggle.checked)});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* マウス追従グロー（パララックス） */</span></p>
+<p class="p1"><span class="s1">window.addEventListener("mousemove",e=&gt;{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(document.body.classList.contains("no-motion")) return;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const x=(e.clientX-window.innerWidth/2), y=(e.clientY-window.innerHeight/2);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>document.documentElement.style.setProperty('--mx', x+'px');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>document.documentElement.style.setProperty('--my', y+'px');</span></p>
+<p class="p1"><span class="s1">});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* スクロール出現 */</span></p>
+<p class="p1"><span class="s1">const io=new IntersectionObserver(es=&gt;es.forEach(ent=&gt;{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(ent.isIntersecting){ent.target.classList.add('show'); io.unobserve(ent.target);}</span></p>
+<p class="p1"><span class="s1">}),{threshold:.12});</span></p>
+<p class="p1"><span class="s1">document.querySelectorAll('.reveal').forEach(el=&gt;io.observe(el));</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function addToken(t){t=t.trim(); if(!t) return; if(tokens.length&gt;=10) return; tokens.push(t); renderChips();}</span></p>
+<p class="p1"><span class="s1">function removeToken(i){tokens.splice(i,1); renderChips();}</span></p>
+<p class="p1"><span class="s1">function renderChips(){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>chipsEl.innerHTML=tokens.map((t,i)=&gt;`&lt;span class="chip"&gt;${escapeHtml(t)} &lt;a style="cursor:pointer" onclick="removeToken(${i})"&gt;✕&lt;/a&gt;&lt;/span&gt;`).join("");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>countBadge.textContent=`${tokens.length} / 10`;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">function escapeHtml(s){return s.replace(/[&amp;&lt;&gt;"]/g,c=&gt;({'&amp;':'&amp;amp;','&lt;':'&amp;lt;','&gt;':'&amp;gt;','"':'&amp;quot;'}[c]));}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">async function runAnalysis(){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(tokens.length===0) addToken("Electronic");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>statusEl.textContent = onlineToggle.checked ? "Fetching open catalog…" : "Using local model";</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const userVec=profileFromInputs(tokens);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>drawProfile(userVec);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>drawAbilities(userVec);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const type=detectType(userVec);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>personalityEl.innerHTML = `&lt;div class="card reveal show"&gt;&lt;strong&gt;${type}&lt;/strong&gt;&lt;div class="small"&gt;${todayAdvice(type)}&lt;/div&gt;&lt;/div&gt;`;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>let catalog=[...LOCAL_SEED];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(onlineToggle.checked){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>try{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>openCatalogCache=await buildOpenCatalog(tokens);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>catalog=openCatalogCache.length?openCatalogCache:LOCAL_SEED;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>statusEl.textContent=`Catalog: ${catalog.length} artists from the web`;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}catch{ statusEl.textContent="Online fetch failed. Fallback to local seed."; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}else{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>statusEl.textContent=`Catalog: ${catalog.length} (local)`;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const have=new Set(tokens.map(t=&gt;t.toLowerCase()));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const recs=recommend(userVec,have,catalog);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>drawRecs(recs);</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">/* UI renders with motion */</span></p>
+<p class="p1"><span class="s1">function drawProfile(v){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const keys=[["energy","エネルギー"],["sophistication","洗練"],["groove","グルーヴ"],["structure","構築力"],["experiment","実験性"],["urban","都市的温度"],["global","越境性"]];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>profileBars.innerHTML=keys.map(([k,ja])=&gt;bar(ja,Math.round((v[k]||0)*100))).join("");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// animate bar fill</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>requestAnimationFrame(()=&gt;document.querySelectorAll('.fill').forEach(el=&gt;{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const w=el.getAttribute('data-w'); el.style.width=w;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// genre approx</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const counts={}; tokens.forEach(t=&gt;{const g=mapGenre(t); counts[g]=(counts[g]||0)+1;});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>genreDist.innerHTML=Object.entries(counts).sort((a,b)=&gt;b[1]-a[1]).map(([k,n])=&gt;`${k}: ${n}`).join(" / ")||"—";</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">function bar(label,percent){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return `&lt;div class="kpi"&gt;&lt;div&gt;${label}&lt;/div&gt;&lt;div class="badge"&gt;${percent}%&lt;/div&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="bar"&gt;&lt;div class="fill" data-w="${percent}%"&gt;&lt;/div&gt;&lt;/div&gt;`;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">function drawAbilities(v){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const abs=toAbilities(v);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>abilitiesEl.innerHTML=abs.map(a=&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>`&lt;div class="kpi"&gt;&lt;div&gt;${a.label}&lt;/div&gt;&lt;div class="badge"&gt;${Math.round(a.score*100)}%&lt;/div&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">     </span>&lt;div class="bar"&gt;&lt;div class="fill" data-w="${Math.round(a.score*100)}%"&gt;&lt;/div&gt;&lt;/div&gt;`</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>).join("");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>requestAnimationFrame(()=&gt;document.querySelectorAll('#abilities .fill').forEach(el=&gt;{el.style.width=el.getAttribute('data-w');}));</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">function drawRecs(recs){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>recsEl.innerHTML=recs.map(r=&gt;{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const g=(r.genres&amp;&amp;r.genres.length)?`&lt;span class="badge" style="margin-left:6px"&gt;${r.genres.join(" / ")}&lt;/span&gt;`:"";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>return `&lt;div class="card reveal"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;strong&gt;${escapeHtml(r.name)}&lt;/strong&gt;${g}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="small" style="margin-top:6px"&gt;open-web suggest •</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;a class="link" target="_blank" href="https://music.apple.com/search?term=${encodeURIComponent(r.name)}"&gt;Apple&lt;/a&gt; ·</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;a class="link" target="_blank" href="https://musicbrainz.org/search?query=${encodeURIComponent(r.name)}&amp;type=artist&amp;method=indexed"&gt;MB&lt;/a&gt; ·</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;a class="link" target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(r.name+' music')}"&gt;YouTube&lt;/a&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;&lt;/div&gt;`;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}).join("");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>document.querySelectorAll('#recs .reveal').forEach(el=&gt;io.observe(el));</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p1"><span class="s1">&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
 </body>
 </html>
