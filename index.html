@@ -1,427 +1,418 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.1">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
-</head>
-<body>
-<p class="p1">&lt;!doctype html&gt;</p>
-<p class="p1">&lt;html lang="ja"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1">&lt;meta charset="utf-8" /&gt;</p>
-<p class="p1">&lt;meta name="viewport" content="width=device-width,initial-scale=1" /&gt;</p>
-<p class="p1">&lt;title&gt;MusicLens — Open Catalog + Motion + Artist Spotlight&lt;/title&gt;</p>
-<p class="p1">&lt;style&gt;</p>
-<p class="p1">:root{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>--accent:#ffcc33; --accent-2:#ff8800; --glow:rgba(255,180,60,.45);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>--txt:#eef2ff; --muted:#a9b2c7; --bg1:#0e1018; --bg2:#15192a;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>--mx:0px; --my:0px;</p>
-<p class="p1">}</p>
-<p class="p1">*{box-sizing:border-box}</p>
-<p class="p1">body{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>margin:0;color:var(--txt);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",Roboto,Segoe UI,sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>background:</p>
-<p class="p1"><span class="Apple-converted-space">    </span>radial-gradient(1200px 600px at 10% -10%, #ffd96622, transparent),</p>
-<p class="p1"><span class="Apple-converted-space">    </span>radial-gradient(900px 600px at 90% 10%, #ff8a0022, transparent),</p>
-<p class="p1"><span class="Apple-converted-space">    </span>linear-gradient(180deg,var(--bg1),var(--bg2));</p>
-<p class="p1"><span class="Apple-converted-space">  </span>overflow-x:hidden;</p>
-<p class="p1">}</p>
-<p class="p1">/* 背景モーション */</p>
-<p class="p1">.bg{position:fixed;inset:-10% -10% -10% -10%;z-index:-1;pointer-events:none;filter:blur(40px) saturate(130%)}</p>
-<p class="p1">.bg::before,.bg::after{content:"";position:absolute;border-radius:50%;width:50vw;height:50vw;opacity:.55;mix-blend-mode:screen;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>background:radial-gradient(circle at 30% 30%, #ffe07a, transparent 60%), radial-gradient(circle at 70% 70%, #ff8a00, transparent 60%);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>transform:translate3d(calc(var(--mx)*.03),calc(var(--my)*.03),0)}</p>
-<p class="p1">.bg::before{left:-8vw;top:-6vw;animation:float1 18s ease-in-out infinite alternate}</p>
-<p class="p1">.bg::after{right:-8vw;bottom:-10vw;animation:float2 22s ease-in-out infinite alternate}</p>
-<p class="p1">@keyframes float1{to{transform:translate3d(2vw,1vh,0) scale(1.05)}}</p>
-<p class="p1">@keyframes float2{to{transform:translate3d(-2vw,-2vh,0) scale(1.07)}}</p>
-<p class="p1">.container{max-width:1100px;margin:34px auto;padding:0 18px}</p>
-<p class="p1">/* パネル */</p>
-<p class="p1">.panel{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));</p>
-<p class="p1"><span class="Apple-converted-space">  </span>border:1px solid rgba(255,255,255,.18);border-radius:22px;padding:18px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>backdrop-filter:saturate(180%) blur(18px);box-shadow:0 12px 36px rgba(0,0,0,.35), inset 0 1px rgba(255,255,255,.25);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease}</p>
-<p class="p1">.panel:hover{transform:translateY(-2px);border-color:rgba(255,200,80,.55);box-shadow:0 18px 44px rgba(255,170,40,.25), inset 0 1px rgba(255,255,255,.35)}</p>
-<p class="p1">.reveal{opacity:0;transform:translateY(10px);transition:opacity .5s ease, transform .5s ease}</p>
-<p class="p1">.reveal.show{opacity:1;transform:none}</p>
-<p class="p1">.subtitle{margin:0 0 12px;color:var(--muted);font-size:13px}</p>
-<p class="p1">label{display:block;margin:.5rem 0 .4rem;font-weight:700}</p>
-<p class="p1">/* ロゴ */</p>
-<p class="p1">.logoWrap{display:flex;justify-content:center;margin:4px 0 12px}</p>
-<p class="p1">.logo{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>font-weight:900;font-size:34px;letter-spacing:1.2px;line-height:1;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>background:linear-gradient(90deg,#fff3b0,#ffd166,#ff9f1c);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>-webkit-background-clip:text;background-clip:text;color:transparent;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>text-shadow:0 6px 40px rgba(255,200,80,.25);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>filter:drop-shadow(0 4px 14px rgba(255,170,40,.25));</p>
-<p class="p1">}</p>
-<p class="p1">/* 入力・ボタン */</p>
-<p class="p1">input[type=text]{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.2);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>background:rgba(255,255,255,.08);color:#fff;outline:none;transition:border-color .2s, box-shadow .2s}</p>
-<p class="p1">input[type=text]:focus{border-color:rgba(255,200,80,.6);box-shadow:0 0 0 4px rgba(255,200,80,.12)}</p>
-<p class="p1">button{appearance:none;border:none;border-radius:14px;padding:10px 16px;color:white;font-weight:800;cursor:pointer;position:relative;overflow:hidden;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 0 22px var(--glow);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>transition:transform .15s, filter .2s, box-shadow .2s}</p>
-<p class="p1">button:hover{transform:translateY(-1px);filter:brightness(1.06);box-shadow:0 0 28px var(--glow)}</p>
-<p class="p1">button::after{content:"";position:absolute;inset:-100% -40% -100% -40%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.5),transparent);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>transform:translateX(-60%) skewX(-15deg);animation:sheen 3.6s linear infinite;pointer-events:none}</p>
-<p class="p1">@keyframes sheen{to{transform:translateX(60%) skewX(-15deg)}}</p>
-<p class="p1">.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}</p>
-<p class="p1">.chip{background:rgba(255,255,255,.1);border-radius:999px;padding:6px 10px;border:1px solid rgba(255,255,255,.18);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>transition:transform .12s,border-color .2s,box-shadow .2s}</p>
-<p class="p1">.chip:hover{transform:scale(1.04);border-color:rgba(255,200,80,.55);box-shadow:0 0 16px rgba(255,190,70,.25)}</p>
-<p class="p1">.row{display:flex;gap:16px;flex-wrap:wrap}</p>
-<p class="p1">.col{flex:1 1 340px;min-width:300px}</p>
-<p class="p1">.section-title{font-size:14px;font-weight:800;margin-bottom:8px;color:#ffd36b}</p>
-<p class="p1">.kpi{display:grid;grid-template-columns:1fr auto;gap:6px;margin:6px 0}</p>
-<p class="p1">.bar{height:10px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden}</p>
-<p class="p1">.fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 0 18px var(--glow) inset;width:0%}</p>
-<p class="p1">.badge{background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px;font-size:12px}</p>
-<p class="p1">.card{background:rgba(255,255,255,.08);border-radius:16px;padding:12px;border:1px solid rgba(255,255,255,.16);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>transition:transform .2s, box-shadow .2s, border-color .2s}</p>
-<p class="p1">.card:hover{transform:translateY(-2px);border-color:rgba(255,200,80,.5);box-shadow:0 10px 26px rgba(255,180,70,.2)}</p>
-<p class="p1">a.link{color:#ffe28a;text-decoration:underline;transition:color .15s}</p>
-<p class="p1">a.link:hover{color:#fff0b5}</p>
-<p class="p1">.headerRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}</p>
-<p class="p1">.small{color:var(--muted);font-size:12px}</p>
-<p class="p1">.badge.pill{background:rgba(255,200,80,.18)}</p>
-<p class="p1">.footer{color:var(--muted);text-align:center;font-size:12px;margin:16px 0 6px}</p>
-<p class="p1">.artistGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}</p>
-<p class="p1">.artistCard{display:flex;gap:10px;align-items:flex-start}</p>
-<p class="p1">.artistImg{width:56px;height:56px;flex:0 0 56px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,.22);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>box-shadow:0 6px 14px rgba(0,0,0,.25)}</p>
-<p class="p1">.no-motion .bg::before,.no-motion .bg::after, .no-motion button::after{animation:none}</p>
-<p class="p1">.no-motion .panel,.no-motion .chip,.no-motion .card, .no-motion button{transition:none}</p>
-<p class="p1">&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1">&lt;div class="bg"&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;div class="container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- ヘッダー：中央ロゴ --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="panel reveal"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="logoWrap"&gt;&lt;div class="logo"&gt;MusicLens&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;p class="subtitle" style="text-align:center"&gt;Enter up to 10 artists/genres → analyze traits → see Artist Spotlights with photos → get open-web recommendations.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="headerRow" style="justify-content:center;gap:14px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;label class="small" style="display:inline-flex;gap:8px;align-items:center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="onlineToggle" type="checkbox" checked/&gt; Online Mode</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;label class="small" style="display:inline-flex;gap:8px;align-items:center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="motionToggle" type="checkbox" checked/&gt; Motion</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;span id="status" class="small"&gt;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- 入力 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="panel reveal"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;label for="inputBox"&gt;Artists / Genres&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;input id="inputBox" type="text" placeholder="e.g. Daft Punk, FKJ, Tom Misch, BLACKPINK, Indie, House" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="headerRow" style="margin-top:8px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;button id="addBtn"&gt;Add&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;button id="analyzeBtn"&gt;Analyze&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;span class="badge" id="countBadge"&gt;0 / 10&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="chips" id="chips"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- プロファイル --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="row"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="col panel reveal"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section-title"&gt;Your Music Vector&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="profileBars"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card" style="margin-top:10px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="section-title"&gt;Genre Distribution&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="genreDist" class="small"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="col panel reveal"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section-title"&gt;Personality &amp; Today&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="personality"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="panel reveal"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-title"&gt;Work Strengths&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="abilities"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- ★ 新機能：Artist Spotlights --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="panel reveal"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-title"&gt;Artist Spotlights (photo + one-liner)&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="artists" class="artistGrid"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="panel reveal"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-title"&gt;Open-Web Recommendations&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="recs" class="artistGrid"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;p class="footer"&gt;Sources: iTunes Search API / MusicBrainz / Wikipedia REST. Fallback to local seed. Motion respects “prefers-reduced-motion”.&lt;/p&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1">/* ===== Utils ===== */</p>
-<p class="p1">const clamp=n=&gt;Math.max(0,Math.min(1,n));</p>
-<p class="p1">function avg(objs){const k=Object.keys(objs[0]||{}),o={};for(const x of k)o[x]=objs.reduce((s,v)=&gt;s+v[x],0)/objs.length;return o;}</p>
-<p class="p1">function cosine(a,b){const K=Object.keys(a),d=K.reduce((s,k)=&gt;s+a[k]*b[k],0),na=Math.sqrt(K.reduce((s,k)=&gt;s+a[k]*a[k],0)),nb=Math.sqrt(K.reduce((s,k)=&gt;s+b[k]*b[k],0));return d/(na*nb||1);}</p>
-<p class="p1">const sleep=ms=&gt;new Promise(r=&gt;setTimeout(r,ms));</p>
-<p class="p1">/* ===== Feature Model ===== */</p>
-<p class="p1">const BASE_GENRE={</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"Electronic":{energy:.7,sophistication:.7,groove:.6,structure:.8,experiment:.55,urban:.35,global:.55},</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"R&amp;B":{energy:.5,sophistication:.6,groove:.8,structure:.5,experiment:.45,urban:.8,global:.45},</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"Soul":{energy:.55,sophistication:.6,groove:.85,structure:.5,experiment:.45,urban:.8,global:.45},</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"Funk":{energy:.7,sophistication:.55,groove:.9,structure:.45,experiment:.4,urban:.75,global:.5},</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"Indie":{energy:.5,sophistication:.5,groove:.55,structure:.55,experiment:.7,urban:.45,global:.45},</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"Alternative":{energy:.55,sophistication:.5,groove:.55,structure:.55,experiment:.7,urban:.45,global:.45},</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"Hip-hop":{energy:.7,sophistication:.55,groove:.85,structure:.5,experiment:.6,urban:.8,global:.6},</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"K-Pop":{energy:.85,sophistication:.8,groove:.65,structure:.9,experiment:.55,urban:.65,global:.95},</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"World":{energy:.7,sophistication:.45,groove:.85,structure:.45,experiment:.6,urban:.65,global:.9},</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"Jazz":{energy:.45,sophistication:.85,groove:.8,structure:.6,experiment:.6,urban:.7,global:.6},</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"Pop":{energy:.7,sophistication:.6,groove:.65,structure:.75,experiment:.45,urban:.65,global:.7},</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"Rock":{energy:.75,sophistication:.5,groove:.55,structure:.6,experiment:.55,urban:.5,global:.55},</p>
-<p class="p1"><span class="Apple-converted-space"> </span>"House":{energy:.75,sophistication:.65,groove:.85,structure:.75,experiment:.55,urban:.6,global:.7}</p>
-<p class="p1">};</p>
-<p class="p1">const GENRE_MAP=[</p>
-<p class="p1"><span class="Apple-converted-space">  </span>[/hip.?hop|rap/i,"Hip-hop"],[/r.?&amp;.?b|soul/i,"R&amp;B"],[/electro|edm|dance|techno|house|club/i,"Electronic"],</p>
-<p class="p1"><span class="Apple-converted-space">  </span>[/k-?pop/i,"K-Pop"],[/world|afro|latin|reggae|balkan/i,"World"],[/jazz/i,"Jazz"],[/indie|alt/i,"Indie"],</p>
-<p class="p1"><span class="Apple-converted-space">  </span>[/funk|boogie|disco/i,"Funk"],[/pop/i,"Pop"],[/rock|metal|punk/i,"Rock"],[/house|garage|breakbeat/i,"House"]</p>
-<p class="p1">];</p>
-<p class="p1">const LOCAL_SEED=[</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{name:"Daft Punk",genres:["Electronic"]},{name:"FKJ",genres:["R&amp;B","Electronic"]},</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{name:"Tom Misch",genres:["R&amp;B","Indie"]},{name:"Peggy Gou",genres:["Electronic"]},</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{name:"Vulfpeck",genres:["Funk"]},{name:"Bonobo",genres:["Electronic"]},</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{name:"Kaytranada",genres:["R&amp;B","Electronic"]},{name:"Parcels",genres:["Funk","Indie"]}</p>
-<p class="p1">];</p>
-<p class="p1">/* ===== Open Web Adapters ===== */</p>
-<p class="p1">async function fetchITunesArtists(term,limit=10){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const url=`https://itunes.apple.com/search?term=${encodeURIComponent(term)}&amp;entity=musicArtist&amp;limit=${limit}`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const r=await fetch(url); const j=await r.json();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return (j.results||[]).map(x=&gt;({name:x.artistName,genres:[mapGenre(x.primaryGenreName)]}));</p>
-<p class="p1">}</p>
-<p class="p1">async function fetchMBArtists(term,limit=8){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const url=`https://musicbrainz.org/ws/2/artist?query=${encodeURIComponent(term)}&amp;limit=${limit}&amp;fmt=json`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const r=await fetch(url); if(!r.ok) return [];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const j=await r.json(); const base=(j.artists||[]).map(a=&gt;({name:a.name,id:a.id}));</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const out=[];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(const a of base){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>try{const t=await fetch(`https://musicbrainz.org/ws/2/artist/${a.id}?inc=tags&amp;fmt=json`);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const tj=await t.json(); const tags=(tj.tags||[]).map(z=&gt;z.name);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>out.push({name:a.name,genres:tagsToGenres(tags)}); await sleep(110);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}catch{ out.push({name:a.name,genres:[]}); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return out;</p>
-<p class="p1">}</p>
-<p class="p1">function tagsToGenres(tags){const txt=(tags||[]).join(" ").toLowerCase(); for(const [re,g] of GENRE_MAP){if(re.test(txt)) return [g];} return [];}</p>
-<p class="p1">function mapGenre(s){if(!s) return "Indie"; for(const [re,g] of GENRE_MAP){if(re.test(String(s))) return g;} return "Indie";}</p>
-<p class="p1">async function buildOpenCatalog(keys){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const map=new Map();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const add=arr=&gt;arr.forEach(a=&gt;{const k=a.name.toLowerCase(); map.set(k,{name:a.name,genres:(a.genres&amp;&amp;a.genres.length?a.genres:["Indie"])})});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(const k of keys){ add(await fetchITunesArtists(k,12).catch(()=&gt;[])); add(await fetchMBArtists(k,8).catch(()=&gt;[])); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(map.size&lt;12){ add(await fetchITunesArtists("electronic",10).catch(()=&gt;[])); add(await fetchITunesArtists("funk",10).catch(()=&gt;[])); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return [...map.values()];</p>
-<p class="p1">}</p>
-<p class="p1">/* ===== Artist Spotlight fetchers ===== */</p>
-<p class="p1">/* Wikipedia summary + thumbnail（優先） */</p>
-<p class="p1">async function fetchWikiProfile(name){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const api=`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const r=await fetch(api); if(!r.ok) return null;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const j=await r.json();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const img=j.thumbnail?.source || null;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const summary=j.extract ? j.extract.replace(/\s+/g,' ').slice(0,140)+'…' : '';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const url=j.content_urls?.desktop?.page || (`https://en.wikipedia.org/wiki/${encodeURIComponent(name)}`);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return {name,image:img,summary,url,source:"wikipedia"};</p>
-<p class="p1">}</p>
-<p class="p1">/* iTunes: album artwork（サムネ代替） */</p>
-<p class="p1">async function fetchITunesArtwork(name){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const url=`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&amp;entity=album&amp;limit=1`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const r=await fetch(url); if(!r.ok) return null;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const j=await r.json(); const art=j.results&amp;&amp;j.results[0]?.artworkUrl100;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(!art) return null;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const img=art.replace('100x100','256x256');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return {name,image:img,summary:"",url:j.results[0]?.collectionViewUrl||"",source:"itunes"};</p>
-<p class="p1">}</p>
-<p class="p1">/* まとめ：最初に画像が取れたものを採用 */</p>
-<p class="p1">async function fetchArtistProfile(name){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const wiki=await fetchWikiProfile(name).catch(()=&gt;null);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(wiki &amp;&amp; wiki.image) return wiki;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const it=await fetchITunesArtwork(name).catch(()=&gt;null);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return wiki || it; // 画像がなくても簡易紹介としてwikiだけ返す</p>
-<p class="p1">}</p>
-<p class="p1">/* ===== Profiling / Personality ===== */</p>
-<p class="p1">function toVec(gs){const v=gs.map(g=&gt;BASE_GENRE[g]||BASE_GENRE.Indie); return avg(v);}</p>
-<p class="p1">function profileFromInputs(tokens){return toVec(tokens.map(t=&gt;mapGenre(t)));}</p>
-<p class="p1">function toAbilities(v){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return [</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{label:"構造化・情報設計力",score:clamp(0.6*v.structure+0.4*v.sophistication)},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{label:"共感・関係性設計力",score:clamp(0.55*v.urban+0.35*v.groove)},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{label:"実験・創造推進力",score:clamp(0.7*v.experiment+0.2*v.global)},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{label:"推進・行動エネルギー",score:v.energy},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{label:"越境・多文化統合力",score:clamp(0.7*v.global+0.2*v.experiment)}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>];</p>
-<p class="p1">}</p>
-<p class="p1">function detectType(v){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(v.experiment&gt;0.65&amp;&amp;v.global&gt;0.6) return "Curious Innovator";</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(v.groove&gt;0.7&amp;&amp;v.urban&gt;0.6) return "Empathic Connector";</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(v.structure&gt;0.7&amp;&amp;v.sophistication&gt;0.6) return "System Architect";</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(v.energy&gt;0.7&amp;&amp;v.groove&gt;0.6) return "Dynamic Performer";</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return "Serene Observer";</p>
-<p class="p1">}</p>
-<p class="p1">function todayAdvice(t){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>switch(t){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>case "Curious Innovator":return "今日は未知の音や景色に触れてみよう。小さな回り道が発想の種に。";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>case "Empathic Connector":return "ペースを落として温かな会話を。心のリズムが整う日。";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>case "System Architect":return "整理・設計に最適。机やタスクを整えると次の一手がクリアに。";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>case "Dynamic Performer":return "まず体を動かしてスイッチON。勢いで小さな勝ちを積もう。";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>default:return "静けさを味方に。お気に入りの曲を背景にリズムを整えよう。";</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1">}</p>
-<p class="p1">/* ===== Recommendation ===== */</p>
-<p class="p1">function vecFromArtist(a){return toVec(a.genres&amp;&amp;a.genres.length?a.genres:["Indie"]);}</p>
-<p class="p1">function recommend(userVec, have, catalog){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const pool=catalog.filter(a=&gt;!have.has(a.name.toLowerCase()));</p>
-<p class="p1"><span class="Apple-converted-space">  </span>pool.forEach(a=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const v=vecFromArtist(a);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const sim=cosine(userVec,v);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const growth=0.3*Math.max(0,v.experiment-userVec.experiment)+0.2*Math.max(0,v.global-userVec.global)+0.2*Math.max(0,v.urban-userVec.urban);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>a._score=sim+growth;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const top=pool.sort((a,b)=&gt;b._score-a._score);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const picked=[], used=new Set();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>for(const a of top){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const g=(a.genres&amp;&amp;a.genres[0])||"Indie"; const penalty=used.has(g)?0.08:0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if(picked.length&lt;10 &amp;&amp; a._score-penalty&gt;0.55){picked.push(a); used.add(g);}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return picked;</p>
-<p class="p1">}</p>
-<p class="p1">/* ===== UI glue ===== */</p>
-<p class="p1">const inputEl=document.getElementById("inputBox");</p>
-<p class="p1">const addBtn=document.getElementById("addBtn");</p>
-<p class="p1">const analyzeBtn=document.getElementById("analyzeBtn");</p>
-<p class="p1">const chipsEl=document.getElementById("chips");</p>
-<p class="p1">const profileBars=document.getElementById("profileBars");</p>
-<p class="p1">const abilitiesEl=document.getElementById("abilities");</p>
-<p class="p1">const recsEl=document.getElementById("recs");</p>
-<p class="p1">const personalityEl=document.getElementById("personality");</p>
-<p class="p1">const countBadge=document.getElementById("countBadge");</p>
-<p class="p1">const statusEl=document.getElementById("status");</p>
-<p class="p1">const onlineToggle=document.getElementById("onlineToggle");</p>
-<p class="p1">const motionToggle=document.getElementById("motionToggle");</p>
-<p class="p1">const artistsEl=document.getElementById("artists");</p>
-<p class="p2"><br></p>
-<p class="p1">let tokens=[]; let openCatalogCache=null;</p>
-<p class="p2"><br></p>
-<p class="p1">inputEl.addEventListener("keydown",e=&gt;{ if(e.key==="Enter"||e.key===","){e.preventDefault(); addToken(inputEl.value); inputEl.value=""; }});</p>
-<p class="p1">addBtn.addEventListener("click",()=&gt;{addToken(inputEl.value); inputEl.value="";});</p>
-<p class="p1">analyzeBtn.addEventListener("click",runAnalysis);</p>
-<p class="p1">motionToggle?.addEventListener("change",()=&gt;{document.body.classList.toggle("no-motion",!motionToggle.checked)});</p>
-<p class="p1">/* マウス追従 */</p>
-<p class="p1">window.addEventListener("mousemove",e=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(document.body.classList.contains("no-motion")) return;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const x=(e.clientX-window.innerWidth/2), y=(e.clientY-window.innerHeight/2);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.documentElement.style.setProperty('--mx', x+'px');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.documentElement.style.setProperty('--my', y+'px');</p>
-<p class="p1">});</p>
-<p class="p1">/* スクロール出現 */</p>
-<p class="p1">const io=new IntersectionObserver(es=&gt;es.forEach(ent=&gt;{ if(ent.isIntersecting){ent.target.classList.add('show'); io.unobserve(ent.target);} }),{threshold:.12});</p>
-<p class="p1">document.querySelectorAll('.reveal').forEach(el=&gt;io.observe(el));</p>
-<p class="p2"><br></p>
-<p class="p1">function addToken(t){t=t.trim(); if(!t) return; if(tokens.length&gt;=10) return; tokens.push(t); renderChips();}</p>
-<p class="p1">function removeToken(i){tokens.splice(i,1); renderChips();}</p>
-<p class="p1">function renderChips(){ chipsEl.innerHTML=tokens.map((t,i)=&gt;`&lt;span class="chip"&gt;${escapeHtml(t)} &lt;a style="cursor:pointer" onclick="removeToken(${i})"&gt;✕&lt;/a&gt;&lt;/span&gt;`).join(""); countBadge.textContent=`${tokens.length} / 10`; }</p>
-<p class="p1">function escapeHtml(s){return s.replace(/[&amp;&lt;&gt;"]/g,c=&gt;({'&amp;':'&amp;amp;','&lt;':'&amp;lt;','&gt;':'&amp;gt;','"':'&amp;quot;'}[c]));}</p>
-<p class="p2"><br></p>
-<p class="p1">async function runAnalysis(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(tokens.length===0) addToken("Electronic");</p>
-<p class="p1"><span class="Apple-converted-space">  </span>statusEl.textContent = onlineToggle.checked ? "Fetching open catalog…" : "Using local model";</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const userVec=profileFromInputs(tokens);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawProfile(userVec); drawAbilities(userVec);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const type=detectType(userVec);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>personalityEl.innerHTML = `&lt;div class="card reveal show"&gt;&lt;strong&gt;${type}&lt;/strong&gt;&lt;div class="small"&gt;${todayAdvice(type)}&lt;/div&gt;&lt;/div&gt;`;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* Artist Spotlights（最大6件まで） */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>artistsEl.innerHTML = `&lt;div class="small"&gt;Loading artist photos…&lt;/div&gt;`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const spotlightTargets = tokens.slice(0,6);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const profiles = (await Promise.all(spotlightTargets.map(n=&gt;fetchArtistProfile(n).catch(()=&gt;null))))</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>.filter(Boolean);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(profiles.length){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>artistsEl.innerHTML = profiles.map(p=&gt;artistCard(p)).join("");</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}else{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>artistsEl.innerHTML = `&lt;div class="small"&gt;No artist profiles were found for your inputs.&lt;/div&gt;`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* Recommendations */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let catalog=[...LOCAL_SEED];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(onlineToggle.checked){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>try{ openCatalogCache=await buildOpenCatalog(tokens);</p>
-<p class="p1"><span class="Apple-converted-space">         </span>catalog=openCatalogCache.length?openCatalogCache:LOCAL_SEED;</p>
-<p class="p1"><span class="Apple-converted-space">         </span>statusEl.textContent=`Catalog: ${catalog.length} artists from the web`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}catch{ statusEl.textContent="Online fetch failed. Fallback to local seed."; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}else{ statusEl.textContent=`Catalog: ${catalog.length} (local)`; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const have=new Set(tokens.map(t=&gt;t.toLowerCase()));</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const recs=recommend(userVec,have,catalog);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>drawRecs(recs);</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function drawProfile(v){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const keys=[["energy","エネルギー"],["sophistication","洗練"],["groove","グルーヴ"],["structure","構築力"],["experiment","実験性"],["urban","都市的温度"],["global","越境性"]];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>profileBars.innerHTML=keys.map(([k,ja])=&gt;bar(ja,Math.round((v[k]||0)*100))).join("");</p>
-<p class="p1"><span class="Apple-converted-space">  </span>requestAnimationFrame(()=&gt;document.querySelectorAll('.fill').forEach(el=&gt;{el.style.width=el.getAttribute('data-w');}));</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const counts={}; tokens.forEach(t=&gt;{const g=mapGenre(t); counts[g]=(counts[g]||0)+1;});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>genreDist.innerHTML=Object.entries(counts).sort((a,b)=&gt;b[1]-a[1]).map(([k,n])=&gt;`${k}: ${n}`).join(" / ")||"—";</p>
-<p class="p1">}</p>
-<p class="p1">function bar(label,percent){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return `&lt;div class="kpi"&gt;&lt;div&gt;${label}&lt;/div&gt;&lt;div class="badge"&gt;${percent}%&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="bar"&gt;&lt;div class="fill" data-w="${percent}%"&gt;&lt;/div&gt;&lt;/div&gt;`;</p>
-<p class="p1">}</p>
-<p class="p1">function drawAbilities(v){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const abs=toAbilities(v);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>abilitiesEl.innerHTML=abs.map(a=&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>`&lt;div class="kpi"&gt;&lt;div&gt;${a.label}&lt;/div&gt;&lt;div class="badge"&gt;${Math.round(a.score*100)}%&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">     </span>&lt;div class="bar"&gt;&lt;div class="fill" data-w="${Math.round(a.score*100)}%"&gt;&lt;/div&gt;&lt;/div&gt;`</p>
-<p class="p1"><span class="Apple-converted-space">  </span>).join("");</p>
-<p class="p1"><span class="Apple-converted-space">  </span>requestAnimationFrame(()=&gt;document.querySelectorAll('#abilities .fill').forEach(el=&gt;{el.style.width=el.getAttribute('data-w');}));</p>
-<p class="p1">}</p>
-<p class="p1">function drawRecs(recs){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>recsEl.innerHTML=recs.map(r=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const g=(r.genres&amp;&amp;r.genres.length)?`&lt;span class="badge" style="margin-left:6px"&gt;${r.genres.join(" / ")}&lt;/span&gt;`:"";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>return `&lt;div class="card reveal artistCard"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;img class="artistImg" src="https://picsum.photos/seed/${encodeURIComponent(r.name)}/112/112" alt="" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div&gt;&lt;strong&gt;${escapeHtml(r.name)}&lt;/strong&gt;${g}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="small" style="margin-top:6px"&gt;open-web:</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;a class="link" target="_blank" href="https://music.apple.com/search?term=${encodeURIComponent(r.name)}"&gt;Apple&lt;/a&gt; ·</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;a class="link" target="_blank" href="https://musicbrainz.org/search?query=${encodeURIComponent(r.name)}&amp;type=artist&amp;method=indexed"&gt;MB&lt;/a&gt; ·</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;a class="link" target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(r.name+' music')}"&gt;YouTube&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}).join("");</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll('#recs .reveal').forEach(el=&gt;io.observe(el));</p>
-<p class="p1">}</p>
-<p class="p1">function artistCard(p){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const img = p.image || `https://picsum.photos/seed/${encodeURIComponent(p.name)}/112/112`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const one = (p.summary &amp;&amp; p.summary.trim().length&gt;0) ? p.summary : "No summary available. Explore their catalog.";</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const link = p.url || `https://www.google.com/search?q=${encodeURIComponent(p.name+' artist')}`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return `&lt;div class="card artistCard"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;img class="artistImg" src="${img}" alt="${escapeHtml(p.name)}" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;strong&gt;${escapeHtml(p.name)}&lt;/strong&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="small" style="margin-top:4px"&gt;${escapeHtml(one)}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="small" style="margin-top:6px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;a class="link" target="_blank" href="${link}"&gt;Learn more&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;`;</p>
-<p class="p1">}</p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
-</body>
-</html>
+{\rtf1\ansi\ansicpg932\cocoartf2865
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!doctype html>\
+<html lang="ja">\
+<head>\
+<meta charset="utf-8" />\
+<meta name="viewport" content="width=device-width,initial-scale=1" />\
+<title>MusicLens \'97 Open Catalog + Motion + Artist Spotlight</title>\
+<style>\
+:root\{\
+  --accent:#ffcc33; --accent-2:#ff8800; --glow:rgba(255,180,60,.45);\
+  --txt:#eef2ff; --muted:#a9b2c7; --bg1:#0e1018; --bg2:#15192a;\
+  --mx:0px; --my:0px;\
+\}\
+*\{box-sizing:border-box\}\
+body\{\
+  margin:0;color:var(--txt);\
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",Roboto,Segoe UI,sans-serif;\
+  background:\
+    radial-gradient(1200px 600px at 10% -10%, #ffd96622, transparent),\
+    radial-gradient(900px 600px at 90% 10%, #ff8a0022, transparent),\
+    linear-gradient(180deg,var(--bg1),var(--bg2));\
+  overflow-x:hidden;\
+\}\
+/* \uc0\u32972 \u26223 \u12514 \u12540 \u12471 \u12519 \u12531  */\
+.bg\{position:fixed;inset:-10% -10% -10% -10%;z-index:-1;pointer-events:none;filter:blur(40px) saturate(130%)\}\
+.bg::before,.bg::after\{content:"";position:absolute;border-radius:50%;width:50vw;height:50vw;opacity:.55;mix-blend-mode:screen;\
+  background:radial-gradient(circle at 30% 30%, #ffe07a, transparent 60%), radial-gradient(circle at 70% 70%, #ff8a00, transparent 60%);\
+  transform:translate3d(calc(var(--mx)*.03),calc(var(--my)*.03),0)\}\
+.bg::before\{left:-8vw;top:-6vw;animation:float1 18s ease-in-out infinite alternate\}\
+.bg::after\{right:-8vw;bottom:-10vw;animation:float2 22s ease-in-out infinite alternate\}\
+@keyframes float1\{to\{transform:translate3d(2vw,1vh,0) scale(1.05)\}\}\
+@keyframes float2\{to\{transform:translate3d(-2vw,-2vh,0) scale(1.07)\}\}\
+.container\{max-width:1100px;margin:34px auto;padding:0 18px\}\
+/* \uc0\u12497 \u12493 \u12523  */\
+.panel\{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));\
+  border:1px solid rgba(255,255,255,.18);border-radius:22px;padding:18px;\
+  backdrop-filter:saturate(180%) blur(18px);box-shadow:0 12px 36px rgba(0,0,0,.35), inset 0 1px rgba(255,255,255,.25);\
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease\}\
+.panel:hover\{transform:translateY(-2px);border-color:rgba(255,200,80,.55);box-shadow:0 18px 44px rgba(255,170,40,.25), inset 0 1px rgba(255,255,255,.35)\}\
+.reveal\{opacity:0;transform:translateY(10px);transition:opacity .5s ease, transform .5s ease\}\
+.reveal.show\{opacity:1;transform:none\}\
+.subtitle\{margin:0 0 12px;color:var(--muted);font-size:13px\}\
+label\{display:block;margin:.5rem 0 .4rem;font-weight:700\}\
+/* \uc0\u12525 \u12468  */\
+.logoWrap\{display:flex;justify-content:center;margin:4px 0 12px\}\
+.logo\{\
+  font-weight:900;font-size:34px;letter-spacing:1.2px;line-height:1;\
+  background:linear-gradient(90deg,#fff3b0,#ffd166,#ff9f1c);\
+  -webkit-background-clip:text;background-clip:text;color:transparent;\
+  text-shadow:0 6px 40px rgba(255,200,80,.25);\
+  filter:drop-shadow(0 4px 14px rgba(255,170,40,.25));\
+\}\
+/* \uc0\u20837 \u21147 \u12539 \u12508 \u12479 \u12531  */\
+input[type=text]\{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.2);\
+  background:rgba(255,255,255,.08);color:#fff;outline:none;transition:border-color .2s, box-shadow .2s\}\
+input[type=text]:focus\{border-color:rgba(255,200,80,.6);box-shadow:0 0 0 4px rgba(255,200,80,.12)\}\
+button\{appearance:none;border:none;border-radius:14px;padding:10px 16px;color:white;font-weight:800;cursor:pointer;position:relative;overflow:hidden;\
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 0 22px var(--glow);\
+  transition:transform .15s, filter .2s, box-shadow .2s\}\
+button:hover\{transform:translateY(-1px);filter:brightness(1.06);box-shadow:0 0 28px var(--glow)\}\
+button::after\{content:"";position:absolute;inset:-100% -40% -100% -40%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.5),transparent);\
+  transform:translateX(-60%) skewX(-15deg);animation:sheen 3.6s linear infinite;pointer-events:none\}\
+@keyframes sheen\{to\{transform:translateX(60%) skewX(-15deg)\}\}\
+.chips\{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0\}\
+.chip\{background:rgba(255,255,255,.1);border-radius:999px;padding:6px 10px;border:1px solid rgba(255,255,255,.18);\
+  transition:transform .12s,border-color .2s,box-shadow .2s\}\
+.chip:hover\{transform:scale(1.04);border-color:rgba(255,200,80,.55);box-shadow:0 0 16px rgba(255,190,70,.25)\}\
+.row\{display:flex;gap:16px;flex-wrap:wrap\}\
+.col\{flex:1 1 340px;min-width:300px\}\
+.section-title\{font-size:14px;font-weight:800;margin-bottom:8px;color:#ffd36b\}\
+.kpi\{display:grid;grid-template-columns:1fr auto;gap:6px;margin:6px 0\}\
+.bar\{height:10px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden\}\
+.fill\{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 0 18px var(--glow) inset;width:0%\}\
+.badge\{background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px;font-size:12px\}\
+.card\{background:rgba(255,255,255,.08);border-radius:16px;padding:12px;border:1px solid rgba(255,255,255,.16);\
+  transition:transform .2s, box-shadow .2s, border-color .2s\}\
+.card:hover\{transform:translateY(-2px);border-color:rgba(255,200,80,.5);box-shadow:0 10px 26px rgba(255,180,70,.2)\}\
+a.link\{color:#ffe28a;text-decoration:underline;transition:color .15s\}\
+a.link:hover\{color:#fff0b5\}\
+.headerRow\{display:flex;gap:10px;align-items:center;flex-wrap:wrap\}\
+.small\{color:var(--muted);font-size:12px\}\
+.badge.pill\{background:rgba(255,200,80,.18)\}\
+.footer\{color:var(--muted);text-align:center;font-size:12px;margin:16px 0 6px\}\
+.artistGrid\{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px\}\
+.artistCard\{display:flex;gap:10px;align-items:flex-start\}\
+.artistImg\{width:56px;height:56px;flex:0 0 56px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,.22);\
+  box-shadow:0 6px 14px rgba(0,0,0,.25)\}\
+.no-motion .bg::before,.no-motion .bg::after, .no-motion button::after\{animation:none\}\
+.no-motion .panel,.no-motion .chip,.no-motion .card, .no-motion button\{transition:none\}\
+</style>\
+</head>\
+<body>\
+<div class="bg"></div>\
+\
+<div class="container">\
+  <!-- \uc0\u12504 \u12483 \u12480 \u12540 \u65306 \u20013 \u22830 \u12525 \u12468  -->\
+  <div class="panel reveal">\
+    <div class="logoWrap"><div class="logo">MusicLens</div></div>\
+    <p class="subtitle" style="text-align:center">Enter up to 10 artists/genres \uc0\u8594  analyze traits \u8594  see Artist Spotlights with photos \u8594  get open-web recommendations.</p>\
+    <div class="headerRow" style="justify-content:center;gap:14px">\
+      <label class="small" style="display:inline-flex;gap:8px;align-items:center">\
+        <input id="onlineToggle" type="checkbox" checked/> Online Mode\
+      </label>\
+      <label class="small" style="display:inline-flex;gap:8px;align-items:center">\
+        <input id="motionToggle" type="checkbox" checked/> Motion\
+      </label>\
+      <span id="status" class="small"></span>\
+    </div>\
+  </div>\
+\
+  <!-- \uc0\u20837 \u21147  -->\
+  <div class="panel reveal">\
+    <label for="inputBox">Artists / Genres</label>\
+    <input id="inputBox" type="text" placeholder="e.g. Daft Punk, FKJ, Tom Misch, BLACKPINK, Indie, House" />\
+    <div class="headerRow" style="margin-top:8px">\
+      <button id="addBtn">Add</button>\
+      <button id="analyzeBtn">Analyze</button>\
+      <span class="badge" id="countBadge">0 / 10</span>\
+    </div>\
+    <div class="chips" id="chips"></div>\
+  </div>\
+\
+  <!-- \uc0\u12503 \u12525 \u12501 \u12449 \u12452 \u12523  -->\
+  <div class="row">\
+    <div class="col panel reveal">\
+      <div class="section-title">Your Music Vector</div>\
+      <div id="profileBars"></div>\
+      <div class="card" style="margin-top:10px">\
+        <div class="section-title">Genre Distribution</div>\
+        <div id="genreDist" class="small"></div>\
+      </div>\
+    </div>\
+    <div class="col panel reveal">\
+      <div class="section-title">Personality & Today</div>\
+      <div id="personality"></div>\
+    </div>\
+  </div>\
+\
+  <div class="panel reveal">\
+    <div class="section-title">Work Strengths</div>\
+    <div id="abilities"></div>\
+  </div>\
+\
+  <!-- \uc0\u9733  \u26032 \u27231 \u33021 \u65306 Artist Spotlights -->\
+  <div class="panel reveal">\
+    <div class="section-title">Artist Spotlights (photo + one-liner)</div>\
+    <div id="artists" class="artistGrid"></div>\
+  </div>\
+\
+  <div class="panel reveal">\
+    <div class="section-title">Open-Web Recommendations</div>\
+    <div id="recs" class="artistGrid"></div>\
+  </div>\
+\
+  <p class="footer">Sources: iTunes Search API / MusicBrainz / Wikipedia REST. Fallback to local seed. Motion respects \'93prefers-reduced-motion\'94.</p>\
+</div>\
+\
+<script>\
+/* ===== Utils ===== */\
+const clamp=n=>Math.max(0,Math.min(1,n));\
+function avg(objs)\{const k=Object.keys(objs[0]||\{\}),o=\{\};for(const x of k)o[x]=objs.reduce((s,v)=>s+v[x],0)/objs.length;return o;\}\
+function cosine(a,b)\{const K=Object.keys(a),d=K.reduce((s,k)=>s+a[k]*b[k],0),na=Math.sqrt(K.reduce((s,k)=>s+a[k]*a[k],0)),nb=Math.sqrt(K.reduce((s,k)=>s+b[k]*b[k],0));return d/(na*nb||1);\}\
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));\
+/* ===== Feature Model ===== */\
+const BASE_GENRE=\{\
+ "Electronic":\{energy:.7,sophistication:.7,groove:.6,structure:.8,experiment:.55,urban:.35,global:.55\},\
+ "R&B":\{energy:.5,sophistication:.6,groove:.8,structure:.5,experiment:.45,urban:.8,global:.45\},\
+ "Soul":\{energy:.55,sophistication:.6,groove:.85,structure:.5,experiment:.45,urban:.8,global:.45\},\
+ "Funk":\{energy:.7,sophistication:.55,groove:.9,structure:.45,experiment:.4,urban:.75,global:.5\},\
+ "Indie":\{energy:.5,sophistication:.5,groove:.55,structure:.55,experiment:.7,urban:.45,global:.45\},\
+ "Alternative":\{energy:.55,sophistication:.5,groove:.55,structure:.55,experiment:.7,urban:.45,global:.45\},\
+ "Hip-hop":\{energy:.7,sophistication:.55,groove:.85,structure:.5,experiment:.6,urban:.8,global:.6\},\
+ "K-Pop":\{energy:.85,sophistication:.8,groove:.65,structure:.9,experiment:.55,urban:.65,global:.95\},\
+ "World":\{energy:.7,sophistication:.45,groove:.85,structure:.45,experiment:.6,urban:.65,global:.9\},\
+ "Jazz":\{energy:.45,sophistication:.85,groove:.8,structure:.6,experiment:.6,urban:.7,global:.6\},\
+ "Pop":\{energy:.7,sophistication:.6,groove:.65,structure:.75,experiment:.45,urban:.65,global:.7\},\
+ "Rock":\{energy:.75,sophistication:.5,groove:.55,structure:.6,experiment:.55,urban:.5,global:.55\},\
+ "House":\{energy:.75,sophistication:.65,groove:.85,structure:.75,experiment:.55,urban:.6,global:.7\}\
+\};\
+const GENRE_MAP=[\
+  [/hip.?hop|rap/i,"Hip-hop"],[/r.?&.?b|soul/i,"R&B"],[/electro|edm|dance|techno|house|club/i,"Electronic"],\
+  [/k-?pop/i,"K-Pop"],[/world|afro|latin|reggae|balkan/i,"World"],[/jazz/i,"Jazz"],[/indie|alt/i,"Indie"],\
+  [/funk|boogie|disco/i,"Funk"],[/pop/i,"Pop"],[/rock|metal|punk/i,"Rock"],[/house|garage|breakbeat/i,"House"]\
+];\
+const LOCAL_SEED=[\
+  \{name:"Daft Punk",genres:["Electronic"]\},\{name:"FKJ",genres:["R&B","Electronic"]\},\
+  \{name:"Tom Misch",genres:["R&B","Indie"]\},\{name:"Peggy Gou",genres:["Electronic"]\},\
+  \{name:"Vulfpeck",genres:["Funk"]\},\{name:"Bonobo",genres:["Electronic"]\},\
+  \{name:"Kaytranada",genres:["R&B","Electronic"]\},\{name:"Parcels",genres:["Funk","Indie"]\}\
+];\
+/* ===== Open Web Adapters ===== */\
+async function fetchITunesArtists(term,limit=10)\{\
+  const url=`https://itunes.apple.com/search?term=$\{encodeURIComponent(term)\}&entity=musicArtist&limit=$\{limit\}`;\
+  const r=await fetch(url); const j=await r.json();\
+  return (j.results||[]).map(x=>(\{name:x.artistName,genres:[mapGenre(x.primaryGenreName)]\}));\
+\}\
+async function fetchMBArtists(term,limit=8)\{\
+  const url=`https://musicbrainz.org/ws/2/artist?query=$\{encodeURIComponent(term)\}&limit=$\{limit\}&fmt=json`;\
+  const r=await fetch(url); if(!r.ok) return [];\
+  const j=await r.json(); const base=(j.artists||[]).map(a=>(\{name:a.name,id:a.id\}));\
+  const out=[];\
+  for(const a of base)\{\
+    try\{const t=await fetch(`https://musicbrainz.org/ws/2/artist/$\{a.id\}?inc=tags&fmt=json`);\
+      const tj=await t.json(); const tags=(tj.tags||[]).map(z=>z.name);\
+      out.push(\{name:a.name,genres:tagsToGenres(tags)\}); await sleep(110);\
+    \}catch\{ out.push(\{name:a.name,genres:[]\}); \}\
+  \}\
+  return out;\
+\}\
+function tagsToGenres(tags)\{const txt=(tags||[]).join(" ").toLowerCase(); for(const [re,g] of GENRE_MAP)\{if(re.test(txt)) return [g];\} return [];\}\
+function mapGenre(s)\{if(!s) return "Indie"; for(const [re,g] of GENRE_MAP)\{if(re.test(String(s))) return g;\} return "Indie";\}\
+async function buildOpenCatalog(keys)\{\
+  const map=new Map();\
+  const add=arr=>arr.forEach(a=>\{const k=a.name.toLowerCase(); map.set(k,\{name:a.name,genres:(a.genres&&a.genres.length?a.genres:["Indie"])\})\});\
+  for(const k of keys)\{ add(await fetchITunesArtists(k,12).catch(()=>[])); add(await fetchMBArtists(k,8).catch(()=>[])); \}\
+  if(map.size<12)\{ add(await fetchITunesArtists("electronic",10).catch(()=>[])); add(await fetchITunesArtists("funk",10).catch(()=>[])); \}\
+  return [...map.values()];\
+\}\
+/* ===== Artist Spotlight fetchers ===== */\
+/* Wikipedia summary + thumbnail\uc0\u65288 \u20778 \u20808 \u65289  */\
+async function fetchWikiProfile(name)\{\
+  const api=`https://en.wikipedia.org/api/rest_v1/page/summary/$\{encodeURIComponent(name)\}`;\
+  const r=await fetch(api); if(!r.ok) return null;\
+  const j=await r.json();\
+  const img=j.thumbnail?.source || null;\
+  const summary=j.extract ? j.extract.replace(/\\s+/g,' ').slice(0,140)+'\'85' : '';\
+  const url=j.content_urls?.desktop?.page || (`https://en.wikipedia.org/wiki/$\{encodeURIComponent(name)\}`);\
+  return \{name,image:img,summary,url,source:"wikipedia"\};\
+\}\
+/* iTunes: album artwork\uc0\u65288 \u12469 \u12512 \u12493 \u20195 \u26367 \u65289  */\
+async function fetchITunesArtwork(name)\{\
+  const url=`https://itunes.apple.com/search?term=$\{encodeURIComponent(name)\}&entity=album&limit=1`;\
+  const r=await fetch(url); if(!r.ok) return null;\
+  const j=await r.json(); const art=j.results&&j.results[0]?.artworkUrl100;\
+  if(!art) return null;\
+  const img=art.replace('100x100','256x256');\
+  return \{name,image:img,summary:"",url:j.results[0]?.collectionViewUrl||"",source:"itunes"\};\
+\}\
+/* \uc0\u12414 \u12392 \u12417 \u65306 \u26368 \u21021 \u12395 \u30011 \u20687 \u12364 \u21462 \u12428 \u12383 \u12418 \u12398 \u12434 \u25505 \u29992  */\
+async function fetchArtistProfile(name)\{\
+  const wiki=await fetchWikiProfile(name).catch(()=>null);\
+  if(wiki && wiki.image) return wiki;\
+  const it=await fetchITunesArtwork(name).catch(()=>null);\
+  return wiki || it; // \uc0\u30011 \u20687 \u12364 \u12394 \u12367 \u12390 \u12418 \u31777 \u26131 \u32057 \u20171 \u12392 \u12375 \u12390 wiki\u12384 \u12369 \u36820 \u12377 \
+\}\
+/* ===== Profiling / Personality ===== */\
+function toVec(gs)\{const v=gs.map(g=>BASE_GENRE[g]||BASE_GENRE.Indie); return avg(v);\}\
+function profileFromInputs(tokens)\{return toVec(tokens.map(t=>mapGenre(t)));\}\
+function toAbilities(v)\{\
+  return [\
+    \{label:"\uc0\u27083 \u36896 \u21270 \u12539 \u24773 \u22577 \u35373 \u35336 \u21147 ",score:clamp(0.6*v.structure+0.4*v.sophistication)\},\
+    \{label:"\uc0\u20849 \u24863 \u12539 \u38306 \u20418 \u24615 \u35373 \u35336 \u21147 ",score:clamp(0.55*v.urban+0.35*v.groove)\},\
+    \{label:"\uc0\u23455 \u39443 \u12539 \u21109 \u36896 \u25512 \u36914 \u21147 ",score:clamp(0.7*v.experiment+0.2*v.global)\},\
+    \{label:"\uc0\u25512 \u36914 \u12539 \u34892 \u21205 \u12456 \u12493 \u12523 \u12462 \u12540 ",score:v.energy\},\
+    \{label:"\uc0\u36234 \u22659 \u12539 \u22810 \u25991 \u21270 \u32113 \u21512 \u21147 ",score:clamp(0.7*v.global+0.2*v.experiment)\}\
+  ];\
+\}\
+function detectType(v)\{\
+  if(v.experiment>0.65&&v.global>0.6) return "Curious Innovator";\
+  if(v.groove>0.7&&v.urban>0.6) return "Empathic Connector";\
+  if(v.structure>0.7&&v.sophistication>0.6) return "System Architect";\
+  if(v.energy>0.7&&v.groove>0.6) return "Dynamic Performer";\
+  return "Serene Observer";\
+\}\
+function todayAdvice(t)\{\
+  switch(t)\{\
+    case "Curious Innovator":return "\uc0\u20170 \u26085 \u12399 \u26410 \u30693 \u12398 \u38899 \u12420 \u26223 \u33394 \u12395 \u35302 \u12428 \u12390 \u12415 \u12424 \u12358 \u12290 \u23567 \u12373 \u12394 \u22238 \u12426 \u36947 \u12364 \u30330 \u24819 \u12398 \u31278 \u12395 \u12290 ";\
+    case "Empathic Connector":return "\uc0\u12506 \u12540 \u12473 \u12434 \u33853 \u12392 \u12375 \u12390 \u28201 \u12363 \u12394 \u20250 \u35441 \u12434 \u12290 \u24515 \u12398 \u12522 \u12474 \u12512 \u12364 \u25972 \u12358 \u26085 \u12290 ";\
+    case "System Architect":return "\uc0\u25972 \u29702 \u12539 \u35373 \u35336 \u12395 \u26368 \u36969 \u12290 \u26426 \u12420 \u12479 \u12473 \u12463 \u12434 \u25972 \u12360 \u12427 \u12392 \u27425 \u12398 \u19968 \u25163 \u12364 \u12463 \u12522 \u12450 \u12395 \u12290 ";\
+    case "Dynamic Performer":return "\uc0\u12414 \u12378 \u20307 \u12434 \u21205 \u12363 \u12375 \u12390 \u12473 \u12452 \u12483 \u12481 ON\u12290 \u21218 \u12356 \u12391 \u23567 \u12373 \u12394 \u21213 \u12385 \u12434 \u31309 \u12418 \u12358 \u12290 ";\
+    default:return "\uc0\u38745 \u12369 \u12373 \u12434 \u21619 \u26041 \u12395 \u12290 \u12362 \u27671 \u12395 \u20837 \u12426 \u12398 \u26354 \u12434 \u32972 \u26223 \u12395 \u12522 \u12474 \u12512 \u12434 \u25972 \u12360 \u12424 \u12358 \u12290 ";\
+  \}\
+\}\
+/* ===== Recommendation ===== */\
+function vecFromArtist(a)\{return toVec(a.genres&&a.genres.length?a.genres:["Indie"]);\}\
+function recommend(userVec, have, catalog)\{\
+  const pool=catalog.filter(a=>!have.has(a.name.toLowerCase()));\
+  pool.forEach(a=>\{\
+    const v=vecFromArtist(a);\
+    const sim=cosine(userVec,v);\
+    const growth=0.3*Math.max(0,v.experiment-userVec.experiment)+0.2*Math.max(0,v.global-userVec.global)+0.2*Math.max(0,v.urban-userVec.urban);\
+    a._score=sim+growth;\
+  \});\
+  const top=pool.sort((a,b)=>b._score-a._score);\
+  const picked=[], used=new Set();\
+  for(const a of top)\{\
+    const g=(a.genres&&a.genres[0])||"Indie"; const penalty=used.has(g)?0.08:0;\
+    if(picked.length<10 && a._score-penalty>0.55)\{picked.push(a); used.add(g);\}\
+  \}\
+  return picked;\
+\}\
+/* ===== UI glue ===== */\
+const inputEl=document.getElementById("inputBox");\
+const addBtn=document.getElementById("addBtn");\
+const analyzeBtn=document.getElementById("analyzeBtn");\
+const chipsEl=document.getElementById("chips");\
+const profileBars=document.getElementById("profileBars");\
+const abilitiesEl=document.getElementById("abilities");\
+const recsEl=document.getElementById("recs");\
+const personalityEl=document.getElementById("personality");\
+const countBadge=document.getElementById("countBadge");\
+const statusEl=document.getElementById("status");\
+const onlineToggle=document.getElementById("onlineToggle");\
+const motionToggle=document.getElementById("motionToggle");\
+const artistsEl=document.getElementById("artists");\
+\
+let tokens=[]; let openCatalogCache=null;\
+\
+inputEl.addEventListener("keydown",e=>\{ if(e.key==="Enter"||e.key===",")\{e.preventDefault(); addToken(inputEl.value); inputEl.value=""; \}\});\
+addBtn.addEventListener("click",()=>\{addToken(inputEl.value); inputEl.value="";\});\
+analyzeBtn.addEventListener("click",runAnalysis);\
+motionToggle?.addEventListener("change",()=>\{document.body.classList.toggle("no-motion",!motionToggle.checked)\});\
+/* \uc0\u12510 \u12454 \u12473 \u36861 \u24467  */\
+window.addEventListener("mousemove",e=>\{\
+  if(document.body.classList.contains("no-motion")) return;\
+  const x=(e.clientX-window.innerWidth/2), y=(e.clientY-window.innerHeight/2);\
+  document.documentElement.style.setProperty('--mx', x+'px');\
+  document.documentElement.style.setProperty('--my', y+'px');\
+\});\
+/* \uc0\u12473 \u12463 \u12525 \u12540 \u12523 \u20986 \u29694  */\
+const io=new IntersectionObserver(es=>es.forEach(ent=>\{ if(ent.isIntersecting)\{ent.target.classList.add('show'); io.unobserve(ent.target);\} \}),\{threshold:.12\});\
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));\
+\
+function addToken(t)\{t=t.trim(); if(!t) return; if(tokens.length>=10) return; tokens.push(t); renderChips();\}\
+function removeToken(i)\{tokens.splice(i,1); renderChips();\}\
+function renderChips()\{ chipsEl.innerHTML=tokens.map((t,i)=>`<span class="chip">$\{escapeHtml(t)\} <a style="cursor:pointer" onclick="removeToken($\{i\})">\uc0\u10005 </a></span>`).join(""); countBadge.textContent=`$\{tokens.length\} / 10`; \}\
+function escapeHtml(s)\{return s.replace(/[&<>"]/g,c=>(\{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'\}[c]));\}\
+\
+async function runAnalysis()\{\
+  if(tokens.length===0) addToken("Electronic");\
+  statusEl.textContent = onlineToggle.checked ? "Fetching open catalog\'85" : "Using local model";\
+\
+  const userVec=profileFromInputs(tokens);\
+  drawProfile(userVec); drawAbilities(userVec);\
+  const type=detectType(userVec);\
+  personalityEl.innerHTML = `<div class="card reveal show"><strong>$\{type\}</strong><div class="small">$\{todayAdvice(type)\}</div></div>`;\
+\
+  /* Artist Spotlights\uc0\u65288 \u26368 \u22823 6\u20214 \u12414 \u12391 \u65289  */\
+  artistsEl.innerHTML = `<div class="small">Loading artist photos\'85</div>`;\
+  const spotlightTargets = tokens.slice(0,6);\
+  const profiles = (await Promise.all(spotlightTargets.map(n=>fetchArtistProfile(n).catch(()=>null))))\
+                    .filter(Boolean);\
+  if(profiles.length)\{\
+    artistsEl.innerHTML = profiles.map(p=>artistCard(p)).join("");\
+  \}else\{\
+    artistsEl.innerHTML = `<div class="small">No artist profiles were found for your inputs.</div>`;\
+  \}\
+\
+  /* Recommendations */\
+  let catalog=[...LOCAL_SEED];\
+  if(onlineToggle.checked)\{\
+    try\{ openCatalogCache=await buildOpenCatalog(tokens);\
+         catalog=openCatalogCache.length?openCatalogCache:LOCAL_SEED;\
+         statusEl.textContent=`Catalog: $\{catalog.length\} artists from the web`;\
+    \}catch\{ statusEl.textContent="Online fetch failed. Fallback to local seed."; \}\
+  \}else\{ statusEl.textContent=`Catalog: $\{catalog.length\} (local)`; \}\
+  const have=new Set(tokens.map(t=>t.toLowerCase()));\
+  const recs=recommend(userVec,have,catalog);\
+  drawRecs(recs);\
+\}\
+\
+function drawProfile(v)\{\
+  const keys=[["energy","\uc0\u12456 \u12493 \u12523 \u12462 \u12540 "],["sophistication","\u27927 \u32244 "],["groove","\u12464 \u12523 \u12540 \u12532 "],["structure","\u27083 \u31689 \u21147 "],["experiment","\u23455 \u39443 \u24615 "],["urban","\u37117 \u24066 \u30340 \u28201 \u24230 "],["global","\u36234 \u22659 \u24615 "]];\
+  profileBars.innerHTML=keys.map(([k,ja])=>bar(ja,Math.round((v[k]||0)*100))).join("");\
+  requestAnimationFrame(()=>document.querySelectorAll('.fill').forEach(el=>\{el.style.width=el.getAttribute('data-w');\}));\
+  const counts=\{\}; tokens.forEach(t=>\{const g=mapGenre(t); counts[g]=(counts[g]||0)+1;\});\
+  genreDist.innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`$\{k\}: $\{n\}`).join(" / ")||"\'97";\
+\}\
+function bar(label,percent)\{\
+  return `<div class="kpi"><div>$\{label\}</div><div class="badge">$\{percent\}%</div></div>\
+          <div class="bar"><div class="fill" data-w="$\{percent\}%"></div></div>`;\
+\}\
+function drawAbilities(v)\{\
+  const abs=toAbilities(v);\
+  abilitiesEl.innerHTML=abs.map(a=>\
+    `<div class="kpi"><div>$\{a.label\}</div><div class="badge">$\{Math.round(a.score*100)\}%</div></div>\
+     <div class="bar"><div class="fill" data-w="$\{Math.round(a.score*100)\}%"></div></div>`\
+  ).join("");\
+  requestAnimationFrame(()=>document.querySelectorAll('#abilities .fill').forEach(el=>\{el.style.width=el.getAttribute('data-w');\}));\
+\}\
+function drawRecs(recs)\{\
+  recsEl.innerHTML=recs.map(r=>\{\
+    const g=(r.genres&&r.genres.length)?`<span class="badge" style="margin-left:6px">$\{r.genres.join(" / ")\}</span>`:"";\
+    return `<div class="card reveal artistCard">\
+      <img class="artistImg" src="https://picsum.photos/seed/$\{encodeURIComponent(r.name)\}/112/112" alt="" />\
+      <div><strong>$\{escapeHtml(r.name)\}</strong>$\{g\}\
+        <div class="small" style="margin-top:6px">open-web:\
+          <a class="link" target="_blank" href="https://music.apple.com/search?term=$\{encodeURIComponent(r.name)\}">Apple</a> \'b7\
+          <a class="link" target="_blank" href="https://musicbrainz.org/search?query=$\{encodeURIComponent(r.name)\}&type=artist&method=indexed">MB</a> \'b7\
+          <a class="link" target="_blank" href="https://www.youtube.com/results?search_query=$\{encodeURIComponent(r.name+' music')\}">YouTube</a>\
+        </div></div></div>`;\
+  \}).join("");\
+  document.querySelectorAll('#recs .reveal').forEach(el=>io.observe(el));\
+\}\
+function artistCard(p)\{\
+  const img = p.image || `https://picsum.photos/seed/$\{encodeURIComponent(p.name)\}/112/112`;\
+  const one = (p.summary && p.summary.trim().length>0) ? p.summary : "No summary available. Explore their catalog.";\
+  const link = p.url || `https://www.google.com/search?q=$\{encodeURIComponent(p.name+' artist')\}`;\
+  return `<div class="card artistCard">\
+      <img class="artistImg" src="$\{img\}" alt="$\{escapeHtml(p.name)\}" />\
+      <div>\
+        <strong>$\{escapeHtml(p.name)\}</strong>\
+        <div class="small" style="margin-top:4px">$\{escapeHtml(one)\}</div>\
+        <div class="small" style="margin-top:6px">\
+          <a class="link" target="_blank" href="$\{link\}">Learn more</a>\
+        </div>\
+      </div>\
+    </div>`;\
+\}\
+</script>\
+</body>\
+</html>}
