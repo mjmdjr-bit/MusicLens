@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="ja">
-<<<<<<< Updated upstream
 
 <head>
   <meta charset="utf-8" />
@@ -16,12 +15,12 @@
       --muted: #a9b2c7;
       --glass: rgba(255, 255, 255, .18);
       --stroke: rgba(255, 255, 255, .22);
-      --aqua: #00d2ff;
       --cyan: #00ecff;
+      --aqua: #8ee7ff;
       --glow: 0 0 18px rgba(255, 180, 60, .45);
     }
 
-    /* Base */
+    /* base */
     * {
       box-sizing: border-box
     }
@@ -37,10 +36,9 @@
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", Roboto, Segoe UI, sans-serif;
       background: linear-gradient(180deg, var(--ink), var(--ink2));
       overflow-x: hidden;
-      position: relative;
+      position: relative
     }
 
-    /* Particles */
     #fx {
       position: fixed;
       inset: 0;
@@ -50,7 +48,7 @@
       display: block
     }
 
-    /* Hero */
+    /* hero */
     #title {
       position: relative;
       z-index: 1;
@@ -80,7 +78,7 @@
       background: linear-gradient(180deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .06));
       border: 1px solid rgba(255, 255, 255, .22);
       box-shadow: inset 0 1px rgba(255, 255, 255, .35), 0 18px 36px rgba(0, 0, 0, .25);
-      overflow: hidden;
+      overflow: hidden
     }
 
     .logo {
@@ -92,7 +90,7 @@
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      animation: logoFloat 6s ease-in-out infinite, logoShine 4.5s linear infinite;
+      animation: float 6s ease-in-out infinite, shine 4.5s linear infinite
     }
 
     .logoWrap::after {
@@ -104,8 +102,8 @@
       height: 340%;
       background: linear-gradient(120deg, transparent, rgba(255, 255, 255, .55), transparent);
       transform: rotate(18deg);
-      animation: glossSweep 6.8s ease-in-out infinite;
-      pointer-events: none;
+      animation: gloss 6.8s ease-in-out infinite;
+      pointer-events: none
     }
 
     .copy {
@@ -135,7 +133,7 @@
       opacity: .9
     }
 
-    @keyframes logoFloat {
+    @keyframes float {
 
       0%,
       100% {
@@ -147,7 +145,7 @@
       }
     }
 
-    @keyframes logoShine {
+    @keyframes shine {
       0% {
         background-position: 0% 50%
       }
@@ -157,7 +155,7 @@
       }
     }
 
-    @keyframes glossSweep {
+    @keyframes gloss {
       0% {
         transform: rotate(18deg) translateX(-140%);
         opacity: 0
@@ -183,7 +181,7 @@
       }
     }
 
-    /* App */
+    /* app */
     #app {
       position: relative;
       z-index: 1;
@@ -247,7 +245,7 @@
       font-size: 12px
     }
 
-    /* Input/Suggest */
+    /* inputs */
     input[type=text] {
       width: 100%;
       padding: 12px 14px;
@@ -311,7 +309,7 @@
       cursor: pointer
     }
 
-    /* KPI bar */
+    /* bars / insights */
     .kpi {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -342,7 +340,7 @@
       font-weight: 900
     }
 
-    /* Artist cards */
+    /* artist cards */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -377,7 +375,7 @@
       line-height: 1.4
     }
 
-    /* Map Canvas */
+    /* map canvas */
     .mapCanvas {
       height: 360px;
       border-radius: 14px;
@@ -391,7 +389,7 @@
       height: 100%
     }
 
-    /* Analyze progress */
+    /* progress */
     #progressWrap {
       display: none;
       margin-top: 10px
@@ -420,7 +418,7 @@
 <body>
   <canvas id="fx"></canvas>
 
-  <!-- Top -->
+  <!-- top -->
   <section id="title">
     <div class="hero">
       <div class="logoWrap">
@@ -432,7 +430,7 @@
     </div>
   </section>
 
-  <!-- App (Unified) -->
+  <!-- app -->
   <section id="app">
     <main class="container">
       <header class="header">
@@ -440,7 +438,7 @@
         <a href="#" id="backTop" class="small" style="text-decoration:none;color:#cfe2ff">← Back to Top</a>
       </header>
 
-      <!-- 入力 -->
+      <!-- inputs -->
       <section class="panel">
         <div class="section-title">Artists / Genres（アーティスト / ジャンル）</div>
         <div style="position:relative">
@@ -454,7 +452,6 @@
           <span class="badge" id="countBadge">0 / 20</span>
         </div>
         <div id="chips" class="chips"></div>
-        <!-- 進行表示 -->
         <div id="progressWrap">
           <div id="progbar">
             <div id="progfill"></div>
@@ -463,28 +460,28 @@
         </div>
       </section>
 
-      <!-- Artist Info（Vectorの上） -->
+      <!-- artist info -->
       <section class="panel">
         <div class="section-title">Artist Info（入力したアーティストの情報）</div>
         <div id="artistGrid" class="grid"></div>
         <div class="small" id="artistHint">※ 画像と要約は Wikipedia / iTunes から取得します。</div>
       </section>
 
-      <!-- Vector -->
+      <!-- vector -->
       <section class="panel">
         <div class="section-title">Your Music Vector（音楽嗜好ベクトル）</div>
         <div id="profileBars"></div>
         <div id="vectorInsight" class="insight" style="display:none"></div>
       </section>
 
-      <!-- Work Strengths -->
+      <!-- work -->
       <section class="panel">
         <div class="section-title">Work Strengths（仕事との関連分析）</div>
         <div id="abilities"></div>
         <div id="abilitiesInsight" class="insight" style="display:none"></div>
       </section>
 
-      <!-- Music Love（別枠） -->
+      <!-- love -->
       <section class="panel">
         <div class="section-title">Music Love（音楽愛）</div>
         <div style="text-align:center">
@@ -518,7 +515,7 @@
         </div>
       </section>
 
-      <!-- Genre Richness（別枠） -->
+      <!-- genre -->
       <section class="panel">
         <div class="section-title">Genre Richness（ユニークジャンル数）</div>
         <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center">
@@ -545,20 +542,20 @@
         </div>
       </section>
 
-      <!-- Personality -->
+      <!-- personality -->
       <section class="panel">
         <div class="section-title">Personality & Today</div>
         <div id="personality"></div>
       </section>
 
-      <!-- Map -->
+      <!-- map -->
       <section class="panel">
         <div class="section-title">Listening Map</div>
         <div class="mapCanvas"><canvas id="map"></canvas></div>
-        <div class="small" style="margin-top:6px">※ ゴールドの緯線・経線グリッドとポイントをCanvasで描画（外部画像非依存）。</div>
+        <div class="small" style="margin-top:6px">※ ゴールドの緯線・経線グリッドとポイントをCanvasで描画（外部依存なし）。</div>
       </section>
 
-      <!-- Recommendations -->
+      <!-- recs -->
       <section class="panel">
         <div class="section-title">Open-Web Recommendations（Spotifyなし・必ず表示）</div>
         <div id="recs" class="small">解析後に表示します。</div>
@@ -567,876 +564,114 @@
   </section>
 
   <script>
-    /* ===== Particles: always on ===== */
-    (function initParticles() {
-      const cvs = document.getElementById('fx');
-      const ctx = cvs.getContext('2d', { alpha: true });
+    /* particles */
+    (function () {
+      const cvs = document.getElementById('fx'); const ctx = cvs.getContext('2d', { alpha: true });
       let W = 0, H = 0, stars = [];
-      function size() { W = cvs.width = innerWidth; H = cvs.height = innerHeight; }
-      function make() { stars = [...Array(160)].map(() => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35, r: 1 + Math.random() * 2, h: 20 + Math.random() * 40, a: .12 + .28 * Math.random() })); }
-      function draw() {
-        ctx.clearRect(0, 0, W, H);
-        for (const s of stars) {
-          s.x += s.vx; s.y += s.vy; if (s.x < 0 || s.x > W) s.vx *= -1; if (s.y < 0 || s.y > H) s.vy *= -1;
-          const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 7);
-          g.addColorStop(0, `hsla(${40 + s.h},100%,60%,${s.a})`); g.addColorStop(1, 'transparent');
-          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 7, 0, Math.PI * 2); ctx.fill();
-        }
-        requestAnimationFrame(draw);
-      }
-      addEventListener('resize', () => { size(); make() });
-      size(); make(); requestAnimationFrame(draw);
+      function size() { W = cvs.width = innerWidth; H = cvs.height = innerHeight }
+      function make() { stars = [...Array(160)].map(() => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35, r: 1 + Math.random() * 2, h: 20 + Math.random() * 40, a: .12 + .28 * Math.random() })) }
+      function draw() { ctx.clearRect(0, 0, W, H); for (const s of stars) { s.x += s.vx; s.y += s.vy; if (s.x < 0 || s.x > W) s.vx *= -1; if (s.y < 0 || s.y > H) s.vy *= -1; const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 7); g.addColorStop(0, `hsla(${40 + s.h},100%,60%,${s.a})`); g.addColorStop(1, 'transparent'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 7, 0, Math.PI * 2); ctx.fill() } requestAnimationFrame(draw) }
+      addEventListener('resize', () => { size(); make() }); size(); make(); requestAnimationFrame(draw);
     })();
 
-    /* ===== Transition: Top <-> App ===== */
-    const topEl = document.getElementById('title');
-    const appEl = document.getElementById('app');
-    const startEl = document.getElementById('startBtn');
-    const backTop = document.getElementById('backTop');
+    /* transition */
+    const topEl = document.getElementById('title'); const appEl = document.getElementById('app'); const startEl = document.getElementById('startBtn'); const backTop = document.getElementById('backTop');
+    function showApp() { appEl.style.display = 'block'; requestAnimationFrame(() => appEl.classList.add('show')); topEl.style.display = 'none' }
+    function showTop() { appEl.classList.remove('show'); appEl.style.display = 'none'; topEl.style.display = 'grid' }
+    ;['click', 'pointerdown', 'touchstart', 'keydown'].forEach(ev => { startEl.addEventListener(ev, e => { if (ev === 'keydown' && !(e.key === 'Enter' || e.key === ' ')) return; e.preventDefault(); showApp() }, { passive: false }) });
+    backTop?.addEventListener('click', e => { e.preventDefault(); showTop() });
 
-    function showApp() {
-      appEl.style.display = 'block';
-      requestAnimationFrame(() => appEl.classList.add('show'));
-      topEl.style.display = 'none';
-    }
-    function showTop() {
-      appEl.classList.remove('show');
-      appEl.style.display = 'none';
-      topEl.style.display = 'grid';
-    }
-    ['click', 'pointerdown', 'touchstart', 'keydown'].forEach(ev => {
-      startEl.addEventListener(ev, (e) => { if (ev === 'keydown' && !(e.key === 'Enter' || e.key === ' ')) return; e.preventDefault(); showApp(); }, { passive: false });
-    });
-    backTop?.addEventListener('click', (e) => { e.preventDefault(); showTop(); });
-
-    /* ===== Inputs / Suggest / Persist ===== */
-    const inputBox = document.getElementById('inputBox');
-    const suggestions = document.getElementById('suggestions');
-    const chips = document.getElementById('chips'); const countBadge = document.getElementById('countBadge');
+    /* inputs & persist (20件) */
+    const inputBox = document.getElementById('inputBox'); const suggestions = document.getElementById('suggestions'); const chips = document.getElementById('chips'); const countBadge = document.getElementById('countBadge');
     const artistGrid = document.getElementById('artistGrid'); const artistHint = document.getElementById('artistHint');
-    let TOKENS = [];
-    function persist() { localStorage.setItem('ml_tokens', JSON.stringify(TOKENS)); }
-    function loadTokens() { try { const t = JSON.parse(localStorage.getItem('ml_tokens') || '[]'); if (Array.isArray(t)) TOKENS = t; } catch { } }
-    function renderChips() { chips.innerHTML = TOKENS.map((t, i) => `<span class="chip">${esc(t)} <a style="cursor:pointer" onclick="removeToken(${i})">✕</a></span>`).join(''); countBadge.textContent = `${TOKENS.length} / 20`; }
-    function addToken(t) { if (TOKENS.length >= 20) return; TOKENS.push(t); renderChips(); persist(); renderArtistCards(); }
-    function removeToken(i) { TOKENS.splice(i, 1); renderChips(); persist(); renderArtistCards(); }
+    let TOKENS = []; function persist() { localStorage.setItem('ml_tokens', JSON.stringify(TOKENS)) } function loadTokens() { try { const t = JSON.parse(localStorage.getItem('ml_tokens') || '[]'); if (Array.isArray(t)) TOKENS = t } catch { } }
+    function renderChips() { chips.innerHTML = TOKENS.map((t, i) => `<span class="chip">${esc(t)} <a style="cursor:pointer" onclick="removeToken(${i})">✕</a></span>`).join(''); countBadge.textContent = `${TOKENS.length} / 20` }
+    function addToken(t) { if (TOKENS.length >= 20) return; TOKENS.push(t); renderChips(); persist(); renderArtistCards() }
+    function removeToken(i) { TOKENS.splice(i, 1); renderChips(); persist(); renderArtistCards() }
     loadTokens(); renderChips(); renderArtistCards();
 
-    /* Suggest (local sample) */
-    let timer = null;
-    inputBox.addEventListener('input', () => {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
+    let timer = null; inputBox.addEventListener('input', () => {
+      if (timer) clearTimeout(timer); timer = setTimeout(() => {
         const q = inputBox.value.trim(); if (q.length < 2) { suggestions.style.display = 'none'; return }
         const data = ['Daft Punk', 'FKJ', 'Tom Misch', 'BLACKPINK', 'NewJeans', 'SZA', 'Jungle', 'Kaytranada', 'Bonobo', 'Bicep', 'XG', 'LE SSERAFIM', 'Parcels', 'Disclosure', 'Altın Gün', 'Vulfpeck', 'Gorillaz', 'James Blake', 'Thundercat', 'Robert Glasper', 'Sault', 'Khruangbin', 'Rosalía', 'Four Tet', 'Yaeji', 'Peggy Gou'];
         const items = data.filter(n => n.toLowerCase().includes(q.toLowerCase())).slice(0, 14);
-        suggestions.innerHTML = items.map(n => `<div class="sugItem" data-name="${esc(n)}">${esc(n)}</div>`).join('');
-        suggestions.style.display = items.length ? 'block' : 'none';
-      }, 150);
+        suggestions.innerHTML = items.map(n => `<div class="sugItem" data-name="${esc(n)}">${esc(n)}</div>`).join(''); suggestions.style.display = items.length ? 'block' : 'none'
+      }, 150)
     });
-    (function bindSuggestionTap() {
-      if (suggestions.__bound) return; suggestions.__bound = true;
-      const handler = (e) => {
-        const it = e.target.closest('.sugItem'); if (!it) return; e.preventDefault();
-        addToken(it.dataset.name || it.textContent.trim()); inputBox.value = ''; suggestions.style.display = 'none';
-      };
-      suggestions.addEventListener('pointerdown', handler, { passive: false });
-      suggestions.addEventListener('touchstart', handler, { passive: false });
-      suggestions.addEventListener('click', handler, { passive: false });
-    })();
-    document.getElementById('addBtn').onclick = () => { if (!inputBox.value.trim()) return; addToken(inputBox.value.trim()); inputBox.value = ''; suggestions.style.display = 'none'; };
+    (function () { if (suggestions.__b) return; suggestions.__b = true; const h = e => { const it = e.target.closest('.sugItem'); if (!it) return; e.preventDefault(); addToken(it.dataset.name || it.textContent.trim()); inputBox.value = ''; suggestions.style.display = 'none' }; suggestions.addEventListener('pointerdown', h, { passive: false }); suggestions.addEventListener('touchstart', h, { passive: false }); suggestions.addEventListener('click', h, { passive: false }) })();
+    document.getElementById('addBtn').onclick = () => { if (!inputBox.value.trim()) return; addToken(inputBox.value.trim()); inputBox.value = ''; suggestions.style.display = 'none' };
 
-    /* ===== Artist Info ===== */
-    async function fetchWiki(name) {
-      try {
-        const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`);
-        if (!r.ok) return null; const j = await r.json();
-        return { summary: j.extract || "", image	j.thumbnail?.source || "", url	j.content_urls?.desktop?.page || "" };
-      } catch (_) { return null }
-    }
-    async function fetchItunesArt(name) {
-      try {
-        const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=album&limit=1`);
-        const j = await r.json(); const art = j.results?.[0]?.artworkUrl100;
-        return art ? art.replace('100x100', '256x256') : "";
-      } catch (_) { return "" }
-    }
-    async function artistProfile(name) {
-      const w = await fetchWiki(name);
-      let img = w?.image || ""; if (!img) img = await fetchItunesArt(name);
-      const sum = w?.summary ? w.summary.replace(/\s+/g, " ").slice(0, 140) + "…" : "紹介文が見つかりませんでした。";
-      const url = w?.url || `https://www.google.com/search?q=${encodeURIComponent(name + ' artist')}`;
-      return { name, image: img || `https://picsum.photos/seed/${encodeURIComponent(name)}/112/112`, summary: sum, url };
-    }
-    async function renderArtistCards() {
-      artistGrid.innerHTML = "";
-      if (!TOKENS.length) { artistHint.style.display = "block"; return; }
-      artistHint.style.display = "none";
-      const list = await Promise.all(TOKENS.slice(0, 12).map(n => artistProfile(n)));
-      artistGrid.innerHTML = list.map(p => `
-    <div class="card">
-      <img src="${p.image}" alt="${esc(p.name)}">
-      <div>
-        <div class="name">${esc(p.name)}</div>
-        <div class="sum">${esc(p.summary)}</div>
-        <div class="small" style="margin-top:6px"><a href="${p.url}" target="_blank" style="color:#ffe28a;text-decoration:underline">詳しく見る</a></div>
-      </div>
-    </div>`).join("");
-    }
+    /* artist info */
+    async function fetchWiki(name) { try { const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`); if (!r.ok) return null; const j = await r.json(); return { summary: j.extract || "", image: j.thumbnail?.source || "", url: j.content_urls?.desktop?.page || "" } } catch (_) { return null } }
+    async function fetchItunesArt(name) { try { const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=album&limit=1`); const j = await r.json(); const art = j.results?.[0]?.artworkUrl100; return art ? art.replace('100x100', '256x256') : "" } catch (_) { return "" } }
+    async function artistProfile(name) { const w = await fetchWiki(name); let img = w?.image || ""; if (!img) img = await fetchItunesArt(name); const sum = w?.summary ? w.summary.replace(/\s+/g, " ").slice(0, 140) + "…" : "紹介文が見つかりませんでした。"; const url = w?.url || `https://www.google.com/search?q=${encodeURIComponent(name + ' artist')}`; return { name, image: img || `https://picsum.photos/seed/${encodeURIComponent(name)}/112/112`, summary: sum, url } }
+    async function renderArtistCards() { artistGrid.innerHTML = ""; if (!TOKENS.length) { artistHint.style.display = "block"; return } artistHint.style.display = "none"; const list = await Promise.all(TOKENS.slice(0, 12).map(n => artistProfile(n))); artistGrid.innerHTML = list.map(p => `<div class="card"><img src="${p.image}" alt="${esc(p.name)}"><div><div class="name">${esc(p.name)}</div><div class="sum">${esc(p.summary)}</div><div class="small" style="margin-top:6px"><a href="${p.url}" target="_blank" style="color:#ffe28a;text-decoration:underline">詳しく見る</a></div></div></div>`).join("") }
 
-    /* ===== Vector / Work / Love / Genre ===== */
+    /* vector/work/love/genre */
     const BASEV = { energy: .6, sophistication: .6, groove: .6, structure: .6, experiment: .6, urban: .6, global: .6 };
-    function mapGenre(s) {
-      s = (s || '').toLowerCase();
-      if (/hip|rap/.test(s)) return 'Hip-hop'; if (/r&b|soul/.test(s)) return 'R&B'; if (/electro|edm|techno|house|dance|club/.test(s)) return 'Electronic';
-      if (/k-?pop/.test(s)) return 'K-Pop'; if (/jazz|fusion/.test(s)) return 'Jazz'; if (/funk|disco|boogie/.test(s)) return 'Funk';
-      if (/rock|metal|punk/.test(s)) return 'Rock'; if (/world|afro|latin|reggae|balkan|cumbia/.test(s)) return 'World'; if (/indie|alt/.test(s)) return 'Indie'; return 'Indie';
-    }
+    function mapGenre(s) { s = (s || '').toLowerCase(); if (/hip|rap/.test(s)) return 'Hip-hop'; if (/r&b|soul/.test(s)) return 'R&B'; if (/electro|edm|techno|house|dance|club/.test(s)) return 'Electronic'; if (/k-?pop/.test(s)) return 'K-Pop'; if (/jazz|fusion/.test(s)) return 'Jazz'; if (/funk|disco|boogie/.test(s)) return 'Funk'; if (/rock|metal|punk/.test(s)) return 'Rock'; if (/world|afro|latin|reggae|balkan|cumbia/.test(s)) return 'World'; if (/indie|alt/.test(s)) return 'Indie'; return 'Indie' }
     function tokenVector(t) {
-      const g = mapGenre(t), z = JSON.parse(JSON.stringify(BASEV));
-      if (g === 'Electronic') { z.structure += .12; z.sophistication += .05 }
-      if (g === 'R&B') { z.urban += .12; z.groove += .08 }
-      if (g === 'Funk') { z.groove += .14; z.energy += .06 }
-      if (g === 'Jazz') { z.sophistication += .12; z.experiment += .06 }
-      if (g === 'Hip-hop') { z.groove += .1; z.urban += .1 }
-      if (g === 'K-Pop') { z.structure += .14; z.sophistication += .1 }
-      if (g === 'World') { z.global += .16; z.groove += .06 }
-      if (g === 'Rock') { z.energy += .12 }
-      return Object.fromEntries(Object.entries(z).map(([k, v]) => [k, Math.max(0, Math.min(1, v))]));
+      const g = mapGenre(t), z = JSON.parse(JSON.stringify(BASEV)); if (g === 'Electronic') { z.structure += .12; z.sophistication += .05 }
+      if (g === 'R&B') { z.urban += .12; z.groove += .08 } if (g === 'Funk') { z.groove += .14; z.energy += .06 } if (g === 'Jazz') { z.sophistication += .12; z.experiment += .06 }
+      if (g === 'Hip-hop') { z.groove += .1; z.urban += .1 } if (g === 'K-Pop') { z.structure += .14; z.sophistication += .1 } if (g === 'World') { z.global += .16; z.groove += .06 } if (g === 'Rock') { z.energy += .12 }
+      return Object.fromEntries(Object.entries(z).map(([k, v]) => [k, Math.max(0, Math.min(1, v))]))
     }
     function mergeVec(vs) { const s = { ...BASEV }; for (const k in s) s[k] = 0; vs.forEach(v => { for (const k in v) s[k] += v[k] }); for (const k in s) s[k] /= vs.length || 1; return s }
     function profileFromInputs(tokens) { return tokens.length ? mergeVec(tokens.map(tokenVector)) : BASEV }
     function clamp(n) { return Math.max(0, Math.min(1, n)) }
     function hashStr(str) { let h = 0; for (let i = 0; i < str.length; i++) { h = ((h << 5) - h) + str.charCodeAt(i); h |= 0 } return Math.abs(h) }
-    function sRand(seed) { let v = seed | 0; return () => (v = (v * 1664525 + 1013904223) | 0, (v >>> 0) / 4294967296); }
+    function sRand(seed) { let v = seed | 0; return () => (v = (v * 1664525 + 1013904223) | 0, (v >>> 0) / 4294967296) }
 
-    /* Vector */
+    /* vector */
     function drawProfile(v) {
-      const L = [["energy", "Energy（エネルギー）"], ["sophistication", "Sophistication（洗練）"], ["groove", "Groove（グルーヴ）"], ["structure", "Structure（構築力）"], ["experiment", "Experimentation（実験性）"], ["urban", "Urban Warmth（都市的温度）"], ["global", "Global Openness（越境性）"]];
-      document.getElementById('profileBars').innerHTML = L.map(([k, ja]) => {
-        const pct = Math.round((v[k] || 0) * 100);
-        return `<div class="kpi"><div>${ja}</div><div class="badge">${pct}%</div></div><div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
-      }).join('');
-      const order = Object.entries(v).sort((a, b) => b[1] - a[1]); const [k1] = order[0], [k2] = order[1];
-      const seed = hashStr(JSON.stringify(v) + TOKENS.join('|')); const rnd = sRand(seed);
-      const templates = [
-        `Vector Insight: 「${k1}」を先頭に、「${k2}」を補助線に。%HINT% を1つだけ試すと深度が増します。`,
-        `Vector Insight: 「${k1}×${k2}」の掛け算が効いています。今日は %HINT% を15分だけやってみよう。`,
-        `Vector Insight: ${k1}が高い日。逆サイドの${k2}を意識して %HINT% を足すとバランスが整います。`,
-        `Vector Insight: ${k1}が核。${k2}の文脈で %HINT% を作ると学習効果が跳ねます。`
-      ];
-      const hints = [
-        "未聴ジャンルの短尺プレイリスト探索",
-        "1曲だけ作業BGMを変えてみる",
-        "好きな曲の構造を手書きでスケッチ",
-        "友人におすすめ曲の理由を言語化して送る"
-      ];
-      const t = templates[Math.floor(rnd() * templates.length)];
-      const h = hints[Math.floor(rnd() * hints.length)];
-      const vi = document.getElementById('vectorInsight'); vi.style.display = 'block'; vi.textContent = t.replace('%HINT%', h);
+      const L = [["energy", "Energy（エネルギー）"], ["sophistication", "Sophistication（洗練）"], ["groove", "Groove（グルーヴ）"], ["structure", "Structure（構築力）"], ["experiment", "Experimentation（実験性）"], ["urban", "Urban Warmth（都市的温度）"], ["global", "Global Openness（越境性）"]]; document.getElementById('profileBars').innerHTML = L.map(([k, ja]) => { const pct = Math.round((v[k] || 0) * 100); return `<div class="kpi"><div>${ja}</div><div class="badge">${pct}%</div></div><div class="bar"><div class="fill" style="width:${pct}%"></div></div>` }).join('');
+      const order = Object.entries(v).sort((a, b) => b[1] - a[1]); const [k1] = order[0], [k2] = order[1]; const seed = hashStr(JSON.stringify(v) + TOKENS.join('|')); const rnd = sRand(seed);
+      const templates = [`Vector Insight: 「${k1}」を先頭に、「${k2}」を補助線に。%HINT% を1つだけ試すと深度が増します。`, `Vector Insight: 「${k1}×${k2}」の掛け算が効いています。今日は %HINT% を15分だけやってみよう。`, `Vector Insight: ${k1}が高い日。逆サイドの${k2}を意識して %HINT% を足すとバランスが整います。`, `Vector Insight: ${k1}が核。${k2}の文脈で %HINT% を作ると学習効果が跳ねます。`];
+      const hints = ["未聴プレイリストを5曲だけ掘る", "1曲だけ作業BGMを変える", "好きな曲の構造を手書きでスケッチ", "友人におすすめ曲の理由を言語化して送る"]; const t = templates[Math.floor(rnd() * templates.length)]; const h = hints[Math.floor(rnd() * hints.length)];
+      const vi = document.getElementById('vectorInsight'); vi.style.display = 'block'; vi.textContent = t.replace('%HINT%', h)
     }
 
-    /* Work */
-    function toAbilities(v) {
-      return [
-        { k: "structure", l: "Structure & Information Design（構造化・情報設計力）", s: clamp(0.6 * v.structure + 0.4 * v.sophistication) },
-        { k: "empathy", l: "Empathy & Relationship Design（共感・関係性設計力）", s: clamp(0.55 * v.urban + 0.35 * v.groove) },
-        { k: "creative", l: "Experimental Creativity（実験・創造推進力）", s: clamp(0.7 * v.experiment + 0.2 * v.global) },
-        { k: "drive", l: "Execution Drive（推進・行動エネルギー）", s: v.energy },
-        { k: "xborder", l: "Cross-cultural Integration（越境・多文化統合力）", s: clamp(0.7 * v.global + 0.2 * v.experiment) }
-      ];
-    }
+    /* work */
+    function toAbilities(v) { return [{ k: "structure", l: "Structure & Information Design（構造化・情報設計力）", s: clamp(0.6 * v.structure + 0.4 * v.sophistication) }, { k: "empathy", l: "Empathy & Relationship Design（共感・関係性設計力）", s: clamp(0.55 * v.urban + 0.35 * v.groove) }, { k: "creative", l: "Experimental Creativity（実験・創造推進力）", s: clamp(0.7 * v.experiment + 0.2 * v.global) }, { k: "drive", l: "Execution Drive（推進・行動エネルギー）", s: v.energy }, { k: "xborder", l: "Cross-cultural Integration（越境・多文化統合力）", s: clamp(0.7 * v.global + 0.2 * v.experiment) }] }
     function drawAbilities(v) {
-      const abs = toAbilities(v);
-      document.getElementById('abilities').innerHTML = abs.map(a => {
-        const pct = Math.round(a.s * 100);
-        return `<div class="kpi"><div>${a.l}</div><div class="badge">${pct}%</div></div><div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
-      }).join('');
-      const top = abs.slice().sort((a, b) => b.s - a.s).slice(0, 2);
-      const label = { structure: "構造化", empathy: "共感", creative: "実験", drive: "推進", xborder: "越境" };
-      const seed = hashStr(JSON.stringify(v) + TOKENS.join('|') + 'work'); const rnd = sRand(seed);
-      const actions = {
-        structure: ["要件箇条書き→図解→結論の順で話す", "既存資料の重複を1枚に統合する", "テーブル定義や命名規則を先に決める"],
-        empathy: ["会議の最後に要約と感謝を一言添える", "相手の“最近の推し曲”を聞き出す", "相手の意図を鏡写しで言い換える"],
-        creative: ["未踏のUIパターンを3つだけスクラップ", "10分だけMVPを仮実装", "検証のToCを先に書く"],
-        drive: ["朝イチで“体を動かすタスク”から着手", "15分×4本のスプリントを組む", "完了基準を先に貼り出す"],
-        xborder: ["他部署の成果物を1つ借景して再利用", "海外事例を1つだけ加える", "異分野の人に5分レビューをもらう"]
-      };
-      const a1 = actions[top[0].k][Math.floor(rnd() * actions[top[0].k].length)];
-      const a2 = actions[top[1].k][Math.floor(rnd() * actions[top[1].k].length)];
-      const ai = document.getElementById('abilitiesInsight'); ai.style.display = 'block';
-      ai.textContent = `Work Insight: ${label[top[0].k]}×${label[top[1].k]}。今日は「${a1}」と「${a2}」で一手前進。`;
+      const abs = toAbilities(v); document.getElementById('abilities').innerHTML = abs.map(a => { const pct = Math.round(a.s * 100); return `<div class="kpi"><div>${a.l}</div><div class="badge">${pct}%</div></div><div class="bar"><div class="fill" style="width:${pct}%"></div></div>` }).join('');
+      const top = abs.slice().sort((a, b) => b.s - a.s).slice(0, 2); const label = { structure: "構造化", empathy: "共感", creative: "実験", drive: "推進", xborder: "越境" }; const seed = hashStr(JSON.stringify(v) + TOKENS.join('|') + 'work'); const rnd = sRand(seed);
+      const actions = { structure: ["要件箇条書き→図解→結論の順で話す", "重複資料を1枚に統合"], empathy: ["会議の最後に要約と感謝を一言", "相手の“推し曲”を聞く"], creative: ["未踏UIを3つスクラップ", "10分だけMVPを仮実装"], drive: ["朝イチで体を使うタスクから", "15分×4本のスプリント"], xborder: ["他部署の成果物を再利用", "海外事例を1つ加える"] };
+      const a1 = actions[top[0].k][Math.floor(rnd() * actions[top[0].k].length)], a2 = actions[top[1].k][Math.floor(rnd() * actions[top[1].k].length)];
+      const ai = document.getElementById('abilitiesInsight'); ai.style.display = 'block'; ai.textContent = `Work Insight: ${label[top[0].k]}×${label[top[1].k]}。今日は「${a1}」「${a2}」で一手前進。`
     }
 
-    /* Love & Genre */
-    function drawLove(tokens) {
-      const n = tokens.length, uniq = [...new Set(tokens.map(mapGenre))].length;
-      const score = clamp(0.6 * (n / 20) + 0.4 * (uniq / 12));  /* ← 上限20対応 */
-      const pct = Math.round(score * 100);
-      document.getElementById('lovePercent').textContent = pct + "%";
-      document.getElementById('loveFill').style.width = pct + "%";
-      const h = Math.round((pct / 100) * 140);
-      const liquid = document.getElementById('liquid'); const glow = document.getElementById('liquidGlow');
-      liquid.setAttribute('y', 180 - h); liquid.setAttribute('height', h);
-      glow.setAttribute('y', 180 - h); glow.setAttribute('height', Math.max(0, h - 10));
-      (function pulse() { const g = document.getElementById('loveGlass'); if (!g) return; let t = 0; (function step() { t += .05; g.style.filter = `drop-shadow(0 0 ${6 + Math.sin(t) * 4}px rgba(255,180,60,.5))`; requestAnimationFrame(step); })() })();
-    }
-    function drawGenre(tokens) {
-      const uniq = [...new Set(tokens.map(mapGenre))].length;
-      const pct = Math.round(100 * Math.min(1, uniq / 12));
-      document.getElementById('genreBadge').textContent = `${uniq} / 12`;
-      document.getElementById('genrePct').textContent = pct + '%';
-      const C = 402; document.getElementById('genreRing').setAttribute('stroke-dashoffset', String(C - C * pct / 100));
-    }
+    /* love / genre */
+    function drawLove(tokens) { const n = tokens.length, uniq = [...new Set(tokens.map(mapGenre))].length; const score = clamp(0.6 * (n / 20) + 0.4 * (uniq / 12)); const pct = Math.round(score * 100); document.getElementById('lovePercent').textContent = pct + "%"; document.getElementById('loveFill').style.width = pct + "%"; const h = Math.round((pct / 100) * 140); document.getElementById('liquid').setAttribute('y', 180 - h); document.getElementById('liquid').setAttribute('height', h); document.getElementById('liquidGlow').setAttribute('y', 180 - h); document.getElementById('liquidGlow').setAttribute('height', Math.max(0, h - 10)) }
+    function drawGenre(tokens) { const uniq = [...new Set(tokens.map(mapGenre))].length; const pct = Math.round(100 * Math.min(1, uniq / 12)); document.getElementById('genreBadge').textContent = `${uniq} / 12`; document.getElementById('genrePct').textContent = pct + '%'; const C = 402; document.getElementById('genreRing').setAttribute('stroke-dashoffset', String(C - C * pct / 100)) }
 
-    /* Personality — 変動ロジック（入力依存） */
+    /* personality dynamic */
     function renderPersonality(v, tokens) {
-      const genres = tokens.map(mapGenre);
-      const counts = {}; genres.forEach(g => counts[g] = (counts[g] || 0) + 1);
-      const dom = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Indie';
-      const missing = ['Electronic', 'R&B', 'Funk', 'Jazz', 'Hip-hop', 'K-Pop', 'World', 'Rock', 'Indie', 'Pop', 'House']
-        .filter(g => !counts[g]).slice(0, 2).join(' / ') || '—';
-
-      const types = ['Curious Innovator', 'Empathic Connector', 'System Architect', 'Dynamic Performer', 'Serene Observer'];
-      const order = Object.entries(v).sort((a, b) => b[1] - a[1]); const [k1] = order[0], [k2] = order[1];
-      // タイプを決めるが、上位軸と支配ジャンルで揺らす
-      const seed = hashStr(tokens.join('|') + JSON.stringify(v) + dom); const rnd = sRand(seed);
-      const type = types[Math.floor(rnd() * types.length)];
-
-      const openers = {
-        'Electronic': "構築と洗練で静かに加速する日。",
-        'R&B': "温度とグルーヴで関係性を整える日。",
-        'Funk': "身体性でチームのテンポを上げる日。",
-        'Jazz': "観察とアレンジで精度を高める日。",
-        'Hip-hop': "自由度とビートで推進する日。",
-        'K-Pop': "完成度と演出を磨き上げる日。",
-        'World': "越境の感性で視野が広がる日。",
-        'Rock': "エネルギーで壁を突破する日。",
-        'Indie': "独自性を起点に企てる日。",
-        'Pop': "伝わり方にこだわる日。",
-        'House': "反復と抑揚で没入を作る日。"
-      };
-      const actions = [
-        "未聴の「%MISS%」から1曲だけ朝に取り入れる",
-        "トップ軸「%K1%」を使って今日のタスクを1つ再設計",
-        "入力上位：%TOP3% の“共通らしさ”を一言で要約して共有",
-        "作業BGMを「%DOM%」から離して30分だけ実験",
-        "終業前に“今日の発見”を3行でメモして明日へ繋ぐ"
-      ];
-      const replacements = {
-        '%MISS%': missing || '未開ジャンル',
-        '%K1%': k1,
-        '%DOM%': dom,
-        '%TOP3%': tokens.slice(0, 3).join(' / ')
-      };
-      function fillTpl(t) { return Object.keys(replacements).reduce((s, k) => s.replaceAll(k, replacements[k]), t); }
-
-      // 3つのアクションをランダム抽出（重複なし）
-      const acts = []; let pool = actions.slice(); for (let i = 0; i < 3 && pool.length; i++) { const idx = Math.floor(rnd() * pool.length); acts.push(fillTpl(pool[idx])); pool.splice(idx, 1); }
-
-      const body = `<div class="badge">Today</div>
-    <div style="margin-top:8px"><strong>${type}</strong> — ${fillTpl(openers[dom])} 上位軸は <strong>${k1}</strong> と <strong>${k2}</strong>。</div>
-    <ul class="small" style="margin-top:8px">${acts.map(a => `<li>${esc(a)}</li>`).join('')}</ul>
-    <div class="small" style="margin-top:6px">未開フック候補：<strong>${esc(missing || '（なし）')}</strong></div>`;
-      document.getElementById('personality').innerHTML = body;
+      const genres = tokens.map(mapGenre); const counts = {}; genres.forEach(g => counts[g] = (counts[g] || 0) + 1); const dom = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Indie'; const missing = ['Electronic', 'R&B', 'Funk', 'Jazz', 'Hip-hop', 'K-Pop', 'World', 'Rock', 'Indie', 'Pop', 'House'].filter(g => !counts[g]).slice(0, 2).join(' / ') || '—';
+      const types = ['Curious Innovator', 'Empathic Connector', 'System Architect', 'Dynamic Performer', 'Serene Observer']; const order = Object.entries(v).sort((a, b) => b[1] - a[1]); const [k1] = order[0], [k2] = order[1]; const seed = hashStr(tokens.join('|') + JSON.stringify(v) + dom); const rnd = sRand(seed); const type = types[Math.floor(rnd() * types.length)];
+      const openers = { 'Electronic': "構築と洗練で静かに加速する日。", 'R&B': "温度とグルーヴで関係性を整える日。", 'Funk': "身体性でチームのテンポを上げる日。", 'Jazz': "観察とアレンジで精度を高める日。", 'Hip-hop': "自由度とビートで推進する日。", 'K-Pop': "完成度と演出を磨き上げる日。", 'World': "越境の感性で視野が広がる日。", 'Rock': "エネルギーで壁を突破する日。", 'Indie': "独自性を起点に企てる日。", 'Pop': "伝わり方にこだわる日。", 'House': "反復と抑揚で没入を作る日。" };
+      const actions = ["未聴の「%MISS%」から1曲だけ朝に取り入れる", "トップ軸「%K1%」で今日のタスクを再設計", "入力上位：%TOP3% の“共通らしさ”を一言で共有", "作業BGMを「%DOM%」から離して30分実験", "終業前に“今日の発見”を3行メモ"];
+      const rep = { '%MISS%': missing, '%K1%': k1, '%DOM%': dom, '%TOP3%': tokens.slice(0, 3).join(' / ') }; const fill = s => Object.keys(rep).reduce((x, k) => x.replaceAll(k, rep[k]), s);
+      const acts = []; let pool = actions.slice(); for (let i = 0; i < 3 && pool.length; i++) { const idx = Math.floor(rnd() * pool.length); acts.push(fill(pool[idx])); pool.splice(idx, 1) }
+      document.getElementById('personality').innerHTML = `<div class="badge">Today</div><div style="margin-top:8px"><strong>${type}</strong> — ${fill(openers[dom])} 上位軸は <strong>${k1}</strong> と <strong>${k2}</strong>。</div><ul class="small" style="margin-top:8px">${acts.map(a => `<li>${esc(a)}</li>`).join('')}</ul><div class="small" style="margin-top:6px">未開フック候補：<strong>${esc(missing || '（なし）')}</strong></div>`
     }
 
-    /* ===== Map: Canvas ゴールドグリッド（常に見える） ===== */
-    function drawMap() {
-      const cvs = document.getElementById('map'); const ctx = cvs.getContext('2d');
-      function resize() { const rect = cvs.parentElement.getBoundingClientRect(); cvs.width = rect.width; cvs.height = rect.height; }
-      resize(); addEventListener('resize', resize);
-      const W = cvs.width, H = cvs.height;
-      ctx.clearRect(0, 0, W, H);
-      ctx.strokeStyle = 'rgba(255,200,80,.35)'; ctx.lineWidth = 1;
-      for (let i = 0; i <= 12; i++) { const x = i * W / 12; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
-      for (let j = 0; j <= 6; j++) { const y = j * H / 6; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
-      // 仮プロット（将来: 実座標に置換）
-      const pts = [{ x: .9, y: .35 }, { x: .75, y: .42 }, { x: .15, y: .38 }, { x: .5, y: .45 }, { x: .35, y: .55 }];
-      ctx.fillStyle = 'rgba(255,200,80,.95)';
-      pts.forEach(p => { ctx.beginPath(); ctx.arc(p.x * W, p.y * H, 5, 0, Math.PI * 2); ctx.fill(); });
-    }
+    /* map canvas */
+    function drawMap() { const cvs = document.getElementById('map'); const ctx = cvs.getContext('2d'); function resize() { const r = cvs.parentElement.getBoundingClientRect(); cvs.width = r.width; cvs.height = r.height } resize(); addEventListener('resize', resize); const W = cvs.width, H = cvs.height; ctx.clearRect(0, 0, W, H); ctx.strokeStyle = 'rgba(255,200,80,.35)'; ctx.lineWidth = 1; for (let i = 0; i <= 12; i++) { const x = i * W / 12; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke() } for (let j = 0; j <= 6; j++) { const y = j * H / 6; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke() } const pts = [{ x: .9, y: .35 }, { x: .75, y: .42 }, { x: .15, y: .38 }, { x: .5, y: .45 }, { x: .35, y: .55 }]; ctx.fillStyle = 'rgba(255,200,80,.95)'; pts.forEach(p => { ctx.beginPath(); ctx.arc(p.x * W, p.y * H, 5, 0, Math.PI * 2); ctx.fill() }) }
 
-    /* ===== Recommendations（Spotifyなし・必ず表示） ===== */
-    function buildRecs(tokens) {
-      const pool = ['Bonobo', 'Kaytranada', 'Jungle', 'Parcels', 'Bicep', 'Altın Gün', 'Robert Glasper', 'Thundercat', 'Gorillaz', 'Sault', 'Cimafunk', 'Vulfpeck', 'FKJ', 'Disclosure', 'Badbadnotgood', 'Toro y Moi', 'Yaeji', 'Peggy Gou', 'Rosalía', 'Khruangbin', 'Four Tet'];
-      const lower = new Set(tokens.map(t => t.toLowerCase()));
-      const recs = pool.filter(n => !lower.has(n.toLowerCase()))
-        .filter((n, i, a) => a.findIndex(x => x.toLowerCase() === n.toLowerCase()) === i)
-        .slice(0, 12);
-      while (recs.length < 8) { recs.push('New Discovery ' + (recs.length + 1)); }
-      return recs;
-    }
-    function renderRecs() {
-      const r = buildRecs(TOKENS);
-      document.getElementById('recs').innerHTML = r.map(n => `<span class="badge" style="margin:4px;display:inline-block">${esc(n)}</span>`).join('');
-    }
+    /* recs (always show, exclude inputs) */
+    function buildRecs(tokens) { const pool = ['Bonobo', 'Kaytranada', 'Jungle', 'Parcels', 'Bicep', 'Altın Gün', 'Robert Glasper', 'Thundercat', 'Gorillaz', 'Sault', 'Cimafunk', 'Vulfpeck', 'FKJ', 'Disclosure', 'Badbadnotgood', 'Toro y Moi', 'Yaeji', 'Peggy Gou', 'Rosalía', 'Khruangbin', 'Four Tet']; const lower = new Set(tokens.map(t => t.toLowerCase())); const recs = pool.filter(n => !lower.has(n.toLowerCase())).filter((n, i, a) => a.findIndex(x => x.toLowerCase() === n.toLowerCase()) === i).slice(0, 12); while (recs.length < 8) { recs.push('New Discovery ' + (recs.length + 1)) } return recs }
+    function renderRecs() { document.getElementById('recs').innerHTML = buildRecs(TOKENS).map(n => `<span class="badge" style="margin:4px;display:inline-block">${esc(n)}</span>`).join('') }
 
-    /* ===== Analyze progress（所要の経過を段階表示） ===== */
-    function simulateAnalyze(fn) {
-      const wrap = document.getElementById('progressWrap'), fill = document.getElementById('progfill'), text = document.getElementById('progtext');
-      wrap.style.display = 'block'; fill.style.width = '0%';
-      const uniq = [...new Set(TOKENS.map(mapGenre))].length;
-      const base = 1200 + TOKENS.length * 180 + uniq * 140; // 上限20前提で可変
-      const steps = [
-        { name: 'ベクトル算出', weight: .35 },
-        { name: '示唆テキスト生成', weight: .25 },
-        { name: '愛着度/ジャンル集計', weight: .20 },
-        { name: '推薦抽出', weight: .20 }
-      ];
-      let acc = 0, i = 0;
-      function step() {
-        if (i >= steps.length) { fill.style.width = '100%'; text.textContent = '完了'; setTimeout(() => wrap.style.display = 'none', 350); fn(); return; }
-        const dur = base * steps[i].weight;
-        const start = performance.now(); const startPct = acc;
-        function tick(now) {
-          const p = Math.min(1, (now - start) / dur);
-          const cur = startPct + (steps[i].weight * 100) * p;
-          fill.style.width = Math.min(99, cur).toFixed(1) + '%';
-          text.textContent = `${steps[i].name}… ${Math.min(99, cur | 0)}%`;
-          if (p < 1) requestAnimationFrame(tick); else { acc += steps[i].weight * 100; i++; step(); }
-        }
-        requestAnimationFrame(tick);
-      }
-      step();
-    }
+    /* progress */
+    function simulateAnalyze(fn) { const wrap = document.getElementById('progressWrap'), fill = document.getElementById('progfill'), text = document.getElementById('progtext'); wrap.style.display = 'block'; fill.style.width = '0%'; const uniq = [...new Set(TOKENS.map(mapGenre))].length; const base = 1200 + TOKENS.length * 180 + uniq * 140; const steps = [{ name: 'ベクトル算出', weight: .35 }, { name: '示唆テキスト生成', weight: .25 }, { name: '愛着度/ジャンル集計', weight: .20 }, { name: '推薦抽出', weight: .20 }]; let acc = 0, i = 0; function step() { if (i >= steps.length) { fill.style.width = '100%'; text.textContent = '完了'; setTimeout(() => wrap.style.display = 'none', 350); fn(); return } const dur = base * steps[i].weight; const start = performance.now(); const st = acc; function tick(now) { const p = Math.min(1, (now - start) / dur); const cur = st + (steps[i].weight * 100) * p; fill.style.width = Math.min(99, cur).toFixed(1) + '%'; text.textContent = `${steps[i].name}… ${Math.min(99, cur | 0)}%`; if (p < 1) requestAnimationFrame(tick); else { acc += steps[i].weight * 100; i++; step() } } requestAnimationFrame(tick) } step() }
 
-    /* ===== Analyze Flow ===== */
-    document.getElementById('analyzeBtn').onclick = () => {
-      if (!TOKENS.length) addToken('Electronic');
-      simulateAnalyze(() => {
-        const v = profileFromInputs(TOKENS);
-        drawProfile(v);
-        drawAbilities(v);
-        drawLove(TOKENS);
-        drawGenre(TOKENS);
-        renderPersonality(v, TOKENS);
-        renderRecs();
-        drawMap();
-      });
-    }
+    /* analyze */
+    document.getElementById('analyzeBtn').onclick = () => { if (!TOKENS.length) addToken('Electronic'); simulateAnalyze(() => { const v = profileFromInputs(TOKENS); drawProfile(v); drawAbilities(v); drawLove(TOKENS); drawGenre(TOKENS); renderPersonality(v, TOKENS); renderRecs(); drawMap() }) }
 
-    /* Helpers */
+    /* helper */
     function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) }
   </script>
 </body>
 
 </html>
-=======
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>音楽嗜好→あなたの潜在能力（Liquid Glass UI）</title>
-<meta name="color-scheme" content="dark light" />
-<style>
-/* =========================
-   Liquid Glass Design System
-   ========================= */
-:root{
-  /* アクセントはApple系の澄んだブルー。必要に応じて変更可 */
-  --accent:#0a84ff;
-  --accent-2:#64d2ff;
-  --bg-1:#05060b;
-  --bg-2:#0a0b12;
-  --txt:#eaf2ff;
-  --muted:#a9b4c7;
-  --glass-bg:rgba(255,255,255,.08);
-  --glass-stroke:rgba(255,255,255,.18);
-  --glass-inner:rgba(255,255,255,.05);
-  --chip:rgba(255,255,255,.10);
-  --success:#30d158;
-}
-
-/* ベース */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  color:var(--txt);
-  font-family:ui-sans-serif, system-ui, -apple-system, "SF Pro Text", "Hiragino Sans", "Noto Sans JP", Roboto, "Segoe UI", sans-serif;
-  background:
-    radial-gradient(1200px 600px at 10% -10%, #3a48ff22, transparent),
-    radial-gradient(800px 500px at 90% 10%, #00ffd522, transparent),
-    linear-gradient(180deg,var(--bg-1),var(--bg-2));
-  overflow-x:hidden;
-}
-
-/* 背景のリキッド・グロー（奥でゆっくり動く） */
-.bg-orb{position:fixed;inset:0;pointer-events:none;z-index:-1;filter:blur(40px) saturate(140%);}
-.bg-orb::before,.bg-orb::after{
-  content:"";position:absolute;border-radius:50%;
-  width:48vw;height:48vw;opacity:.55;
-  background:radial-gradient(circle at 30% 30%, #7bf0ff, transparent 60%),
-             radial-gradient(circle at 70% 70%, #7c5cff, transparent 60%);
-  mix-blend-mode:screen;
-}
-.bg-orb::before{left:-10vw;top:-6vw;animation:float1 18s ease-in-out infinite alternate}
-.bg-orb::after{right:-8vw;bottom:-10vw;animation:float2 22s ease-in-out infinite alternate}
-@keyframes float1{to{transform:translate3d(3vw,2vh,0) scale(1.05)}}
-@keyframes float2{to{transform:translate3d(-2vw,-3vh,0) scale(1.07)}}
-@media (prefers-reduced-motion: reduce){
-  .bg-orb::before,.bg-orb::after{animation:none}
-}
-
-/* コンテナ */
-.container{max-width:1080px;margin:40px auto;padding:0 20px}
-
-/* ヘッダー（クリスタルバー） */
-.header{
-  position:sticky;top:16px;backdrop-filter:saturate(170%) blur(20px);-webkit-backdrop-filter:saturate(170%) blur(20px);
-  background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
-  border:1px solid var(--glass-stroke);
-  border-radius:22px;padding:12px 16px;margin-bottom:18px;
-  box-shadow:0 10px 30px rgba(0,0,0,.25), inset 0 1px rgba(255,255,255,.25);
-}
-.brand{display:flex;align-items:center;gap:10px}
-.brand .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(180deg,var(--accent),var(--accent-2));box-shadow:0 0 12px var(--accent)}
-.brand h1{font-size:18px;letter-spacing:.2px;margin:0}
-.subtitle{margin:2px 0 0;color:var(--muted);font-size:13px}
-
-/* ガラスカード */
-.panel{
-  position:relative;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.05)) /* ガラス層 */,
-    linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,0)) /* 内部の柔らかい照り */;
-  border:1px solid var(--glass-stroke);
-  border-radius:22px;padding:18px;
-  backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);
-  box-shadow:
-    0 15px 40px rgba(0,0,0,.35),
-    inset 0 1px 0 rgba(255,255,255,.25);
-}
-.panel + .panel{margin-top:16px}
-
-/* レイアウト */
-.row{display:flex;gap:16px;flex-wrap:wrap}
-.col{flex:1 1 340px;min-width:300px}
-
-/* 入力群 */
-label{display:block;margin:.5rem 0 .4rem;color:#e5ecff;font-weight:700}
-.input-wrap{
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center
-}
-input[type=text]{
-  flex:1 1 420px;min-width:260px;
-  padding:14px 16px;border-radius:14px;
-  border:1px solid rgba(255,255,255,.22);
-  background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-  color:#fff;outline:none;
-  backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);
-  box-shadow:inset 0 1px rgba(255,255,255,.35);
-}
-input::placeholder{color:#b7c2d8}
-
-/* ボタン（液体ガラス） */
-button{
-  appearance:none;cursor:pointer;border:none;border-radius:14px;
-  padding:12px 16px;font-weight:800;color:white;letter-spacing:.2px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.25), rgba(255,255,255,.12)),
-    linear-gradient(180deg, var(--accent), var(--accent-2));
-  box-shadow:0 12px 28px rgba(10,132,255,.35), inset 0 1px 0 rgba(255,255,255,.4);
-  transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
-}
-button:hover{transform:translateY(-1px);box-shadow:0 16px 36px rgba(10,132,255,.45), inset 0 1px 0 rgba(255,255,255,.5)}
-button:active{transform:translateY(0);filter:saturate(120%)}
-button:disabled{opacity:.6;cursor:not-allowed}
-
-/* チップ */
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 6px}
-.chip{
-  background:linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,.08));
-  border:1px solid rgba(255,255,255,.22); padding:8px 10px;border-radius:999px;
-  display:flex; gap:8px; align-items:center; color:#eaf2ff;
-  backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);
-}
-.chip .x{cursor:pointer; opacity:.85}
-
-/* 見出し/ラベル */
-.section-title{font-size:14px;letter-spacing:.3px;color:#e5ecff;margin:2px 0 10px;font-weight:800;text-transform:uppercase}
-
-/* KPIバー（ガラス面＋発光フィル） */
-.kpi{display:grid;grid-template-columns:1fr auto;gap:6px;margin:6px 0}
-.bar{height:12px;background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.22);border-radius:999px;overflow:hidden;backdrop-filter:blur(8px)}
-.fill{height:100%;background:linear-gradient(90deg, var(--accent), var(--accent-2));box-shadow:0 0 18px rgba(10,132,255,.55) inset}
-
-/* ピルバッジ */
-.badge{
-  background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
-  border:1px solid rgba(255,255,255,.22); color:#eaf2ff;
-  padding:6px 10px;border-radius:999px;font-size:12px;backdrop-filter:blur(8px)
-}
-
-/* グリッドとカード */
-.grid{display:grid;gap:12px}
-.grid-2{grid-template-columns:1fr 1fr}
-.card{
-  background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
-  border:1px solid rgba(255,255,255,.22); border-radius:16px; padding:12px;
-  backdrop-filter:blur(16px)
-}
-.small{color:var(--muted);font-size:12px}
-
-/* フッター */
-.footer{color:#93a5bf;margin-top:18px;font-size:12px}
-
-/* a11y */
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:12px}
-
-/* Light mode（システムに追従） */
-@media (prefers-color-scheme: light){
-  :root{
-    --txt:#0b1220; --muted:#536079;
-    --bg-1:#eaf2ff; --bg-2:#f7fbff;
-    --glass-bg:rgba(255,255,255,.6); --glass-stroke:rgba(0,0,0,.08); --glass-inner:rgba(255,255,255,.9);
-  }
-  body{
-    background:
-      radial-gradient(1200px 600px at 10% -10%, #7bb5ff33, transparent),
-      radial-gradient(800px 500px at 90% 10%, #7cf9ff33, transparent),
-      linear-gradient(180deg,#eaf2ff,#fbfdff);
-  }
-}
-
-/* 細部 */
-ul{margin:.4rem 0 .2rem; padding-left:1rem}
-li{margin:.2rem 0}
-hr{border:0;border-top:1px solid rgba(255,255,255,.18);margin:12px 0}
-</style>
-</head>
-<body>
-<div class="bg-orb"></div>
-
-<div class="container">
-  <div class="header panel" style="padding:10px 14px">
-    <div class="brand">
-      <span class="dot"></span>
-      <div>
-        <h1>音楽嗜好から読み解く：あなたの特徴・潜在能力・成長レコメンド</h1>
-        <p class="subtitle">Liquid Glass UI — 透過・ぼかし・微細なハイライトで構成。分析ロジックは既存MVPと同一です。</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <label for="inputBox">あなたの好きなアーティスト／ジャンル（最大10件）</label>
-    <div class="input-wrap">
-      <input id="inputBox" type="text" inputmode="search" autocomplete="off" placeholder="例）Daft Punk, FKJ, Tom Misch, BLACKPINK, Vaudou Game, Indie, Electronic" />
-      <button id="analyzeBtn" aria-label="分析する">分析する</button>
-      <span class="badge" id="countBadge">0 / 10</span>
-    </div>
-    <div class="small" style="margin-top:6px">Enter/カンマで追加。曖昧な綴りも自動マッチ。未登録名はジャンル推定します。</div>
-    <div class="chips" id="chips" aria-live="polite"></div>
-  </div>
-
-  <div class="row" style="margin-top:16px">
-    <div class="col panel">
-      <div class="section-title">あなたの音楽ベクトル（平均）</div>
-      <div id="profileBars"></div>
-      <div class="grid grid-2" style="margin-top:10px">
-        <div class="card">
-          <div class="section-title">ジャンル構成</div>
-          <div id="genreDist"></div>
-        </div>
-        <div class="card">
-          <div class="section-title">地域・時代バランス</div>
-          <div id="regionEra"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col panel">
-      <div class="section-title">性格傾向 / 仕事の潜在能力</div>
-      <div id="abilities"></div>
-    </div>
-  </div>
-
-  <div class="panel" style="margin-top:16px">
-    <div class="section-title">成長のための推薦アーティスト</div>
-    <div id="recs" class="grid grid-2" aria-live="polite"></div>
-  </div>
-
-  <p class="footer">
-    設計根拠：PDFレポートの「グルーヴ三原則（リズム/洗練/実験性）」「エネルギー×洗練度」「ジャンル別の意味付け／体験ヒント」「推奨アーティスト群」をスコアリングに反映しています（p.11–14,16–17,19,21–23,24）。 [oai_citation:1‡daijiro_music嗜好分析＋.pdf](sediment://file_0000000099b461fabd808f7fa764b779)
-  </p>
-</div>
-
-<script>
-/** =========================
- *  1) データ定義（前MVPと同じ）
- *  =======================*/
-const BASE_GENRE = {
-  "Electronic": {energy:.7, sophistication:.7, groove:.6, structure:.8, experimentation:.55, urban:.35, global:.55},
-  "R&B":        {energy:.5, sophistication:.6, groove:.8, structure:.5, experimentation:.45, urban:.8,  global:.45},
-  "Soul":       {energy:.55,sophistication:.6, groove:.85,structure:.5, experimentation:.45, urban:.8,  global:.45},
-  "Funk":       {energy:.7, sophistication:.55,groove:.9, structure:.45,experimentation:.4, urban:.75, global:.5},
-  "Indie":      {energy:.5, sophistication:.5, groove:.55,structure:.55,experimentation:.7, urban:.45, global:.45},
-  "Alternative":{energy:.55,sophistication:.5, groove:.55,structure:.55,experimentation:.7, urban:.45, global:.45},
-  "Post-rock":  {energy:.45,sophistication:.6, groove:.5, structure:.6, experimentation:.7, urban:.4,  global:.45},
-  "K-Pop":      {energy:.85,sophistication:.8, groove:.65,structure:.9, experimentation:.55, urban:.65, global:.95},
-  "Hip-hop":    {energy:.7, sophistication:.55,groove:.85,structure:.5, experimentation:.6, urban:.8,  global:.6},
-  "World":      {energy:.7, sophistication:.45,groove:.85,structure:.45,experimentation:.6, urban:.65, global:.9},
-  "Global":     {energy:.7, sophistication:.45,groove:.85,structure:.45,experimentation:.6, urban:.65, global:.9}
-};
-
-const ARTISTS = [
-  A("Daft Punk","FR",["Electronic"],"1990s",{energy:.75,sophistication:.85,groove:.7,structure:.9, experimentation:.6, urban:.4,global:.6}),
-  A("Justice","FR",["Electronic"],"2000s",{energy:.8,sophistication:.7,groove:.8,structure:.7, experimentation:.5, urban:.4,global:.6}),
-  A("FKJ","FR",["R&B","Electronic"],"2010s",{energy:.45,sophistication:.75,groove:.7,structure:.6, experimentation:.6, urban:.7,global:.7}),
-  A("Disclosure","UK",["Electronic"],"2010s",{energy:.7,sophistication:.7,groove:.7,structure:.8, experimentation:.5, urban:.5,global:.6}),
-  A("Fred again..","UK",["Electronic","Pop"],"2020s",{energy:.8,sophistication:.65,groove:.75,structure:.6, experimentation:.6, urban:.5,global:.7}),
-  A("The Chemical Brothers","UK",["Electronic"],"1990s",{energy:.85,sophistication:.6,groove:.65,structure:.7, experimentation:.7, urban:.4,global:.6}),
-  A("Rei Harakami","JP",["Electronic"],"2000s",{energy:.3,sophistication:.85,groove:.5,structure:.8, experimentation:.75,urban:.45,global:.6}),
-  A("Kan Sano","JP",["R&B","Soul"],"2010s",{energy:.55,sophistication:.7,groove:.8,structure:.6, experimentation:.5, urban:.85,global:.55}),
-  A("Tom Misch","UK",["R&B","Indie"],"2010s",{energy:.55,sophistication:.7,groove:.85,structure:.6, experimentation:.45,urban:.85,global:.6}),
-  A("Jamiroquai","UK",["Funk","R&B"],"1990s",{energy:.75,sophistication:.6,groove:.9,structure:.5, experimentation:.5, urban:.8,global:.55}),
-  A("James Blake","UK",["R&B","Electronic"],"2010s",{energy:.35,sophistication:.8,groove:.5,structure:.65, experimentation:.8, urban:.6,global:.65}),
-  A("SZA","US",["R&B"],"2010s",{energy:.5,sophistication:.6,groove:.6,structure:.5, experimentation:.4,urban:.85,global:.55}),
-  A("Thundercat","US",["Funk","R&B"],"2010s",{energy:.7,sophistication:.65,groove:.85,structure:.55, experimentation:.6,urban:.7,global:.6}),
-  A("Skrillex","US",["Electronic"],"2010s",{energy:.9,sophistication:.55,groove:.8,structure:.65, experimentation:.6,urban:.5,global:.7}),
-  A("ODESZA","US",["Electronic"],"2010s",{energy:.75,sophistication:.65,groove:.7,structure:.65, experimentation:.5,urban:.55,global:.7}),
-  A("Peggy Gou","KR",["Electronic"],"2010s",{energy:.75,sophistication:.7,groove:.8,structure:.7, experimentation:.55,urban:.55,global:.75}),
-  A("Vaudou Game","TG/FR",["World","Funk"],"2010s",{energy:.85,sophistication:.45,groove:.9,structure:.4, experimentation:.55,urban:.6,global:.9}),
-  A("African Head Charge","UK",["World","Dub"],"1980s",{energy:.6,sophistication:.5,groove:.8,structure:.5, experimentation:.7,urban:.6,global:.85}),
-  A("Tyla","ZA",["World","Pop"],"2020s",{energy:.65,sophistication:.6,groove:.8,structure:.55, experimentation:.55,urban:.8,global:.85}),
-  A("J Balvin","CO",["World","Pop"],"2010s",{energy:.8,sophistication:.55,groove:.85,structure:.55, experimentation:.55,urban:.7,global:.9}),
-  A("Altın Gün","NL/TR",["World","Indie"],"2010s",{energy:.7,sophistication:.55,groove:.8,structure:.55, experimentation:.65,urban:.6,global:.85}),
-  A("BLACKPINK","KR",["K-Pop"],"2010s",{energy:.9,sophistication:.85,groove:.7,structure:.9, experimentation:.55,urban:.7,global:.95}),
-  A("NewJeans","KR",["K-Pop"],"2020s",{energy:.7,sophistication:.8,groove:.65,structure:.9, experimentation:.55,urban:.7,global:.95}),
-  A("LE SSERAFIM","KR",["K-Pop"],"2020s",{energy:.8,sophistication:.8,groove:.65,structure:.9, experimentation:.55,urban:.7,global:.9}),
-  A("XG","JP/KR",["K-Pop","Hip-hop"],"2020s",{energy:.85,sophistication:.75,groove:.75,structure:.85, experimentation:.6,urban:.7,global:.9}),
-  A("BABYMONSTER","KR",["K-Pop"],"2020s",{energy:.85,sophistication:.8,groove:.7,structure:.88, experimentation:.55,urban:.7,global:.9}),
-  A("Jung Kook","KR",["K-Pop","Pop"],"2020s",{energy:.8,sophistication:.8,groove:.7,structure:.85, experimentation:.55,urban:.7,global:.9}),
-  A("Gorillaz","UK",["Alternative","Electronic"],"2000s",{energy:.7,sophistication:.7,groove:.7,structure:.65, experimentation:.8,urban:.6,global:.8}),
-  A("Khruangbin","US",["Indie","World"],"2010s",{energy:.5,sophistication:.7,groove:.75,structure:.55, experimentation:.6,urban:.55,global:.7}),
-  A("Ginger Root","US",["Indie","Funk"],"2020s",{energy:.6,sophistication:.65,groove:.75,structure:.55, experimentation:.55,urban:.6,global:.6}),
-  A("Bonobo","UK",["Electronic","Chill"],"2000s",{energy:.6,sophistication:.75,groove:.7,structure:.7, experimentation:.6,urban:.6,global:.8}),
-  A("Four Tet","UK",["Electronic","Experimental"],"2000s",{energy:.65,sophistication:.7,groove:.65,structure:.7, experimentation:.85,urban:.55,global:.8}),
-  A("Bicep","UK",["Electronic","House"],"2010s",{energy:.75,sophistication:.75,groove:.8,structure:.8, experimentation:.65,urban:.55,global:.7}),
-  A("Tycho","US",["Electronic","Ambient"],"2010s",{energy:.45,sophistication:.75,groove:.55,structure:.75, experimentation:.6,urban:.5,global:.65}),
-  A("Kaytranada","CA",["R&B","Electronic"],"2010s",{energy:.7,sophistication:.7,groove:.9,structure:.6, experimentation:.6,urban:.85,global:.7}),
-  A("Robert Glasper","US",["Jazz","R&B"],"2000s",{energy:.5,sophistication:.8,groove:.85,structure:.6, experimentation:.6,urban:.85,global:.6}),
-  A("BADBADNOTGOOD","CA",["Jazz","R&B"],"2010s",{energy:.55,sophistication:.7,groove:.85,structure:.6, experimentation:.65,urban:.75,global:.65}),
-  A("Nubya Garcia","UK",["Jazz","R&B"],"2010s",{energy:.65,sophistication:.75,groove:.85,structure:.6, experimentation:.65,urban:.7,global:.7}),
-  A("KOKOROKO","UK",["Jazz","R&B"],"2010s",{energy:.6,sophistication:.7,groove:.85,structure:.6, experimentation:.6,urban:.7,global:.7}),
-  A("Alfa Mist","UK",["Jazz","R&B"],"2010s",{energy:.45,sophistication:.75,groove:.8,structure:.6, experimentation:.65,urban:.75,global:.65}),
-  A("Vulfpeck","US",["Funk"],"2010s",{energy:.75,sophistication:.6,groove:.9,structure:.55, experimentation:.5,urban:.75,global:.6}),
-  A("Jungle","UK",["Funk","Pop"],"2010s",{energy:.8,sophistication:.65,groove:.9,structure:.55, experimentation:.55,urban:.7,global:.6}),
-  A("Parcels","AU/DE",["Funk","Indie"],"2010s",{energy:.7,sophistication:.65,groove:.85,structure:.6, experimentation:.55,urban:.7,global:.7}),
-  A("Cimafunk","CU",["Funk","World"],"2010s",{energy:.8,sophistication:.55,groove:.95,structure:.5, experimentation:.6,urban:.75,global:.9}),
-  A("RÜFÜS DU SOL","AU",["Electronic","House"],"2010s",{energy:.8,sophistication:.7,groove:.7,structure:.8, experimentation:.6,urban:.55,global:.7}),
-  A("Roosevelt","DE",["Electronic","Pop"],"2010s",{energy:.7,sophistication:.65,groove:.7,structure:.7, experimentation:.55,urban:.6,global:.65}),
-  A("TOKiMONSTA","US",["Electronic"],"2010s",{energy:.7,sophistication:.6,groove:.7,structure:.6, experimentation:.75,urban:.6,global:.7}),
-  A("Dorian Concept","AT",["Electronic","Experimental"],"2010s",{energy:.7,sophistication:.7,groove:.6,structure:.6, experimentation:.85,urban:.55,global:.7}),
-  A("Floating Points","UK",["Electronic","Experimental"],"2010s",{energy:.6,sophistication:.85,groove:.65,structure:.75, experimentation:.85,urban:.55,global:.75}),
-];
-function A(name,region,genres,era,features){return {name,region,genres,era,features};}
-
-/** =========================
- *  2) ユーティリティ
- *  =======================*/
-const clamp = (n)=>Math.max(0,Math.min(1,n));
-function avg(objs){
-  const keys=Object.keys(objs[0]||{}), out={};
-  for(const k of keys) out[k]=objs.reduce((s,o)=>s+o[k],0)/objs.length;
-  return out;
-}
-function cosine(a,b){
-  const keys=Object.keys(a), dot=keys.reduce((s,k)=>s+a[k]*b[k],0);
-  const na=Math.sqrt(keys.reduce((s,k)=>s+a[k]*a[k],0));
-  const nb=Math.sqrt(keys.reduce((s,k)=>s+b[k]*b[k],0));
-  return dot/(na*nb||1);
-}
-function fuzzyFindArtist(token){
-  token=token.toLowerCase().trim();
-  let best=null,score=0;
-  for(const a of ARTISTS){
-    const s = similarity(token,a.name.toLowerCase());
-    if(s>score){score=s;best=a;}
-  }
-  return score>=0.55?best:null;
-}
-function similarity(a,b){
-  const A=new Set(a.split(/\s+/)), B=new Set(b.split(/\s+/));
-  const inter=[...A].filter(x=>B.has(x)).length;
-  const union=new Set([...A,...B]).size;
-  return inter/(union||1);
-}
-function findGenre(token){
-  const key = Object.keys(BASE_GENRE).find(g=>g.toLowerCase()===token.toLowerCase());
-  return key?key:null;
-}
-
-/** =========================
- *  3) プロファイル計算
- *  =======================*/
-function computeProfile(inputs){
-  const used=new Set();
-  const items=[];
-  const genresCount={};
-  const regionsCount={};
-  const erasCount={};
-
-  for(const raw of inputs){
-    const t = raw.trim();
-    if(!t) continue;
-    if(used.has(t.toLowerCase())) continue;
-    used.add(t.toLowerCase());
-    let item = fuzzyFindArtist(t);
-    if(item){
-      items.push(item);
-      for(const g of item.genres){genresCount[g]=(genresCount[g]||0)+1;}
-      regionsCount[item.region]=(regionsCount[item.region]||0)+1;
-      erasCount[item.era]=(erasCount[item.era]||0)+1;
-    }else{
-      const g=findGenre(t) || "Indie";
-      items.push({name:t,region:"-",genres:[g],era:"-",features:BASE_GENRE[g]});
-      genresCount[g]=(genresCount[g]||0)+1;
-    }
-  }
-
-  const vecs = items.map(x=>x.features);
-  const user = avg(vecs.length?vecs:[BASE_GENRE["Indie"]]);
-
-  // 多様性（Structured Diversityの簡易値）
-  const genreDiversity = 1 - Math.max(0,...Object.values(genresCount))/Math.max(1,items.length);
-  const regionDiversity = 1 - Math.max(0,...Object.values(regionsCount))/Math.max(1,items.length);
-  const structuredDiversity = clamp((genreDiversity+regionDiversity)/2);
-
-  return {items,user,genresCount,regionsCount,erasCount,structuredDiversity};
-}
-
-/** =========================
- *  4) 能力推定（PDFの概念→仕事言語）
- *  =======================*/
-function toAbilities(p){
-  const v=p.user, div=p.structuredDiversity;
-  const abilities = [
-    {key:"system", label:"構造化・情報設計力（構築美×洗練）", score: clamp(0.6*v.structure + 0.4*v.sophistication),
-      why:"Electronic指向と洗練の高さ（p.11, p.17）が、要件整理・情報設計の強みとして現れます。"},
-    {key:"grooveLead", label:"チーム推進・ファシリテーション（リズム）", score: clamp(0.5*v.groove + 0.3*v.energy),
-      why:"“リズム”が高い人は協働でテンポを作れる（p.16）。"},
-    {key:"innovation", label:"実験駆動のR&D/新規事業（実験性）", score: clamp(0.7*v.experimentation + 0.2*v.structure + 0.1*v.global),
-      why:"“実験性”の高さは探索・試作の推進力に直結（p.16）。"},
-    {key:"empathy", label:"共感・関係性設計（都市的温度）", score: clamp(0.6*v.urban + 0.2*(1-v.energy) + 0.2*v.groove),
-      why:"R&B/Soulの『都市的温度』は関係性デザインの資質（p.12）。"},
-    {key:"global", label:"越境協業・多文化統合（グローバル×ローカル）", score: clamp(0.7*v.global + 0.3*div),
-      why:"World/Global傾向と分布の多様性が越境力に（p.14, p.19, p.24）。"},
-    {key:"execution", label:"実行ドライブ（エネルギー）", score: v.energy,
-      why:"エネルギーは行動の立ち上がりを司る（p.17）。"},
-    {key:"orchestration", label:"品質統率・演出（洗練×構築力/K‑Pop）", score: clamp(0.5*v.sophistication + 0.35*v.structure + 0.15*v.groove),
-      why:"K‑Pop的な構築力と発信性を業務演出へ（p.13）。"}
-  ];
-  for(const a of abilities) a.percent=Math.round(a.score*100);
-  return abilities.sort((a,b)=>b.percent-a.percent);
-}
-
-/** =========================
- *  5) レコメンド（近接＋伸びしろ）
- *  =======================*/
-function recommend(p){
-  const user=p.user;
-  const have=new Set(p.items.map(i=>i.name.toLowerCase()));
-  const cands=ARTISTS.filter(a=>!have.has(a.name.toLowerCase()));
-  cands.forEach(c=>{
-    const sim = cosine(user,c.features);
-    const growth = 0.3*(c.features.experimentation-user.experimentation)
-                 + 0.2*(c.features.global-user.global)
-                 + 0.2*(c.features.urban-user.urban);
-    c._score = sim + Math.max(0,growth);
-  });
-  const top = cands.sort((a,b)=>b._score-a._score).slice(0,50);
-  const picked=[], usedGenres=new Set();
-  for(const c of top){
-    const gKey=c.genres[0];
-    if(picked.length>=8) break;
-    const penalty = usedGenres.has(gKey)?0.07:0;
-    if((c._score-penalty)>0.6){picked.push(c); usedGenres.add(gKey);}
-  }
-  return picked.map(c=>{
-    const reasons=[];
-    if(c.features.experimentation>user.experimentation+0.07) reasons.push("実験性が一段高く、発想の幅を拡げます");
-    if(c.features.global>user.global+0.07) reasons.push("多文化・越境性が強く、視野を広げます");
-    if(c.features.urban>user.urban+0.07) reasons.push("都市的温度が高く、共感の解像度を上げます");
-    if(reasons.length===0) reasons.push("あなたの中核ベクトルに近く、深掘りに最適です");
-    return {...c, why:reasons.join(" / ")};
-  });
-}
-
-/** =========================
- *  6) UI ハンドラ
- *  =======================*/
-const inputBox=document.getElementById("inputBox");
-const chipsEl=document.getElementById("chips");
-const countBadge=document.getElementById("countBadge");
-const profileBars=document.getElementById("profileBars");
-const genreDist=document.getElementById("genreDist");
-const regionEra=document.getElementById("regionEra");
-const abilitiesEl=document.getElementById("abilities");
-const recsEl=document.getElementById("recs");
-const analyzeBtn=document.getElementById("analyzeBtn");
-
-let tokens=[];
-
-inputBox.addEventListener("keydown",e=>{
-  if(e.key==="Enter"||e.key===","){e.preventDefault(); addToken(inputBox.value); inputBox.value=""; renderChips();}
-});
-function addToken(t){
-  t=t.trim(); if(!t) return;
-  if(tokens.length>=10) return;
-  tokens.push(t);
-  renderChips();
-}
-function removeToken(i){tokens.splice(i,1); renderChips();}
-function renderChips(){
-  chipsEl.innerHTML=tokens.map((t,i)=>`<span class="chip"><b>${escapeHtml(t)}</b><span class="x" onclick="removeToken(${i})" aria-label="削除">✕</span></span>`).join("");
-  countBadge.textContent=`${tokens.length} / 10`;
-}
-function escapeHtml(s){return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-
-analyzeBtn.addEventListener("click",()=>{
-  if(tokens.length===0){addToken("Electronic");}
-  const res = computeProfile(tokens);
-  drawProfile(res);
-  drawAbilities(res);
-  drawRecs(res);
-  analyzeBtn.blur();
-});
-
-function drawProfile(p){
-  const v=p.user;
-  const keys=[["energy","エネルギー"],["sophistication","洗練"],["groove","グルーヴ"],["structure","構築力"],["experimentation","実験性"],["urban","都市的温度"],["global","越境性"]];
-  profileBars.innerHTML = keys.map(([k,ja])=>bar(ja,Math.round(v[k]*100))).join("");
-  genreDist.innerHTML = distList(p.genresCount,"ジャンル");
-  regionEra.innerHTML = `<div class='kpi'><span>地域多様性</span><span class='badge'>${Math.round(p.structuredDiversity*100)}%</span></div>`
-    + distList(p.regionsCount,"地域") + distList(p.erasCount,"時代");
-}
-function bar(label,percent){return `<div class="kpi"><div>${label}</div><div class="badge" style="padding:2px 8px">${percent}%</div></div><div class="bar"><div class="fill" style="width:${percent}%"></div></div>`}
-function distList(obj,title){
-  const total=Object.values(obj).reduce((s,n)=>s+n,0)||1;
-  if(total===1 && Object.keys(obj).length===0) return `<div class="small">—</div>`;
-  return `<ul class="small">${Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<li>${escapeHtml(k)}：${Math.round(n/total*100)}%</li>`).join("")}</ul>`;
-}
-function drawAbilities(p){
-  const abs = toAbilities(p);
-  abilitiesEl.innerHTML = abs.map(a=>`
-    <div class="card">
-      <div class="kpi"><div><strong>${a.label}</strong></div><div class="badge">${a.percent}%</div></div>
-      <div class="small">${a.why}</div>
-    </div>
-  `).join("");
-}
-function drawRecs(p){
-  const recs = recommend(p);
-  recsEl.innerHTML = recs.map(r=>`
-    <div class="card">
-      <strong>${r.name}</strong> <span class="badge">${r.genres.join(" / ")}</span>
-      <div class="small" style="margin-top:6px">${r.why}</div>
-    </div>
-  `).join("");
-}
-</script>
-</body>
-</html>
->>>>>>> Stashed changes
