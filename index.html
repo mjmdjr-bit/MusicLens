@@ -1,19 +1,19 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ja">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MusicLens — Dynamic Metrics + Gold Map（英日併記・多様性レコメンド）</title>
+  <title>MusicLens — Dynamic Metrics + Black/Gold Map</title>
   <style>
     :root {
       --accent: #ffcc33;
       --accent-2: #ff8800;
-      --glow: rgba(255, 180, 60, .65);
+      --glow: rgba(255, 180, 60, .7);
       --txt: #eef2ff;
       --muted: #a9b2c7;
-      --bg1: #0e1018;
-      --bg2: #15192a;
+      --bg1: #0a0a0e;
+      --bg2: #151722;
       --mx: 0px;
       --my: 0px;
     }
@@ -27,8 +27,8 @@
       color: var(--txt);
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", Roboto, Segoe UI, sans-serif;
       background:
-        radial-gradient(1200px 600px at 10% -10%, #ffd96622, transparent),
-        radial-gradient(900px 600px at 90% 10%, #ff8a0022, transparent),
+        radial-gradient(1200px 600px at 12% -10%, #ffbf0022, transparent),
+        radial-gradient(900px 600px at 88% 10%, #ff7a0022, transparent),
         linear-gradient(180deg, var(--bg1), var(--bg2));
       overflow-x: hidden;
     }
@@ -170,7 +170,7 @@
 
     input[type=text]:focus {
       border-color: rgba(255, 200, 80, .7);
-      box-shadow: 0 0 0 4px rgba(255, 200, 80, .15)
+      box-shadow: 0 0 0 4px rgba(255, 200, 80, .18)
     }
 
     button {
@@ -347,7 +347,7 @@
       box-shadow: 0 6px 14px rgba(0, 0, 0, .25)
     }
 
-    /* Listening Map（はっきり見えるゴールド） */
+    /* Listening Map（黒地に金線） */
     .mapWrap {
       position: relative;
       border-radius: 18px;
@@ -359,45 +359,48 @@
       position: relative;
       width: 100%;
       aspect-ratio: 21/9;
-      background:
-        linear-gradient(180deg, #ffcf6b 0%, #ff9f1c 100%),
+      /* さらにワイドに */
+      background-color: #000;
+      /* 純黒ベース */
+      background-image:
         url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
-      background-size: cover, contain;
-      background-position: center, center;
-      background-repeat: no-repeat, no-repeat;
-      filter: contrast(1.1) saturate(1.08) brightness(1.02)
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      /* 画像を金色に“着色”するフィルタ（白地図 → 金線化） */
+      filter: invert(100%) sepia(90%) saturate(1500%) hue-rotate(-20deg) brightness(1.1) contrast(1.1);
     }
 
+    /* 薄い経緯線を追加（視認性UP） */
     .mapCanvas::after {
       content: "";
       position: absolute;
       inset: 0;
       pointer-events: none;
       background:
-        repeating-linear-gradient(transparent, transparent 47px, rgba(255, 255, 255, .07) 48px),
-        repeating-linear-gradient(90deg, transparent, transparent 47px, rgba(255, 255, 255, .07) 48px);
-      mix-blend-mode: soft-light;
+        repeating-linear-gradient(transparent, transparent 46px, rgba(255, 185, 60, .09) 47px),
+        repeating-linear-gradient(90deg, transparent, transparent 46px, rgba(255, 185, 60, .09) 47px);
     }
 
-    /* プロット（入力：シアン／推薦：オレンジ） */
+    /* プロット（入力＝シアン、推薦＝ゴールド）を強発光に */
     .dot {
       position: absolute;
       width: 14px;
       height: 14px;
       border-radius: 50%;
       transform: translate(-50%, -50%) scale(.7);
-      background: radial-gradient(circle, #fff 0%, #ffe9b0 35%, #ff9f1c 75%);
-      box-shadow: 0 0 20px rgba(255, 180, 40, .95), 0 0 6px rgba(255, 255, 255, .85) inset
+      background: radial-gradient(circle, #fff 0%, #ffe9b0 35%, #ffb340 75%);
+      box-shadow: 0 0 22px rgba(255, 190, 40, .95), 0 0 6px rgba(255, 255, 255, .85) inset
     }
 
     .dot.input {
-      background: radial-gradient(circle, #fff 0%, #bff0ff 35%, #00bfff 75%);
-      box-shadow: 0 0 20px rgba(0, 170, 255, .95), 0 0 6px rgba(255, 255, 255, .85) inset
+      background: radial-gradient(circle, #fff 0%, #c9f3ff 35%, #00c4ff 75%);
+      box-shadow: 0 0 22px rgba(0, 180, 255, .95), 0 0 6px rgba(255, 255, 255, .85) inset
     }
 
     .ping {
       position: absolute;
-      border: 2px solid rgba(255, 255, 255, .55);
+      border: 2px solid rgba(255, 215, 120, .7);
       border-radius: 999px;
       transform: translate(-50%, -50%) scale(1);
       animation: ping 2.4s ease-out infinite;
@@ -418,10 +421,10 @@
       }
     }
 
-    /* Loveセクション：横いっぱい・大きく */
+    /* Loveセクション：横いっぱい・大きく（SVGハート） */
     .loveWide {
       display: grid;
-      grid-template-columns: minmax(260px, 32%) 1fr;
+      grid-template-columns: minmax(320px, 40%) 1fr;
       gap: 18px;
       align-items: center
     }
@@ -435,53 +438,49 @@
     }
 
     .loveLabel {
-      margin-top: 10px;
-      font-weight: 700;
+      margin-top: 12px;
+      font-weight: 800;
       letter-spacing: .3px;
       color: #ffe7a8
     }
 
-    .heart {
-      width: 120px;
-      height: 120px;
-      position: relative;
-      transform: rotate(-45deg);
-      background: conic-gradient(from 0deg, #fff 0 10%, #ffe3a3 20%, #ffb347 60%, #ff8a00 100%);
-      box-shadow: 0 0 30px rgba(255, 180, 60, .8);
-      animation: beat 1.6s ease-in-out infinite
+    .heartSvg {
+      width: 180px;
+      height: 180px;
+      /* JSでレベルに応じて可変 */
+      filter: drop-shadow(0 0 18px rgba(255, 180, 60, .7));
     }
 
-    .heart:before,
-    .heart:after {
-      content: "";
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: inherit
-    }
-
-    .heart:before {
-      top: -60px;
-      left: 0
-    }
-
-    .heart:after {
-      left: 60px;
-      top: 0
+    .heartSvg path {
+      fill: url(#heartGrad);
+      animation: beat 1.6s ease-in-out infinite, shine 2.6s ease-in-out infinite;
     }
 
     @keyframes beat {
       0% {
-        transform: rotate(-45deg) scale(.98)
+        transform: scale(.98)
       }
 
       50% {
-        transform: rotate(-45deg) scale(1.07)
+        transform: scale(1.06)
       }
 
       100% {
-        transform: rotate(-45deg) scale(.98)
+        transform: scale(.98)
+      }
+    }
+
+    @keyframes shine {
+      0% {
+        filter: brightness(1)
+      }
+
+      50% {
+        filter: brightness(1.18)
+      }
+
+      100% {
+        filter: brightness(1)
       }
     }
 
@@ -524,34 +523,16 @@
         grid-template-columns: 1fr
       }
 
-      .heart,
-      .heart:before,
-      .heart:after {
-        width: 100px;
-        height: 100px
-      }
-
-      .heart:before {
-        top: -50px
-      }
-
-      .heart:after {
-        left: 50px
+      .heartSvg {
+        width: 140px;
+        height: 140px
       }
     }
 
     .no-motion .bg::before,
     .no-motion .bg::after,
-    .no-motion button::after {
-      animation: none
-    }
-
-    .no-motion .panel,
-    .no-motion .chip,
-    .no-motion .card,
-    .no-motion button,
-    .no-motion .heart {
-      transition: none;
+    .no-motion button::after,
+    .no-motion .heartSvg path {
       animation: none
     }
   </style>
@@ -568,9 +549,9 @@
         <div class="sig">Produced by DAIJIRO MAJIMA</div>
       </div>
       <p class="subtitle" style="text-align:center">
-        Enter up to 10 artists/genres → dynamic traits → Gold Listening Map & Big Love Meter → diverse
+        Enter up to 10 artists/genres → dynamic traits → Black/Gold Listening Map & Big Heart Meter → diverse
         recommendations.<br>
-        （最大10件入力 → 毎回変動する特性 → 金色の地図＆大型メーター → 多ジャンル推薦）
+        （最大10件入力 → 毎回変動する特性 → 黒×金の地図＆大型ハート → 多ジャンル推薦）
       </p>
       <div class="headerRow" style="justify-content:center;gap:14px">
         <label class="small" style="display:inline-flex;gap:8px;align-items:center">
@@ -632,12 +613,24 @@
       </div>
     </div>
 
-    <!-- Love Meter（横いっぱい大型） -->
+    <!-- Love Meter（横いっぱい・SVGハート） -->
     <div class="panel reveal">
       <div class="section-title">Music Love Level（音楽愛レベル / 10段階）</div>
       <div class="loveWide">
         <div class="loveHeartWrap">
-          <div id="heart" class="heart" title="love"></div>
+          <!-- 正しいフォルムのハート（SVGパス） -->
+          <svg id="heart" class="heartSvg" viewBox="0 0 48 48" aria-hidden="true">
+            <defs>
+              <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#fff3b0" />
+                <stop offset="40%" stop-color="#ffd166" />
+                <stop offset="100%" stop-color="#ff8a00" />
+              </linearGradient>
+            </defs>
+            <!-- 綺麗なハート形状パス（角の角張りなし） -->
+            <path
+              d="M24 43c-1.1 0-2.2-.4-3-1.2C18.3 39.4 6 28.8 6 18.1 6 12.1 10.8 7 16.7 7c3.3 0 6.5 1.6 8.4 4.2C27 8.6 30.2 7 33.5 7 39.4 7 44.2 12.1 44.2 18.1c0 10.7-12.3 21.3-15 23.7-.8.7-1.9 1.2-3 1.2z" />
+          </svg>
           <div id="loveLabel" class="loveLabel">—</div>
         </div>
         <div class="loveMeterWrap">
@@ -672,7 +665,7 @@
     function norm(s) { return s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim(); }
     function similar(a, b) { a = norm(a); b = norm(b); return a === b || a.includes(b) || b.includes(a); }
 
-    /* ========= Feature Model & Genre Map ========= */
+    /* ========= Feature Model ========= */
     const BASE_GENRE = {
       "Electronic": { energy: .7, sophistication: .7, groove: .6, structure: .8, experiment: .55, urban: .35, global: .55 },
       "R&B": { energy: .5, sophistication: .6, groove: .8, structure: .5, experiment: .45, urban: .8, global: .45 },
@@ -774,7 +767,7 @@
     };
     function project(lat, lon, w, h) { const x = (lon + 180) / 360 * w; const y = (90 - lat) / 180 * h; return [x, y]; }
 
-    /* ========= Dynamic profile (毎回変動) ========= */
+    /* ========= Dynamic profile ========= */
     function tokenVector(token, catalog) {
       const hit = catalog?.find(a => similar(a.name, token));
       const gs = hit?.genres?.length ? hit.genres : [mapGenre(token)];
@@ -865,7 +858,7 @@
     const motionToggle = document.getElementById("motionToggle");
     const artistsEl = document.getElementById("artists");
     const mapEl = document.getElementById("map");
-    const heartEl = document.getElementById("heart");
+    const heartSvg = document.getElementById("heart");
     const genreFill = document.getElementById("genreFill");
     const genreDetail = document.getElementById("genreDetail");
     const loveLabel = document.getElementById("loveLabel");
@@ -889,7 +882,7 @@
     function renderChips() { chipsEl.innerHTML = tokens.map((t, i) => `<span class="chip">${escapeHtml(t)} <a style="cursor:pointer" onclick="removeToken(${i})">✕</a></span>`).join(""); countBadge.textContent = `${tokens.length} / 10`; }
     function escapeHtml(s) { return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 
-    /* ========= Love Score（大型・光モーション） ========= */
+    /* ========= Love Score（SVGハートをダイナミックに） ========= */
     function computeLoveAndDiversity() {
       const n = tokens.length;
       const genres = tokens.map(t => mapGenre(t));
@@ -901,12 +894,12 @@
     function renderLoveUI() {
       const { level, unique } = computeLoveAndDiversity();
       const vw = Math.max(320, window.innerWidth);
-      const base = vw >= 1000 ? 140 : 110;
-      const amp = vw >= 1000 ? 18 : 14;
-      const size = base + level * amp;
-      heartEl.style.width = size + "px"; heartEl.style.height = size + "px";
-      heartEl.style.boxShadow = `0 0 ${8 + level}px rgba(255,190,60,.8)`;
-      heartEl.style.animationDuration = Math.max(0.7, 1.9 - level * 0.09) + "s";
+      const base = vw >= 1000 ? 200 : 160;               // SVGの見た目サイズ（px）
+      const amp = vw >= 1000 ? 14 : 12;              // レベルごとの増加
+      const size = base + (level - 5) * amp;           // 5を中心に増減
+      heartSvg.style.width = size + "px";
+      heartSvg.style.height = size + "px";
+      heartSvg.querySelector('path').style.animationDuration = Math.max(0.7, 1.9 - level * 0.09) + "s"; // 心拍
       loveLabel.textContent = `Level ${level} / 10（入力 ${tokens.length}・ユニークジャンル ${unique}）`;
       const maxG = 12; const gPct = Math.round(100 * Math.min(1, unique / maxG));
       genreFill.style.width = gPct + "%";
