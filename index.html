@@ -1,418 +1,971 @@
-{\rtf1\ansi\ansicpg932\cocoartf2865
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+<!doctype html>
+<html lang="ja">
 
-\f0\fs24 \cf0 <!doctype html>\
-<html lang="ja">\
-<head>\
-<meta charset="utf-8" />\
-<meta name="viewport" content="width=device-width,initial-scale=1" />\
-<title>MusicLens \'97 Open Catalog + Motion + Artist Spotlight</title>\
-<style>\
-:root\{\
-  --accent:#ffcc33; --accent-2:#ff8800; --glow:rgba(255,180,60,.45);\
-  --txt:#eef2ff; --muted:#a9b2c7; --bg1:#0e1018; --bg2:#15192a;\
-  --mx:0px; --my:0px;\
-\}\
-*\{box-sizing:border-box\}\
-body\{\
-  margin:0;color:var(--txt);\
-  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",Roboto,Segoe UI,sans-serif;\
-  background:\
-    radial-gradient(1200px 600px at 10% -10%, #ffd96622, transparent),\
-    radial-gradient(900px 600px at 90% 10%, #ff8a0022, transparent),\
-    linear-gradient(180deg,var(--bg1),var(--bg2));\
-  overflow-x:hidden;\
-\}\
-/* \uc0\u32972 \u26223 \u12514 \u12540 \u12471 \u12519 \u12531  */\
-.bg\{position:fixed;inset:-10% -10% -10% -10%;z-index:-1;pointer-events:none;filter:blur(40px) saturate(130%)\}\
-.bg::before,.bg::after\{content:"";position:absolute;border-radius:50%;width:50vw;height:50vw;opacity:.55;mix-blend-mode:screen;\
-  background:radial-gradient(circle at 30% 30%, #ffe07a, transparent 60%), radial-gradient(circle at 70% 70%, #ff8a00, transparent 60%);\
-  transform:translate3d(calc(var(--mx)*.03),calc(var(--my)*.03),0)\}\
-.bg::before\{left:-8vw;top:-6vw;animation:float1 18s ease-in-out infinite alternate\}\
-.bg::after\{right:-8vw;bottom:-10vw;animation:float2 22s ease-in-out infinite alternate\}\
-@keyframes float1\{to\{transform:translate3d(2vw,1vh,0) scale(1.05)\}\}\
-@keyframes float2\{to\{transform:translate3d(-2vw,-2vh,0) scale(1.07)\}\}\
-.container\{max-width:1100px;margin:34px auto;padding:0 18px\}\
-/* \uc0\u12497 \u12493 \u12523  */\
-.panel\{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));\
-  border:1px solid rgba(255,255,255,.18);border-radius:22px;padding:18px;\
-  backdrop-filter:saturate(180%) blur(18px);box-shadow:0 12px 36px rgba(0,0,0,.35), inset 0 1px rgba(255,255,255,.25);\
-  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease\}\
-.panel:hover\{transform:translateY(-2px);border-color:rgba(255,200,80,.55);box-shadow:0 18px 44px rgba(255,170,40,.25), inset 0 1px rgba(255,255,255,.35)\}\
-.reveal\{opacity:0;transform:translateY(10px);transition:opacity .5s ease, transform .5s ease\}\
-.reveal.show\{opacity:1;transform:none\}\
-.subtitle\{margin:0 0 12px;color:var(--muted);font-size:13px\}\
-label\{display:block;margin:.5rem 0 .4rem;font-weight:700\}\
-/* \uc0\u12525 \u12468  */\
-.logoWrap\{display:flex;justify-content:center;margin:4px 0 12px\}\
-.logo\{\
-  font-weight:900;font-size:34px;letter-spacing:1.2px;line-height:1;\
-  background:linear-gradient(90deg,#fff3b0,#ffd166,#ff9f1c);\
-  -webkit-background-clip:text;background-clip:text;color:transparent;\
-  text-shadow:0 6px 40px rgba(255,200,80,.25);\
-  filter:drop-shadow(0 4px 14px rgba(255,170,40,.25));\
-\}\
-/* \uc0\u20837 \u21147 \u12539 \u12508 \u12479 \u12531  */\
-input[type=text]\{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.2);\
-  background:rgba(255,255,255,.08);color:#fff;outline:none;transition:border-color .2s, box-shadow .2s\}\
-input[type=text]:focus\{border-color:rgba(255,200,80,.6);box-shadow:0 0 0 4px rgba(255,200,80,.12)\}\
-button\{appearance:none;border:none;border-radius:14px;padding:10px 16px;color:white;font-weight:800;cursor:pointer;position:relative;overflow:hidden;\
-  background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 0 22px var(--glow);\
-  transition:transform .15s, filter .2s, box-shadow .2s\}\
-button:hover\{transform:translateY(-1px);filter:brightness(1.06);box-shadow:0 0 28px var(--glow)\}\
-button::after\{content:"";position:absolute;inset:-100% -40% -100% -40%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.5),transparent);\
-  transform:translateX(-60%) skewX(-15deg);animation:sheen 3.6s linear infinite;pointer-events:none\}\
-@keyframes sheen\{to\{transform:translateX(60%) skewX(-15deg)\}\}\
-.chips\{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0\}\
-.chip\{background:rgba(255,255,255,.1);border-radius:999px;padding:6px 10px;border:1px solid rgba(255,255,255,.18);\
-  transition:transform .12s,border-color .2s,box-shadow .2s\}\
-.chip:hover\{transform:scale(1.04);border-color:rgba(255,200,80,.55);box-shadow:0 0 16px rgba(255,190,70,.25)\}\
-.row\{display:flex;gap:16px;flex-wrap:wrap\}\
-.col\{flex:1 1 340px;min-width:300px\}\
-.section-title\{font-size:14px;font-weight:800;margin-bottom:8px;color:#ffd36b\}\
-.kpi\{display:grid;grid-template-columns:1fr auto;gap:6px;margin:6px 0\}\
-.bar\{height:10px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden\}\
-.fill\{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 0 18px var(--glow) inset;width:0%\}\
-.badge\{background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px;font-size:12px\}\
-.card\{background:rgba(255,255,255,.08);border-radius:16px;padding:12px;border:1px solid rgba(255,255,255,.16);\
-  transition:transform .2s, box-shadow .2s, border-color .2s\}\
-.card:hover\{transform:translateY(-2px);border-color:rgba(255,200,80,.5);box-shadow:0 10px 26px rgba(255,180,70,.2)\}\
-a.link\{color:#ffe28a;text-decoration:underline;transition:color .15s\}\
-a.link:hover\{color:#fff0b5\}\
-.headerRow\{display:flex;gap:10px;align-items:center;flex-wrap:wrap\}\
-.small\{color:var(--muted);font-size:12px\}\
-.badge.pill\{background:rgba(255,200,80,.18)\}\
-.footer\{color:var(--muted);text-align:center;font-size:12px;margin:16px 0 6px\}\
-.artistGrid\{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px\}\
-.artistCard\{display:flex;gap:10px;align-items:flex-start\}\
-.artistImg\{width:56px;height:56px;flex:0 0 56px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,.22);\
-  box-shadow:0 6px 14px rgba(0,0,0,.25)\}\
-.no-motion .bg::before,.no-motion .bg::after, .no-motion button::after\{animation:none\}\
-.no-motion .panel,.no-motion .chip,.no-motion .card, .no-motion button\{transition:none\}\
-</style>\
-</head>\
-<body>\
-<div class="bg"></div>\
-\
-<div class="container">\
-  <!-- \uc0\u12504 \u12483 \u12480 \u12540 \u65306 \u20013 \u22830 \u12525 \u12468  -->\
-  <div class="panel reveal">\
-    <div class="logoWrap"><div class="logo">MusicLens</div></div>\
-    <p class="subtitle" style="text-align:center">Enter up to 10 artists/genres \uc0\u8594  analyze traits \u8594  see Artist Spotlights with photos \u8594  get open-web recommendations.</p>\
-    <div class="headerRow" style="justify-content:center;gap:14px">\
-      <label class="small" style="display:inline-flex;gap:8px;align-items:center">\
-        <input id="onlineToggle" type="checkbox" checked/> Online Mode\
-      </label>\
-      <label class="small" style="display:inline-flex;gap:8px;align-items:center">\
-        <input id="motionToggle" type="checkbox" checked/> Motion\
-      </label>\
-      <span id="status" class="small"></span>\
-    </div>\
-  </div>\
-\
-  <!-- \uc0\u20837 \u21147  -->\
-  <div class="panel reveal">\
-    <label for="inputBox">Artists / Genres</label>\
-    <input id="inputBox" type="text" placeholder="e.g. Daft Punk, FKJ, Tom Misch, BLACKPINK, Indie, House" />\
-    <div class="headerRow" style="margin-top:8px">\
-      <button id="addBtn">Add</button>\
-      <button id="analyzeBtn">Analyze</button>\
-      <span class="badge" id="countBadge">0 / 10</span>\
-    </div>\
-    <div class="chips" id="chips"></div>\
-  </div>\
-\
-  <!-- \uc0\u12503 \u12525 \u12501 \u12449 \u12452 \u12523  -->\
-  <div class="row">\
-    <div class="col panel reveal">\
-      <div class="section-title">Your Music Vector</div>\
-      <div id="profileBars"></div>\
-      <div class="card" style="margin-top:10px">\
-        <div class="section-title">Genre Distribution</div>\
-        <div id="genreDist" class="small"></div>\
-      </div>\
-    </div>\
-    <div class="col panel reveal">\
-      <div class="section-title">Personality & Today</div>\
-      <div id="personality"></div>\
-    </div>\
-  </div>\
-\
-  <div class="panel reveal">\
-    <div class="section-title">Work Strengths</div>\
-    <div id="abilities"></div>\
-  </div>\
-\
-  <!-- \uc0\u9733  \u26032 \u27231 \u33021 \u65306 Artist Spotlights -->\
-  <div class="panel reveal">\
-    <div class="section-title">Artist Spotlights (photo + one-liner)</div>\
-    <div id="artists" class="artistGrid"></div>\
-  </div>\
-\
-  <div class="panel reveal">\
-    <div class="section-title">Open-Web Recommendations</div>\
-    <div id="recs" class="artistGrid"></div>\
-  </div>\
-\
-  <p class="footer">Sources: iTunes Search API / MusicBrainz / Wikipedia REST. Fallback to local seed. Motion respects \'93prefers-reduced-motion\'94.</p>\
-</div>\
-\
-<script>\
-/* ===== Utils ===== */\
-const clamp=n=>Math.max(0,Math.min(1,n));\
-function avg(objs)\{const k=Object.keys(objs[0]||\{\}),o=\{\};for(const x of k)o[x]=objs.reduce((s,v)=>s+v[x],0)/objs.length;return o;\}\
-function cosine(a,b)\{const K=Object.keys(a),d=K.reduce((s,k)=>s+a[k]*b[k],0),na=Math.sqrt(K.reduce((s,k)=>s+a[k]*a[k],0)),nb=Math.sqrt(K.reduce((s,k)=>s+b[k]*b[k],0));return d/(na*nb||1);\}\
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));\
-/* ===== Feature Model ===== */\
-const BASE_GENRE=\{\
- "Electronic":\{energy:.7,sophistication:.7,groove:.6,structure:.8,experiment:.55,urban:.35,global:.55\},\
- "R&B":\{energy:.5,sophistication:.6,groove:.8,structure:.5,experiment:.45,urban:.8,global:.45\},\
- "Soul":\{energy:.55,sophistication:.6,groove:.85,structure:.5,experiment:.45,urban:.8,global:.45\},\
- "Funk":\{energy:.7,sophistication:.55,groove:.9,structure:.45,experiment:.4,urban:.75,global:.5\},\
- "Indie":\{energy:.5,sophistication:.5,groove:.55,structure:.55,experiment:.7,urban:.45,global:.45\},\
- "Alternative":\{energy:.55,sophistication:.5,groove:.55,structure:.55,experiment:.7,urban:.45,global:.45\},\
- "Hip-hop":\{energy:.7,sophistication:.55,groove:.85,structure:.5,experiment:.6,urban:.8,global:.6\},\
- "K-Pop":\{energy:.85,sophistication:.8,groove:.65,structure:.9,experiment:.55,urban:.65,global:.95\},\
- "World":\{energy:.7,sophistication:.45,groove:.85,structure:.45,experiment:.6,urban:.65,global:.9\},\
- "Jazz":\{energy:.45,sophistication:.85,groove:.8,structure:.6,experiment:.6,urban:.7,global:.6\},\
- "Pop":\{energy:.7,sophistication:.6,groove:.65,structure:.75,experiment:.45,urban:.65,global:.7\},\
- "Rock":\{energy:.75,sophistication:.5,groove:.55,structure:.6,experiment:.55,urban:.5,global:.55\},\
- "House":\{energy:.75,sophistication:.65,groove:.85,structure:.75,experiment:.55,urban:.6,global:.7\}\
-\};\
-const GENRE_MAP=[\
-  [/hip.?hop|rap/i,"Hip-hop"],[/r.?&.?b|soul/i,"R&B"],[/electro|edm|dance|techno|house|club/i,"Electronic"],\
-  [/k-?pop/i,"K-Pop"],[/world|afro|latin|reggae|balkan/i,"World"],[/jazz/i,"Jazz"],[/indie|alt/i,"Indie"],\
-  [/funk|boogie|disco/i,"Funk"],[/pop/i,"Pop"],[/rock|metal|punk/i,"Rock"],[/house|garage|breakbeat/i,"House"]\
-];\
-const LOCAL_SEED=[\
-  \{name:"Daft Punk",genres:["Electronic"]\},\{name:"FKJ",genres:["R&B","Electronic"]\},\
-  \{name:"Tom Misch",genres:["R&B","Indie"]\},\{name:"Peggy Gou",genres:["Electronic"]\},\
-  \{name:"Vulfpeck",genres:["Funk"]\},\{name:"Bonobo",genres:["Electronic"]\},\
-  \{name:"Kaytranada",genres:["R&B","Electronic"]\},\{name:"Parcels",genres:["Funk","Indie"]\}\
-];\
-/* ===== Open Web Adapters ===== */\
-async function fetchITunesArtists(term,limit=10)\{\
-  const url=`https://itunes.apple.com/search?term=$\{encodeURIComponent(term)\}&entity=musicArtist&limit=$\{limit\}`;\
-  const r=await fetch(url); const j=await r.json();\
-  return (j.results||[]).map(x=>(\{name:x.artistName,genres:[mapGenre(x.primaryGenreName)]\}));\
-\}\
-async function fetchMBArtists(term,limit=8)\{\
-  const url=`https://musicbrainz.org/ws/2/artist?query=$\{encodeURIComponent(term)\}&limit=$\{limit\}&fmt=json`;\
-  const r=await fetch(url); if(!r.ok) return [];\
-  const j=await r.json(); const base=(j.artists||[]).map(a=>(\{name:a.name,id:a.id\}));\
-  const out=[];\
-  for(const a of base)\{\
-    try\{const t=await fetch(`https://musicbrainz.org/ws/2/artist/$\{a.id\}?inc=tags&fmt=json`);\
-      const tj=await t.json(); const tags=(tj.tags||[]).map(z=>z.name);\
-      out.push(\{name:a.name,genres:tagsToGenres(tags)\}); await sleep(110);\
-    \}catch\{ out.push(\{name:a.name,genres:[]\}); \}\
-  \}\
-  return out;\
-\}\
-function tagsToGenres(tags)\{const txt=(tags||[]).join(" ").toLowerCase(); for(const [re,g] of GENRE_MAP)\{if(re.test(txt)) return [g];\} return [];\}\
-function mapGenre(s)\{if(!s) return "Indie"; for(const [re,g] of GENRE_MAP)\{if(re.test(String(s))) return g;\} return "Indie";\}\
-async function buildOpenCatalog(keys)\{\
-  const map=new Map();\
-  const add=arr=>arr.forEach(a=>\{const k=a.name.toLowerCase(); map.set(k,\{name:a.name,genres:(a.genres&&a.genres.length?a.genres:["Indie"])\})\});\
-  for(const k of keys)\{ add(await fetchITunesArtists(k,12).catch(()=>[])); add(await fetchMBArtists(k,8).catch(()=>[])); \}\
-  if(map.size<12)\{ add(await fetchITunesArtists("electronic",10).catch(()=>[])); add(await fetchITunesArtists("funk",10).catch(()=>[])); \}\
-  return [...map.values()];\
-\}\
-/* ===== Artist Spotlight fetchers ===== */\
-/* Wikipedia summary + thumbnail\uc0\u65288 \u20778 \u20808 \u65289  */\
-async function fetchWikiProfile(name)\{\
-  const api=`https://en.wikipedia.org/api/rest_v1/page/summary/$\{encodeURIComponent(name)\}`;\
-  const r=await fetch(api); if(!r.ok) return null;\
-  const j=await r.json();\
-  const img=j.thumbnail?.source || null;\
-  const summary=j.extract ? j.extract.replace(/\\s+/g,' ').slice(0,140)+'\'85' : '';\
-  const url=j.content_urls?.desktop?.page || (`https://en.wikipedia.org/wiki/$\{encodeURIComponent(name)\}`);\
-  return \{name,image:img,summary,url,source:"wikipedia"\};\
-\}\
-/* iTunes: album artwork\uc0\u65288 \u12469 \u12512 \u12493 \u20195 \u26367 \u65289  */\
-async function fetchITunesArtwork(name)\{\
-  const url=`https://itunes.apple.com/search?term=$\{encodeURIComponent(name)\}&entity=album&limit=1`;\
-  const r=await fetch(url); if(!r.ok) return null;\
-  const j=await r.json(); const art=j.results&&j.results[0]?.artworkUrl100;\
-  if(!art) return null;\
-  const img=art.replace('100x100','256x256');\
-  return \{name,image:img,summary:"",url:j.results[0]?.collectionViewUrl||"",source:"itunes"\};\
-\}\
-/* \uc0\u12414 \u12392 \u12417 \u65306 \u26368 \u21021 \u12395 \u30011 \u20687 \u12364 \u21462 \u12428 \u12383 \u12418 \u12398 \u12434 \u25505 \u29992  */\
-async function fetchArtistProfile(name)\{\
-  const wiki=await fetchWikiProfile(name).catch(()=>null);\
-  if(wiki && wiki.image) return wiki;\
-  const it=await fetchITunesArtwork(name).catch(()=>null);\
-  return wiki || it; // \uc0\u30011 \u20687 \u12364 \u12394 \u12367 \u12390 \u12418 \u31777 \u26131 \u32057 \u20171 \u12392 \u12375 \u12390 wiki\u12384 \u12369 \u36820 \u12377 \
-\}\
-/* ===== Profiling / Personality ===== */\
-function toVec(gs)\{const v=gs.map(g=>BASE_GENRE[g]||BASE_GENRE.Indie); return avg(v);\}\
-function profileFromInputs(tokens)\{return toVec(tokens.map(t=>mapGenre(t)));\}\
-function toAbilities(v)\{\
-  return [\
-    \{label:"\uc0\u27083 \u36896 \u21270 \u12539 \u24773 \u22577 \u35373 \u35336 \u21147 ",score:clamp(0.6*v.structure+0.4*v.sophistication)\},\
-    \{label:"\uc0\u20849 \u24863 \u12539 \u38306 \u20418 \u24615 \u35373 \u35336 \u21147 ",score:clamp(0.55*v.urban+0.35*v.groove)\},\
-    \{label:"\uc0\u23455 \u39443 \u12539 \u21109 \u36896 \u25512 \u36914 \u21147 ",score:clamp(0.7*v.experiment+0.2*v.global)\},\
-    \{label:"\uc0\u25512 \u36914 \u12539 \u34892 \u21205 \u12456 \u12493 \u12523 \u12462 \u12540 ",score:v.energy\},\
-    \{label:"\uc0\u36234 \u22659 \u12539 \u22810 \u25991 \u21270 \u32113 \u21512 \u21147 ",score:clamp(0.7*v.global+0.2*v.experiment)\}\
-  ];\
-\}\
-function detectType(v)\{\
-  if(v.experiment>0.65&&v.global>0.6) return "Curious Innovator";\
-  if(v.groove>0.7&&v.urban>0.6) return "Empathic Connector";\
-  if(v.structure>0.7&&v.sophistication>0.6) return "System Architect";\
-  if(v.energy>0.7&&v.groove>0.6) return "Dynamic Performer";\
-  return "Serene Observer";\
-\}\
-function todayAdvice(t)\{\
-  switch(t)\{\
-    case "Curious Innovator":return "\uc0\u20170 \u26085 \u12399 \u26410 \u30693 \u12398 \u38899 \u12420 \u26223 \u33394 \u12395 \u35302 \u12428 \u12390 \u12415 \u12424 \u12358 \u12290 \u23567 \u12373 \u12394 \u22238 \u12426 \u36947 \u12364 \u30330 \u24819 \u12398 \u31278 \u12395 \u12290 ";\
-    case "Empathic Connector":return "\uc0\u12506 \u12540 \u12473 \u12434 \u33853 \u12392 \u12375 \u12390 \u28201 \u12363 \u12394 \u20250 \u35441 \u12434 \u12290 \u24515 \u12398 \u12522 \u12474 \u12512 \u12364 \u25972 \u12358 \u26085 \u12290 ";\
-    case "System Architect":return "\uc0\u25972 \u29702 \u12539 \u35373 \u35336 \u12395 \u26368 \u36969 \u12290 \u26426 \u12420 \u12479 \u12473 \u12463 \u12434 \u25972 \u12360 \u12427 \u12392 \u27425 \u12398 \u19968 \u25163 \u12364 \u12463 \u12522 \u12450 \u12395 \u12290 ";\
-    case "Dynamic Performer":return "\uc0\u12414 \u12378 \u20307 \u12434 \u21205 \u12363 \u12375 \u12390 \u12473 \u12452 \u12483 \u12481 ON\u12290 \u21218 \u12356 \u12391 \u23567 \u12373 \u12394 \u21213 \u12385 \u12434 \u31309 \u12418 \u12358 \u12290 ";\
-    default:return "\uc0\u38745 \u12369 \u12373 \u12434 \u21619 \u26041 \u12395 \u12290 \u12362 \u27671 \u12395 \u20837 \u12426 \u12398 \u26354 \u12434 \u32972 \u26223 \u12395 \u12522 \u12474 \u12512 \u12434 \u25972 \u12360 \u12424 \u12358 \u12290 ";\
-  \}\
-\}\
-/* ===== Recommendation ===== */\
-function vecFromArtist(a)\{return toVec(a.genres&&a.genres.length?a.genres:["Indie"]);\}\
-function recommend(userVec, have, catalog)\{\
-  const pool=catalog.filter(a=>!have.has(a.name.toLowerCase()));\
-  pool.forEach(a=>\{\
-    const v=vecFromArtist(a);\
-    const sim=cosine(userVec,v);\
-    const growth=0.3*Math.max(0,v.experiment-userVec.experiment)+0.2*Math.max(0,v.global-userVec.global)+0.2*Math.max(0,v.urban-userVec.urban);\
-    a._score=sim+growth;\
-  \});\
-  const top=pool.sort((a,b)=>b._score-a._score);\
-  const picked=[], used=new Set();\
-  for(const a of top)\{\
-    const g=(a.genres&&a.genres[0])||"Indie"; const penalty=used.has(g)?0.08:0;\
-    if(picked.length<10 && a._score-penalty>0.55)\{picked.push(a); used.add(g);\}\
-  \}\
-  return picked;\
-\}\
-/* ===== UI glue ===== */\
-const inputEl=document.getElementById("inputBox");\
-const addBtn=document.getElementById("addBtn");\
-const analyzeBtn=document.getElementById("analyzeBtn");\
-const chipsEl=document.getElementById("chips");\
-const profileBars=document.getElementById("profileBars");\
-const abilitiesEl=document.getElementById("abilities");\
-const recsEl=document.getElementById("recs");\
-const personalityEl=document.getElementById("personality");\
-const countBadge=document.getElementById("countBadge");\
-const statusEl=document.getElementById("status");\
-const onlineToggle=document.getElementById("onlineToggle");\
-const motionToggle=document.getElementById("motionToggle");\
-const artistsEl=document.getElementById("artists");\
-\
-let tokens=[]; let openCatalogCache=null;\
-\
-inputEl.addEventListener("keydown",e=>\{ if(e.key==="Enter"||e.key===",")\{e.preventDefault(); addToken(inputEl.value); inputEl.value=""; \}\});\
-addBtn.addEventListener("click",()=>\{addToken(inputEl.value); inputEl.value="";\});\
-analyzeBtn.addEventListener("click",runAnalysis);\
-motionToggle?.addEventListener("change",()=>\{document.body.classList.toggle("no-motion",!motionToggle.checked)\});\
-/* \uc0\u12510 \u12454 \u12473 \u36861 \u24467  */\
-window.addEventListener("mousemove",e=>\{\
-  if(document.body.classList.contains("no-motion")) return;\
-  const x=(e.clientX-window.innerWidth/2), y=(e.clientY-window.innerHeight/2);\
-  document.documentElement.style.setProperty('--mx', x+'px');\
-  document.documentElement.style.setProperty('--my', y+'px');\
-\});\
-/* \uc0\u12473 \u12463 \u12525 \u12540 \u12523 \u20986 \u29694  */\
-const io=new IntersectionObserver(es=>es.forEach(ent=>\{ if(ent.isIntersecting)\{ent.target.classList.add('show'); io.unobserve(ent.target);\} \}),\{threshold:.12\});\
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));\
-\
-function addToken(t)\{t=t.trim(); if(!t) return; if(tokens.length>=10) return; tokens.push(t); renderChips();\}\
-function removeToken(i)\{tokens.splice(i,1); renderChips();\}\
-function renderChips()\{ chipsEl.innerHTML=tokens.map((t,i)=>`<span class="chip">$\{escapeHtml(t)\} <a style="cursor:pointer" onclick="removeToken($\{i\})">\uc0\u10005 </a></span>`).join(""); countBadge.textContent=`$\{tokens.length\} / 10`; \}\
-function escapeHtml(s)\{return s.replace(/[&<>"]/g,c=>(\{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'\}[c]));\}\
-\
-async function runAnalysis()\{\
-  if(tokens.length===0) addToken("Electronic");\
-  statusEl.textContent = onlineToggle.checked ? "Fetching open catalog\'85" : "Using local model";\
-\
-  const userVec=profileFromInputs(tokens);\
-  drawProfile(userVec); drawAbilities(userVec);\
-  const type=detectType(userVec);\
-  personalityEl.innerHTML = `<div class="card reveal show"><strong>$\{type\}</strong><div class="small">$\{todayAdvice(type)\}</div></div>`;\
-\
-  /* Artist Spotlights\uc0\u65288 \u26368 \u22823 6\u20214 \u12414 \u12391 \u65289  */\
-  artistsEl.innerHTML = `<div class="small">Loading artist photos\'85</div>`;\
-  const spotlightTargets = tokens.slice(0,6);\
-  const profiles = (await Promise.all(spotlightTargets.map(n=>fetchArtistProfile(n).catch(()=>null))))\
-                    .filter(Boolean);\
-  if(profiles.length)\{\
-    artistsEl.innerHTML = profiles.map(p=>artistCard(p)).join("");\
-  \}else\{\
-    artistsEl.innerHTML = `<div class="small">No artist profiles were found for your inputs.</div>`;\
-  \}\
-\
-  /* Recommendations */\
-  let catalog=[...LOCAL_SEED];\
-  if(onlineToggle.checked)\{\
-    try\{ openCatalogCache=await buildOpenCatalog(tokens);\
-         catalog=openCatalogCache.length?openCatalogCache:LOCAL_SEED;\
-         statusEl.textContent=`Catalog: $\{catalog.length\} artists from the web`;\
-    \}catch\{ statusEl.textContent="Online fetch failed. Fallback to local seed."; \}\
-  \}else\{ statusEl.textContent=`Catalog: $\{catalog.length\} (local)`; \}\
-  const have=new Set(tokens.map(t=>t.toLowerCase()));\
-  const recs=recommend(userVec,have,catalog);\
-  drawRecs(recs);\
-\}\
-\
-function drawProfile(v)\{\
-  const keys=[["energy","\uc0\u12456 \u12493 \u12523 \u12462 \u12540 "],["sophistication","\u27927 \u32244 "],["groove","\u12464 \u12523 \u12540 \u12532 "],["structure","\u27083 \u31689 \u21147 "],["experiment","\u23455 \u39443 \u24615 "],["urban","\u37117 \u24066 \u30340 \u28201 \u24230 "],["global","\u36234 \u22659 \u24615 "]];\
-  profileBars.innerHTML=keys.map(([k,ja])=>bar(ja,Math.round((v[k]||0)*100))).join("");\
-  requestAnimationFrame(()=>document.querySelectorAll('.fill').forEach(el=>\{el.style.width=el.getAttribute('data-w');\}));\
-  const counts=\{\}; tokens.forEach(t=>\{const g=mapGenre(t); counts[g]=(counts[g]||0)+1;\});\
-  genreDist.innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`$\{k\}: $\{n\}`).join(" / ")||"\'97";\
-\}\
-function bar(label,percent)\{\
-  return `<div class="kpi"><div>$\{label\}</div><div class="badge">$\{percent\}%</div></div>\
-          <div class="bar"><div class="fill" data-w="$\{percent\}%"></div></div>`;\
-\}\
-function drawAbilities(v)\{\
-  const abs=toAbilities(v);\
-  abilitiesEl.innerHTML=abs.map(a=>\
-    `<div class="kpi"><div>$\{a.label\}</div><div class="badge">$\{Math.round(a.score*100)\}%</div></div>\
-     <div class="bar"><div class="fill" data-w="$\{Math.round(a.score*100)\}%"></div></div>`\
-  ).join("");\
-  requestAnimationFrame(()=>document.querySelectorAll('#abilities .fill').forEach(el=>\{el.style.width=el.getAttribute('data-w');\}));\
-\}\
-function drawRecs(recs)\{\
-  recsEl.innerHTML=recs.map(r=>\{\
-    const g=(r.genres&&r.genres.length)?`<span class="badge" style="margin-left:6px">$\{r.genres.join(" / ")\}</span>`:"";\
-    return `<div class="card reveal artistCard">\
-      <img class="artistImg" src="https://picsum.photos/seed/$\{encodeURIComponent(r.name)\}/112/112" alt="" />\
-      <div><strong>$\{escapeHtml(r.name)\}</strong>$\{g\}\
-        <div class="small" style="margin-top:6px">open-web:\
-          <a class="link" target="_blank" href="https://music.apple.com/search?term=$\{encodeURIComponent(r.name)\}">Apple</a> \'b7\
-          <a class="link" target="_blank" href="https://musicbrainz.org/search?query=$\{encodeURIComponent(r.name)\}&type=artist&method=indexed">MB</a> \'b7\
-          <a class="link" target="_blank" href="https://www.youtube.com/results?search_query=$\{encodeURIComponent(r.name+' music')\}">YouTube</a>\
-        </div></div></div>`;\
-  \}).join("");\
-  document.querySelectorAll('#recs .reveal').forEach(el=>io.observe(el));\
-\}\
-function artistCard(p)\{\
-  const img = p.image || `https://picsum.photos/seed/$\{encodeURIComponent(p.name)\}/112/112`;\
-  const one = (p.summary && p.summary.trim().length>0) ? p.summary : "No summary available. Explore their catalog.";\
-  const link = p.url || `https://www.google.com/search?q=$\{encodeURIComponent(p.name+' artist')\}`;\
-  return `<div class="card artistCard">\
-      <img class="artistImg" src="$\{img\}" alt="$\{escapeHtml(p.name)\}" />\
-      <div>\
-        <strong>$\{escapeHtml(p.name)\}</strong>\
-        <div class="small" style="margin-top:4px">$\{escapeHtml(one)\}</div>\
-        <div class="small" style="margin-top:6px">\
-          <a class="link" target="_blank" href="$\{link\}">Learn more</a>\
-        </div>\
-      </div>\
-    </div>`;\
-\}\
-</script>\
-</body>\
-</html>}
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MusicLens — Listening Map + Love Meter（英日併記・多様性レコメンド）</title>
+  <style>
+    :root {
+      --accent: #ffcc33;
+      --accent-2: #ff8800;
+      --glow: rgba(255, 180, 60, .55);
+      --txt: #eef2ff;
+      --muted: #a9b2c7;
+      --bg1: #0e1018;
+      --bg2: #15192a;
+      --mx: 0px;
+      --my: 0px;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      color: var(--txt);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", Roboto, Segoe UI, sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #ffd96622, transparent),
+        radial-gradient(900px 600px at 90% 10%, #ff8a0022, transparent),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      overflow-x: hidden;
+    }
+
+    /* 背景モーション */
+    .bg {
+      position: fixed;
+      inset: -10% -10% -10% -10%;
+      z-index: -1;
+      pointer-events: none;
+      filter: blur(40px) saturate(130%)
+    }
+
+    .bg::before,
+    .bg::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      width: 50vw;
+      height: 50vw;
+      opacity: .55;
+      mix-blend-mode: screen;
+      background: radial-gradient(circle at 30% 30%, #ffe07a, transparent 60%), radial-gradient(circle at 70% 70%, #ff8a00, transparent 60%);
+      transform: translate3d(calc(var(--mx)*.03), calc(var(--my)*.03), 0)
+    }
+
+    .bg::before {
+      left: -8vw;
+      top: -6vw;
+      animation: float1 18s ease-in-out infinite alternate
+    }
+
+    .bg::after {
+      right: -8vw;
+      bottom: -10vw;
+      animation: float2 22s ease-in-out infinite alternate
+    }
+
+    @keyframes float1 {
+      to {
+        transform: translate3d(2vw, 1vh, 0) scale(1.05)
+      }
+    }
+
+    @keyframes float2 {
+      to {
+        transform: translate3d(-2vw, -2vh, 0) scale(1.07)
+      }
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 34px auto;
+      padding: 0 18px
+    }
+
+    .panel {
+      position: relative;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, .07));
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 22px;
+      padding: 18px;
+      backdrop-filter: saturate(180%) blur(18px);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, .35), inset 0 1px rgba(255, 255, 255, .25);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease
+    }
+
+    .panel:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 200, 80, .6);
+      box-shadow: 0 18px 44px rgba(255, 170, 40, .28), inset 0 1px rgba(255, 255, 255, .35)
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .5s ease, transform .5s ease
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: none
+    }
+
+    .subtitle {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    label {
+      display: block;
+      margin: .5rem 0 .4rem;
+      font-weight: 700
+    }
+
+    /* ロゴ＋署名 */
+    .headerBar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+      position: relative
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: 34px;
+      letter-spacing: 1.2px;
+      line-height: 1;
+      background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 6px 40px rgba(255, 200, 80, .25);
+      filter: drop-shadow(0 4px 14px rgba(255, 170, 40, .25))
+    }
+
+    .sig {
+      position: absolute;
+      right: 6px;
+      top: 2px;
+      font-size: 11px;
+      color: #cbd3e6;
+      opacity: .8
+    }
+
+    /* 入力・ボタン */
+    input[type=text] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .22);
+      background: rgba(255, 255, 255, .1);
+      color: #fff;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s
+    }
+
+    input[type=text]:focus {
+      border-color: rgba(255, 200, 80, .7);
+      box-shadow: 0 0 0 4px rgba(255, 200, 80, .15)
+    }
+
+    button {
+      appearance: none;
+      border: none;
+      border-radius: 14px;
+      padding: 10px 16px;
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 22px var(--glow);
+      transition: transform .15s, filter .2s, box-shadow .2s
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+      box-shadow: 0 0 28px var(--glow)
+    }
+
+    button::after {
+      content: "";
+      position: absolute;
+      inset: -120% -50% -120% -50%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, .6), transparent);
+      transform: translateX(-60%) skewX(-15deg);
+      animation: sheen 3.6s linear infinite;
+      pointer-events: none
+    }
+
+    @keyframes sheen {
+      to {
+        transform: translateX(60%) skewX(-15deg)
+      }
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0
+    }
+
+    .chip {
+      background: rgba(255, 255, 255, .12);
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid rgba(255, 255, 255, .22);
+      transition: transform .12s, border-color .2s, box-shadow .2s
+    }
+
+    .chip:hover {
+      transform: scale(1.04);
+      border-color: rgba(255, 200, 80, .6);
+      box-shadow: 0 0 16px rgba(255, 190, 70, .3)
+    }
+
+    .row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap
+    }
+
+    .col {
+      flex: 1 1 340px;
+      min-width: 300px
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #ffd36b
+    }
+
+    .kpi {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      margin: 6px 0
+    }
+
+    .bar {
+      height: 10px;
+      background: rgba(255, 255, 255, .12);
+      border-radius: 999px;
+      overflow: hidden
+    }
+
+    .fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 18px var(--glow) inset;
+      width: 0%
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, .16);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .1);
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      transition: transform .2s, box-shadow .2s, border-color .2s
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 200, 80, .55);
+      box-shadow: 0 10px 26px rgba(255, 180, 70, .25)
+    }
+
+    a.link {
+      color: #ffe28a;
+      text-decoration: underline;
+      transition: color .15s
+    }
+
+    a.link:hover {
+      color: #fff0b5
+    }
+
+    .headerRow {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .small {
+      color: #a9b2c7;
+      font-size: 12px
+    }
+
+    .badge.pill {
+      background: rgba(255, 200, 80, .22)
+    }
+
+    .footer {
+      color: #a9b2c7;
+      text-align: center;
+      font-size: 12px;
+      margin: 16px 0 6px
+    }
+
+    /* Artist grid */
+    .artistGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px
+    }
+
+    .artistCard {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start
+    }
+
+    .artistImg {
+      width: 56px;
+      height: 56px;
+      flex: 0 0 56px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, .24);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, .25)
+    }
+
+    /* Listening Map（明るめ＋プロット強化） */
+    .mapWrap {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .22)
+    }
+
+    .mapCanvas {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #101426;
+      background-image:
+        linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, 0)),
+        url('https://upload.wikimedia.org/wikipedia/commons/5/59/BlankMap-World-v2-light.svg');
+      background-size: cover;
+      background-position: center;
+      filter: brightness(1.18) contrast(1.08) saturate(1.05)
+    }
+
+    .dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(.7);
+      background: radial-gradient(circle, #fff 0%, #ffe9b0 35%, #ff9f1c 70%, #ff9f1c 100%);
+      box-shadow: 0 0 18px rgba(255, 190, 60, .95), 0 0 4px rgba(255, 255, 255, .8) inset
+    }
+
+    .dot.input {
+      background: radial-gradient(circle, #fff 0%, #c9f1ff 35%, #00bfff 70%, #00bfff 100%);
+      box-shadow: 0 0 18px rgba(0, 170, 255, .95), 0 0 4px rgba(255, 255, 255, .8) inset
+    }
+
+    .ping {
+      position: absolute;
+      border: 2px solid rgba(255, 200, 80, .65);
+      border-radius: 999px;
+      transform: translate(-50%, -50%) scale(1);
+      animation: ping 2.4s ease-out infinite;
+      pointer-events: none
+    }
+
+    @keyframes ping {
+      0% {
+        opacity: .9;
+        width: 0;
+        height: 0
+      }
+
+      100% {
+        opacity: 0;
+        width: 54px;
+        height: 54px
+      }
+    }
+
+    /* ラブメーター（ハート） */
+    .loveRow {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .heart {
+      width: 36px;
+      height: 36px;
+      position: relative;
+      transform: rotate(-45deg);
+      margin: 8px;
+      background: radial-gradient(circle at 30% 30%, #fff 0%, #ffe3a3 35%, #ff8a00 70%);
+      box-shadow: 0 0 18px rgba(255, 180, 60, .6)
+    }
+
+    .heart:before,
+    .heart:after {
+      content: "";
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: inherit
+    }
+
+    .heart:before {
+      top: -18px;
+      left: 0
+    }
+
+    .heart:after {
+      left: 18px;
+      top: 0
+    }
+
+    .glow {
+      animation: glow 1.8s ease-in-out infinite alternate
+    }
+
+    @keyframes glow {
+      from {
+        filter: drop-shadow(0 0 6px rgba(255, 200, 80, .6))
+      }
+
+      to {
+        filter: drop-shadow(0 0 18px rgba(255, 200, 80, .95))
+      }
+    }
+
+    .genreMeter {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .12);
+      overflow: hidden
+    }
+
+    .genreFill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #9beeff, #00bfff);
+      box-shadow: 0 0 14px rgba(0, 175, 255, .6) inset
+    }
+
+    /* SP最適化 */
+    @media (max-width: 820px) {
+      .container {
+        padding: 0 14px
+      }
+
+      .logo {
+        font-size: 28px
+      }
+
+      .mapCanvas {
+        aspect-ratio: 3/4
+      }
+    }
+
+    .no-motion .bg::before,
+    .no-motion .bg::after,
+    .no-motion button::after {
+      animation: none
+    }
+
+    .no-motion .panel,
+    .no-motion .chip,
+    .no-motion .card,
+    .no-motion button,
+    .no-motion .glow {
+      transition: none;
+      animation: none
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="panel reveal">
+      <div class="headerBar">
+        <div class="logo">MusicLens</div>
+        <div class="sig">Produced by DAIJIRO MAJIMA</div>
+      </div>
+      <p class="subtitle" style="text-align:center">
+        Enter up to 10 artists/genres → analyze traits → Listening Map & Love Meter → open-web recommendations.<br>
+        （最大10件入力 → 特性分析 → 世界マップ＆音楽愛メーター → オープンWeb推薦）
+      </p>
+      <div class="headerRow" style="justify-content:center;gap:14px">
+        <label class="small" style="display:inline-flex;gap:8px;align-items:center">
+          <input id="onlineToggle" type="checkbox" checked /> Online Mode（オンライン取得）
+        </label>
+        <label class="small" style="display:inline-flex;gap:8px;align-items:center">
+          <input id="motionToggle" type="checkbox" checked /> Motion（モーション）
+        </label>
+        <span id="status" class="small"></span>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="panel reveal">
+      <label for="inputBox">Artists / Genres（アーティスト / ジャンル）</label>
+      <input id="inputBox" type="text" placeholder="e.g. Daft Punk, FKJ, Tom Misch, BLACKPINK, Indie, House（例）" />
+      <div class="headerRow" style="margin-top:8px">
+        <button id="addBtn">Add（追加）</button>
+        <button id="analyzeBtn">Analyze（解析）</button>
+        <span class="badge" id="countBadge">0 / 10</span>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <!-- Profile & Today -->
+    <div class="row">
+      <div class="col panel reveal">
+        <div class="section-title">Your Music Vector（あなたの音楽ベクトル）</div>
+        <div id="profileBars"></div>
+        <div class="card" style="margin-top:10px">
+          <div class="section-title">Genre Distribution（ジャンル構成）</div>
+          <div id="genreDist" class="small"></div>
+        </div>
+      </div>
+      <div class="col panel reveal">
+        <div class="section-title">Personality & Today（あなたの性格タイプと今日の過ごし方）</div>
+        <div id="personality"></div>
+      </div>
+    </div>
+
+    <div class="panel reveal">
+      <div class="section-title">Work Strengths（仕事における強み）</div>
+      <div id="abilities"></div>
+    </div>
+
+    <!-- Listening Map -->
+    <div class="panel reveal">
+      <div class="section-title">Listening Map（リスニング・マップ：世界地図）</div>
+      <div class="mapWrap">
+        <div id="map" class="mapCanvas" aria-label="world map"></div>
+      </div>
+      <div class="headerRow" style="margin-top:8px;justify-content:flex-start">
+        <div class="legendItem"><span class="dot input"
+            style="position:static;transform:none;width:10px;height:10px"></span><span class="small">Your
+            picks（入力アーティスト）</span></div>
+        <div class="legendItem" style="margin-left:12px"><span class="dot"
+            style="position:static;transform:none;width:10px;height:10px"></span><span
+            class="small">Recommendations（推薦）</span></div>
+      </div>
+    </div>
+
+    <!-- Love Meter -->
+    <div class="panel reveal">
+      <div class="section-title">Music Love Level（音楽愛レベル / 10段階）</div>
+      <div class="loveRow">
+        <div id="heart" class="heart glow" title="love"></div>
+        <div>
+          <div class="small" id="loveLabel">—</div>
+          <div style="margin-top:8px" class="small">Genre Richness（ジャンル多様性）</div>
+          <div class="genreMeter">
+            <div id="genreFill" class="genreFill"></div>
+          </div>
+          <div class="small" id="genreDetail" style="margin-top:6px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spotlights & Recs -->
+    <div class="panel reveal">
+      <div class="section-title">Artist Spotlights（アーティスト紹介）</div>
+      <div id="artists" class="artistGrid"></div>
+    </div>
+    <div class="panel reveal">
+      <div class="section-title">Open-Web Recommendations（おすすめの新しいアーティスト）</div>
+      <div id="recs" class="artistGrid"></div>
+    </div>
+
+    <p class="footer">Data: iTunes / MusicBrainz / Wikipedia（coordinates優先 → 国センタ座標fallback）。レスポンシブ対応・モーションはOS設定に追従。</p>
+  </div>
+
+  <script>
+    /* ===== Utils ===== */
+    const clamp = n => Math.max(0, Math.min(1, n));
+    function avg(objs) { const k = Object.keys(objs[0] || {}), o = {}; for (const x of k) o[x] = objs.reduce((s, v) => s + v[x], 0) / objs.length; return o; }
+    function cosine(a, b) { const K = Object.keys(a), d = K.reduce((s, k) => s + a[k] * b[k], 0), na = Math.sqrt(K.reduce((s, k) => s + a[k] * a[k], 0)), nb = Math.sqrt(K.reduce((s, k) => s + b[k] * b[k], 0)); return d / (na * nb || 1); }
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    /* ゆるい一致（同一/近似名判定用） */
+    function norm(s) { return s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim(); }
+    function similar(a, b) { a = norm(a); b = norm(b); return a === b || a.includes(b) || b.includes(a); }
+
+    /* ===== Feature Model / Seeds ===== */
+    const BASE_GENRE = {
+      "Electronic": { energy: .7, sophistication: .7, groove: .6, structure: .8, experiment: .55, urban: .35, global: .55 },
+      "R&B": { energy: .5, sophistication: .6, groove: .8, structure: .5, experiment: .45, urban: .8, global: .45 },
+      "Soul": { energy: .55, sophistication: .6, groove: .85, structure: .5, experiment: .45, urban: .8, global: .45 },
+      "Funk": { energy: .7, sophistication: .55, groove: .9, structure: .45, experiment: .4, urban: .75, global: .5 },
+      "Indie": { energy: .5, sophistication: .5, groove: .55, structure: .55, experiment: .7, urban: .45, global: .45 },
+      "Alternative": { energy: .55, sophistication: .5, groove: .55, structure: .55, experiment: .7, urban: .45, global: .45 },
+      "Hip-hop": { energy: .7, sophistication: .55, groove: .85, structure: .5, experiment: .6, urban: .8, global: .6 },
+      "K-Pop": { energy: .85, sophistication: .8, groove: .65, structure: .9, experiment: .55, urban: .65, global: .95 },
+      "World": { energy: .7, sophistication: .45, groove: .85, structure: .45, experiment: .6, urban: .65, global: .9 },
+      "Jazz": { energy: .45, sophistication: .85, groove: .8, structure: .6, experiment: .6, urban: .7, global: .6 },
+      "Pop": { energy: .7, sophistication: .6, groove: .65, structure: .75, experiment: .45, urban: .65, global: .7 },
+      "Rock": { energy: .75, sophistication: .5, groove: .55, structure: .6, experiment: .55, urban: .5, global: .55 },
+      "House": { energy: .75, sophistication: .65, groove: .85, structure: .75, experiment: .55, urban: .6, global: .7 }
+    };
+    const GENRE_MAP = [[/hip.?hop|rap/i, "Hip-hop"], [/r.?&.?b|soul/i, "R&B"], [/electro|edm|dance|techno|house|club/i, "Electronic"], [/k-?pop/i, "K-Pop"], [/world|afro|latin|reggae|balkan/i, "World"], [/jazz/i, "Jazz"], [/indie|alt/i, "Indie"], [/funk|boogie|disco/i, "Funk"], [/pop/i, "Pop"], [/rock|metal|punk/i, "Rock"], [/house|garage|breakbeat/i, "House"]];
+    const LOCAL_SEED = [{ name: "Daft Punk", genres: ["Electronic"] }, { name: "FKJ", genres: ["R&B", "Electronic"] }, { name: "Tom Misch", genres: ["R&B", "Indie"] }, { name: "Peggy Gou", genres: ["Electronic"] }, { name: "Vulfpeck", genres: ["Funk"] }, { name: "Bonobo", genres: ["Electronic"] }, { name: "Kaytranada", genres: ["R&B", "Electronic"] }, { name: "Parcels", genres: ["Funk", "Indie"] }];
+
+    /* ===== Open Web Adapters ===== */
+    async function fetchITunesArtists(term, limit = 10) {
+      const url = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=musicArtist&limit=${limit}`;
+      const r = await fetch(url); const j = await r.json();
+      return (j.results || []).map(x => ({ name: x.artistName, genres: [mapGenre(x.primaryGenreName)] }));
+    }
+    async function fetchMBArtists(term, limit = 8) {
+      const url = `https://musicbrainz.org/ws/2/artist?query=${encodeURIComponent(term)}&limit=${limit}&fmt=json`;
+      const r = await fetch(url); if (!r.ok) return [];
+      const j = await r.json(); const base = (j.artists || []).map(a => ({ name: a.name, id: a.id }));
+      const out = [];
+      for (const a of base) {
+        try {
+          const t = await fetch(`https://musicbrainz.org/ws/2/artist/${a.id}?inc=tags&area&fmt=json`);
+          const tj = await t.json(); const tags = (tj.tags || []).map(z => z.name);
+          let country = tj.area?.name || "";
+          out.push({ name: a.name, genres: tagsToGenres(tags), country });
+          await sleep(90);
+        } catch { out.push({ name: a.name, genres: [], country: "" }); }
+      }
+      return out;
+    }
+    function tagsToGenres(tags) { const txt = (tags || []).join(" ").toLowerCase(); for (const [re, g] of GENRE_MAP) { if (re.test(txt)) return [g]; } return []; }
+    function mapGenre(s) { if (!s) return "Indie"; for (const [re, g] of GENRE_MAP) { if (re.test(String(s))) return g; } return "Indie"; }
+    async function buildOpenCatalog(keys) {
+      const map = new Map();
+      const add = arr => arr.forEach(a => {
+        const k = a.name.toLowerCase();
+        const g = (a.genres && a.genres.length ? a.genres : ["Indie"]);
+        const country = a.country || "";
+        if (!map.has(k)) map.set(k, { name: a.name, genres: g, country });
+        else { const ex = map.get(k); ex.genres = [...new Set([...ex.genres, ...g])]; ex.country = ex.country || country; }
+      });
+      for (const k of keys) { add(await fetchITunesArtists(k, 12).catch(() => [])); add(await fetchMBArtists(k, 8).catch(() => [])); }
+      if (map.size < 12) { add(await fetchITunesArtists("electronic", 10).catch(() => [])); add(await fetchITunesArtists("funk", 10).catch(() => [])); }
+      return [...map.values()];
+    }
+
+    /* ===== Wiki profiles with coordinates ===== */
+    async function fetchWikiProfile(name) {
+      const api = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`;
+      const r = await fetch(api); if (!r.ok) return null;
+      const j = await r.json();
+      const img = j.thumbnail?.source || null;
+      const summary = j.extract ? j.extract.replace(/\s+/g, ' ').slice(0, 140) + '…' : '';
+      const url = j.content_urls?.desktop?.page || (`https://en.wikipedia.org/wiki/${encodeURIComponent(name)}`);
+      const lat = j.coordinates?.lat, lon = j.coordinates?.lon;
+      return { name, image: img, summary, url, lat, lon };
+    }
+    async function fetchITunesArtwork(name) {
+      const url = `https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=album&limit=1`;
+      const r = await fetch(url); if (!r.ok) return null;
+      const j = await r.json(); const art = j.results && j.results[0]?.artworkUrl100;
+      if (!art) return null;
+      const img = art.replace('100x100', '256x256');
+      return { name, image: img, summary: "", url: j.results[0]?.collectionViewUrl || "" };
+    }
+    async function fetchArtistProfile(name) { const wiki = await fetchWikiProfile(name).catch(() => null); if (wiki && (wiki.image || wiki.summary)) return wiki; const it = await fetchITunesArtwork(name).catch(() => null); return wiki || it; }
+
+    /* ===== Geo helpers ===== */
+    const COUNTRY_XY = {
+      "Japan": [35.7, 139.7], "South Korea": [37.5, 127], "Korea, Republic of": [37.5, 127], "China": [39.9, 116.4], "Taiwan": [25.0, 121.5],
+      "United States": [38.9, -77.0], "USA": [38.9, -77.0], "Canada": [45.4, -75.7], "United Kingdom": [51.5, -0.1], "England": [51.5, -0.1],
+      "France": [48.86, 2.35], "Germany": [52.5, 13.4], "Netherlands": [52.37, 4.9], "Belgium": [50.85, 4.35], "Spain": [40.4, -3.7], "Italy": [41.9, 12.5],
+      "Sweden": [59.3, 18.1], "Australia": [-33.86, 151.2], "New Zealand": [-36.85, 174.76], "Brazil": [-23.55, -46.63], "Argentina": [-34.6, -58.38],
+      "Colombia": [4.71, -74.07], "Mexico": [19.43, -99.13], "Cuba": [23.11, -82.36], "South Africa": [-26.2, 28.04], "Turkey": [41.0, 28.97],
+      "Ghana": [5.55, -0.2], "Togo": [6.13, 1.22]
+    };
+    function project(lat, lon, w, h) { const x = (lon + 180) / 360 * w; const y = (90 - lat) / 180 * h; return [x, y]; }
+
+    /* ===== Profiling / Personality ===== */
+    function toVec(gs) { const v = gs.map(g => BASE_GENRE[g] || BASE_GENRE.Indie); return avg(v); }
+    function profileFromInputs(tokens) { return toVec(tokens.map(t => mapGenre(t))); }
+    function toAbilities(v) {
+      return [{ label: "Structure & Information Design（構造化・情報設計力）", score: clamp(0.6 * v.structure + 0.4 * v.sophistication) },
+      { label: "Empathy & Relationship Design（共感・関係性設計力）", score: clamp(0.55 * v.urban + 0.35 * v.groove) },
+      { label: "Experimental Creativity（実験・創造推進力）", score: clamp(0.7 * v.experiment + 0.2 * v.global) },
+      { label: "Execution Drive（推進・行動エネルギー）", score: v.energy },
+      { label: "Cross-cultural Integration（越境・多文化統合力）", score: clamp(0.7 * v.global + 0.2 * v.experiment) }];
+    }
+    function detectType(v) { if (v.experiment > 0.65 && v.global > 0.6) return "Curious Innovator"; if (v.groove > 0.7 && v.urban > 0.6) return "Empathic Connector"; if (v.structure > 0.7 && v.sophistication > 0.6) return "System Architect"; if (v.energy > 0.7 && v.groove > 0.6) return "Dynamic Performer"; return "Serene Observer"; }
+    function todayAdvice(t) { switch (t) { case "Curious Innovator": return "Curious Innovator（探究型）— 今日は未知の音や景色に触れてみよう。小さな回り道が発想の種に。"; case "Empathic Connector": return "Empathic Connector（共感型）— ペースを落として温かな会話を。心のリズムが整う日。"; case "System Architect": return "System Architect（構築型）— 整理・設計に最適。机やタスクを整えると次の一手がクリアに。"; case "Dynamic Performer": return "Dynamic Performer（行動型）— まず体を動かしてスイッチON。勢いで小さな勝ちを積もう。"; default: return "Serene Observer（静観型）— 静けさを味方に。お気に入りの曲を背景にリズムを整えよう。"; } }
+
+    /* ===== Diverse Recommend（別人保証＋多ジャンル） ===== */
+    // 入力ジャンル分布
+    function countInputGenres(tokens) {
+      const c = {}; tokens.forEach(t => { const g = mapGenre(t); c[g] = (c[g] || 0) + 1; }); return c;
+    }
+    function recommend(userVec, have, catalog) {
+      const inGenre = countInputGenres(tokens);
+      const maxIn = Math.max(1, ...Object.values(inGenre));
+
+      // 入力名と近似名は除外
+      const inputsLower = tokens.map(t => t.toLowerCase());
+      const pool = catalog.filter(a => {
+        const nm = a.name || ""; if (!nm) return false;
+        if (inputsLower.includes(nm.toLowerCase())) return false;
+        if (tokens.some(t => similar(t, nm))) return false;
+        return true;
+      });
+
+      // スコアリング
+      pool.forEach(a => {
+        const v = vecFromArtist(a);
+        const sim = cosine(userVec, v);
+        const growth = 0.3 * Math.max(0, v.experiment - userVec.experiment)
+          + 0.2 * Math.max(0, v.global - userVec.global)
+          + 0.2 * Math.max(0, v.urban - userVec.urban);
+        const g0 = (a.genres && a.genres[0]) || "Indie";
+        const explore = 0.25 * (1 - ((inGenre[g0] || 0) / maxIn)); // 未開拓ジャンルを上げる
+        a.__score = sim + growth + explore;
+        a.__g0 = g0;
+        a.__vec = v;
+      });
+
+      // 初期順位
+      const ranked = pool.sort((x, y) => y.__score - x.__score);
+
+      // MMR風ピック：近さと多様性を両立
+      const picked = []; const perGenre = {}; const maxPerGenre = 2; const targetN = 10; const lambda = 0.7;
+      while (picked.length < targetN && ranked.length) {
+        let best = -1, bestMMR = -Infinity;
+        for (let i = 0; i < ranked.length; i++) {
+          const c = ranked[i];
+          if ((perGenre[c.__g0] || 0) >= maxPerGenre) continue;
+          const maxSim = picked.length ? Math.max(...picked.map(p => cosine(c.__vec, p.__vec))) : 0;
+          const mmr = lambda * c.__score - (1 - lambda) * maxSim;
+          if (mmr > bestMMR) { bestMMR = mmr; best = i; }
+        }
+        if (best === -1) break;
+        const ch = ranked.splice(best, 1)[0]; picked.push(ch); perGenre[ch.__g0] = (perGenre[ch.__g0] || 0) + 1;
+      }
+      // 未登場ジャンルの補完
+      if (picked.length < targetN) {
+        const used = new Set(picked.map(p => p.__g0));
+        const fillers = ranked.filter(a => !used.has(a.__g0) && (perGenre[a.__g0] || 0) < maxPerGenre);
+        for (const f of fillers) { if (picked.length >= targetN) break; picked.push(f); perGenre[f.__g0] = (perGenre[f.__g0] || 0) + 1; }
+      }
+      return picked.slice(0, targetN).map(({ __score, __g0, __vec, ...rest }) => rest);
+    }
+
+    /* ===== UI glue ===== */
+    const inputEl = document.getElementById("inputBox");
+    const addBtn = document.getElementById("addBtn");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const chipsEl = document.getElementById("chips");
+    const profileBars = document.getElementById("profileBars");
+    const abilitiesEl = document.getElementById("abilities");
+    const recsEl = document.getElementById("recs");
+    const personalityEl = document.getElementById("personality");
+    const countBadge = document.getElementById("countBadge");
+    const statusEl = document.getElementById("status");
+    const onlineToggle = document.getElementById("onlineToggle");
+    const motionToggle = document.getElementById("motionToggle");
+    const artistsEl = document.getElementById("artists");
+    const mapEl = document.getElementById("map");
+    const heartEl = document.getElementById("heart");
+    const genreFill = document.getElementById("genreFill");
+    const genreDetail = document.getElementById("genreDetail");
+    const loveLabel = document.getElementById("loveLabel");
+
+    let tokens = []; let openCatalogCache = null;
+    inputEl.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addToken(inputEl.value); inputEl.value = ""; } });
+    addBtn.addEventListener("click", () => { addToken(inputEl.value); inputEl.value = ""; });
+    analyzeBtn.addEventListener("click", runAnalysis);
+    motionToggle?.addEventListener("change", () => { document.body.classList.toggle("no-motion", !motionToggle.checked) });
+    window.addEventListener("mousemove", e => { if (document.body.classList.contains("no-motion")) return; const x = (e.clientX - window.innerWidth / 2), y = (e.clientY - window.innerHeight / 2); document.documentElement.style.setProperty('--mx', x + 'px'); document.documentElement.style.setProperty('--my', y + 'px'); });
+    const io = new IntersectionObserver(es => es.forEach(ent => { if (ent.isIntersecting) { ent.target.classList.add('show'); io.unobserve(ent.target); } }), { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    function addToken(t) { t = t.trim(); if (!t) return; if (tokens.length >= 10) return; tokens.push(t); renderChips(); }
+    function removeToken(i) { tokens.splice(i, 1); renderChips(); }
+    function renderChips() { chipsEl.innerHTML = tokens.map((t, i) => `<span class="chip">${escapeHtml(t)} <a style="cursor:pointer" onclick="removeToken(${i})">✕</a></span>`).join(""); countBadge.textContent = `${tokens.length} / 10`; }
+    function escapeHtml(s) { return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+    /* ===== Love Score ===== */
+    function computeLoveAndDiversity() {
+      const n = tokens.length;                 // 入力数（0..10）
+      const genres = tokens.map(t => mapGenre(t));
+      const unique = [...new Set(genres)].length; // ユニークジャンル数
+      const score = clamp(0.6 * (n / 10) + 0.4 * (unique / 10)); // 0..1
+      const level = Math.max(1, Math.round(score * 10));   // 1..10
+      return { level, unique, score };
+    }
+    function renderLoveUI() {
+      const { level, unique } = computeLoveAndDiversity();
+      const base = 36, size = base + level * 4;
+      heartEl.style.width = size + "px"; heartEl.style.height = size + "px";
+      heartEl.style.boxShadow = `0 0 ${6 + level}px rgba(255,190,60,.7)`;
+      heartEl.style.animationDuration = `${2.2 - Math.min(1.8, level * 0.12)}s`;
+      loveLabel.textContent = `Level ${level} / 10（入力 ${tokens.length}・ユニークジャンル ${unique}）`;
+      const maxG = 10; const gPct = Math.round(100 * Math.min(1, unique / maxG));
+      genreFill.style.width = gPct + "%";
+      genreDetail.textContent = `Genres: ${unique} / ${maxG}（多いほど光り輝く）`;
+    }
+
+    /* ===== Main run ===== */
+    async function runAnalysis() {
+      if (tokens.length === 0) addToken("Electronic");
+      statusEl.textContent = onlineToggle.checked ? "Fetching open catalog… / オンライン取得中…" : "Using local model / ローカルモデル使用";
+
+      const userVec = profileFromInputs(tokens);
+      drawProfile(userVec); drawAbilities(userVec);
+      const type = detectType(userVec);
+      personalityEl.innerHTML = `<div class="card reveal show"><strong>${type}</strong><div class="small">${todayAdvice(type)}</div></div>`;
+
+      // Spotlights
+      artistsEl.innerHTML = `<div class="small">Loading artist photos…（アーティスト写真を取得中）</div>`;
+      const spotlightTargets = tokens.slice(0, 8);
+      const profiles = (await Promise.all(spotlightTargets.map(n => fetchArtistProfile(n).catch(() => null)))).filter(Boolean);
+      artistsEl.innerHTML = profiles.length ? profiles.map(p => artistCard(p)).join("") : `<div class="small">No artist profiles found.（見つかりませんでした）</div>`;
+
+      // Catalog & Recs
+      let catalog = [...LOCAL_SEED];
+      if (onlineToggle.checked) {
+        try {
+          openCatalogCache = await buildOpenCatalog(tokens); catalog = openCatalogCache.length ? openCatalogCache : LOCAL_SEED;
+          statusEl.textContent = `Catalog: ${catalog.length} artists from the web / 取得件数 ${catalog.length}`;
+        } catch { statusEl.textContent = "Online fetch failed. Fallback to local seed. / 取得失敗のためローカルに切替"; }
+      } else { statusEl.textContent = `Catalog: ${catalog.length} (local) / ローカル ${catalog.length} 件`; }
+
+      const have = new Set(tokens.map(t => t.toLowerCase()));
+      const recs = recommend(userVec, have, catalog);
+      drawRecs(recs);
+
+      // Listening Map（入力＋推薦を最大限プロット）
+      const inputPoints = await Promise.all(tokens.map(async n => {
+        let p = await fetchWikiProfile(n).catch(() => null);
+        let lat = p?.lat, lon = p?.lon;
+        if (lat == null || lon == null) {
+          const hit = catalog.find(c => similar(c.name, n));
+          if (hit && COUNTRY_XY[hit.country]) { [lat, lon] = COUNTRY_XY[hit.country]; }
+        }
+        return (lat != null && lon != null) ? { name: n, lat, lon, type: "input" } : null;
+      }));
+      const recPoints = await Promise.all(recs.map(async r => {
+        let p = await fetchWikiProfile(r.name).catch(() => null);
+        let lat = p?.lat, lon = p?.lon;
+        if (lat == null || lon == null) {
+          if (r.country && COUNTRY_XY[r.country]) { [lat, lon] = COUNTRY_XY[r.country]; }
+        }
+        return (lat != null && lon != null) ? { name: r.name, lat, lon, type: "rec" } : null;
+      }));
+      const points = [...inputPoints.filter(Boolean), ...recPoints.filter(Boolean)];
+      drawMap(points);
+
+      // Love meter
+      renderLoveUI();
+    }
+
+    /* ===== UI Pieces ===== */
+    function drawProfile(v) {
+      const keys = [
+        ["energy", "Energy（エネルギー）"], ["sophistication", "Sophistication（洗練）"],
+        ["groove", "Groove（グルーヴ）"], ["structure", "Structure（構築力）"],
+        ["experiment", "Experimentation（実験性）"], ["urban", "Urban Warmth（都市的温度）"],
+        ["global", "Global Openness（越境性）"]
+      ];
+      profileBars.innerHTML = keys.map(([k, ja]) => bar(ja, Math.round((v[k] || 0) * 100))).join("");
+      requestAnimationFrame(() => document.querySelectorAll('.fill').forEach(el => { el.style.width = el.getAttribute('data-w'); }));
+      const counts = {}; tokens.forEach(t => { const g = mapGenre(t); counts[g] = (counts[g] || 0) + 1; });
+      genreDist.innerHTML = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}: ${n}`).join(" / ") || "—";
+    }
+    function bar(label, percent) { return `<div class="kpi"><div>${label}</div><div class="badge">${percent}%</div></div><div class="bar"><div class="fill" data-w="${percent}%"></div></div>` }
+    function drawAbilities(v) {
+      const abs = toAbilities(v);
+      abilitiesEl.innerHTML = abs.map(a =>
+        `<div class="kpi"><div>${a.label}</div><div class="badge">${Math.round(a.score * 100)}%</div></div>
+     <div class="bar"><div class="fill" data-w="${Math.round(a.score * 100)}%"></div></div>`
+      ).join("");
+      requestAnimationFrame(() => document.querySelectorAll('#abilities .fill').forEach(el => { el.style.width = el.getAttribute('data-w'); }));
+    }
+    function drawRecs(recs) {
+      recsEl.innerHTML = recs.map(r => {
+        const g = (r.genres && r.genres.length) ? `<span class="badge" style="margin-left:6px">${r.genres.join(" / ")}</span>` : "";
+        return `<div class="card reveal artistCard">
+      <img class="artistImg" src="https://picsum.photos/seed/${encodeURIComponent(r.name)}/112/112" alt="" />
+      <div><strong>${escapeHtml(r.name)}</strong>${g}
+        <div class="small" style="margin-top:6px">open-web:
+          <a class="link" target="_blank" href="https://music.apple.com/search?term=${encodeURIComponent(r.name)}">Apple</a> ·
+          <a class="link" target="_blank" href="https://musicbrainz.org/search?query=${encodeURIComponent(r.name)}&type=artist&method=indexed">MB</a> ·
+          <a class="link" target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + ' music')}">YouTube</a>
+        </div></div></div>`;
+      }).join("");
+      document.querySelectorAll('#recs .reveal').forEach(el => io.observe(el));
+    }
+    function artistCard(p) {
+      const img = p.image || `https://picsum.photos/seed/${encodeURIComponent(p.name)}/112/112`;
+      const one = (p.summary && p.summary.trim().length > 0) ? p.summary : "No summary available.（紹介文は見つかりませんでした）";
+      const link = p.url || `https://www.google.com/search?q=${encodeURIComponent(p.name + ' artist')}`;
+      return `<div class="card artistCard">
+      <img class="artistImg" src="${img}" alt="${escapeHtml(p.name)}" />
+      <div>
+        <strong>${escapeHtml(p.name)}</strong>
+        <div class="small" style="margin-top:4px">${escapeHtml(one)}</div>
+        <div class="small" style="margin-top:6px">
+          <a class="link" target="_blank" href="${link}">Learn more（詳しく見る）</a>
+        </div>
+      </div>
+    </div>`;
+    }
+
+    /* ===== Map Renderer ===== */
+    function drawMap(points) {
+      mapEl.innerHTML = "";
+      const { width: w, height: h } = mapEl.getBoundingClientRect();
+      const ordered = [...points.filter(p => p.type === "input"), ...points.filter(p => p.type === "rec")];
+      let delay = 0;
+      for (const p of ordered) {
+        const [x, y] = project(p.lat, p.lon, w, h);
+        const dot = document.createElement("div");
+        dot.className = "dot " + (p.type === "input" ? "input" : "rec");
+        dot.style.left = `${x}px`; dot.style.top = `${y}px`; dot.style.opacity = "0"; dot.style.transform += " scale(.6)";
+        dot.title = p.name;
+        const ring = document.createElement("div");
+        ring.className = "ping";
+        ring.style.left = `${x}px`; ring.style.top = `${y}px`;
+        ring.style.borderColor = p.type === "input" ? "rgba(0,170,255,.7)" : "rgba(255,200,80,.75)";
+        ring.style.animationDelay = `${delay}ms`;
+        mapEl.appendChild(dot); mapEl.appendChild(ring);
+        setTimeout(() => { dot.style.transition = "all .5s ease"; dot.style.opacity = "1"; dot.style.transform = dot.style.transform.replace("scale(.6)", "scale(1)"); }, 60 + delay);
+        delay += 110;
+      }
+    }
+
+    /* レスポンシブ：サイズ変更で再レイアウト */
+    window.addEventListener("resize", () => { clearTimeout(window.__ml_resz); window.__ml_resz = setTimeout(() => { if (tokens.length) drawMap([]) || runAnalysis(); }, 350); });
+
+    /* ===== End ===== */
+  </script>
+</body>
+
+</html>
