@@ -4,12 +4,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MusicLens — Listening Map + Love Meter（英日併記・多様性レコメンド）</title>
+  <title>MusicLens — Dynamic Metrics + Gold Map</title>
   <style>
     :root {
       --accent: #ffcc33;
       --accent-2: #ff8800;
-      --glow: rgba(255, 180, 60, .55);
+      --glow: rgba(255, 180, 60, .65);
       --txt: #eef2ff;
       --muted: #a9b2c7;
       --bg1: #0e1018;
@@ -347,7 +347,7 @@
       box-shadow: 0 6px 14px rgba(0, 0, 0, .25)
     }
 
-    /* Listening Map（明るめ＋プロット強化） */
+    /* Listening Map（オレンジゴールド） */
     .mapWrap {
       position: relative;
       border-radius: 18px;
@@ -359,13 +359,15 @@
       position: relative;
       width: 100%;
       aspect-ratio: 16/9;
-      background: #101426;
-      background-image:
-        linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, 0)),
+      background:
+        linear-gradient(180deg, rgba(255, 190, 60, .45), rgba(255, 140, 0, .35)),
+        /* ゴールド光 */
         url('https://upload.wikimedia.org/wikipedia/commons/5/59/BlankMap-World-v2-light.svg');
+      /* 明るい地図 */
+      background-blend-mode: overlay, normal;
       background-size: cover;
       background-position: center;
-      filter: brightness(1.18) contrast(1.08) saturate(1.05)
+      filter: saturate(1.15) contrast(1.08) brightness(1.08)
     }
 
     .dot {
@@ -375,17 +377,17 @@
       border-radius: 50%;
       transform: translate(-50%, -50%) scale(.7);
       background: radial-gradient(circle, #fff 0%, #ffe9b0 35%, #ff9f1c 70%, #ff9f1c 100%);
-      box-shadow: 0 0 18px rgba(255, 190, 60, .95), 0 0 4px rgba(255, 255, 255, .8) inset
+      box-shadow: 0 0 20px rgba(255, 190, 60, .95), 0 0 4px rgba(255, 255, 255, .85) inset
     }
 
     .dot.input {
       background: radial-gradient(circle, #fff 0%, #c9f1ff 35%, #00bfff 70%, #00bfff 100%);
-      box-shadow: 0 0 18px rgba(0, 170, 255, .95), 0 0 4px rgba(255, 255, 255, .8) inset
+      box-shadow: 0 0 20px rgba(0, 170, 255, .95), 0 0 4px rgba(255, 255, 255, .85) inset
     }
 
     .ping {
       position: absolute;
-      border: 2px solid rgba(255, 200, 80, .65);
+      border: 2px solid rgba(255, 200, 80, .7);
       border-radius: 999px;
       transform: translate(-50%, -50%) scale(1);
       animation: ping 2.4s ease-out infinite;
@@ -401,8 +403,8 @@
 
       100% {
         opacity: 0;
-        width: 54px;
-        height: 54px
+        width: 60px;
+        height: 60px
       }
     }
 
@@ -420,8 +422,9 @@
       position: relative;
       transform: rotate(-45deg);
       margin: 8px;
-      background: radial-gradient(circle at 30% 30%, #fff 0%, #ffe3a3 35%, #ff8a00 70%);
-      box-shadow: 0 0 18px rgba(255, 180, 60, .6)
+      background: conic-gradient(from 0deg, #fff 0 10%, #ffe3a3 20%, #ffb347 60%, #ff8a00 100%);
+      box-shadow: 0 0 18px rgba(255, 180, 60, .7);
+      animation: beat 1.9s ease-in-out infinite
     }
 
     .heart:before,
@@ -444,6 +447,20 @@
       top: 0
     }
 
+    @keyframes beat {
+      0% {
+        transform: rotate(-45deg) scale(.98)
+      }
+
+      50% {
+        transform: rotate(-45deg) scale(1.05)
+      }
+
+      100% {
+        transform: rotate(-45deg) scale(.98)
+      }
+    }
+
     .glow {
       animation: glow 1.8s ease-in-out infinite alternate
     }
@@ -454,7 +471,7 @@
       }
 
       to {
-        filter: drop-shadow(0 0 18px rgba(255, 200, 80, .95))
+        filter: drop-shadow(0 0 22px rgba(255, 200, 80, .95))
       }
     }
 
@@ -468,8 +485,9 @@
     .genreFill {
       height: 100%;
       width: 0;
-      background: linear-gradient(90deg, #9beeff, #00bfff);
-      box-shadow: 0 0 14px rgba(0, 175, 255, .6) inset
+      background: linear-gradient(90deg, #9beeff, #00c7ff, #00e2ff);
+      box-shadow: 0 0 16px rgba(0, 175, 255, .7) inset;
+      transition: width .6s ease
     }
 
     /* SP最適化 */
@@ -497,7 +515,8 @@
     .no-motion .chip,
     .no-motion .card,
     .no-motion button,
-    .no-motion .glow {
+    .no-motion .glow,
+    .no-motion .heart {
       transition: none;
       animation: none
     }
@@ -508,15 +527,15 @@
   <div class="bg"></div>
 
   <div class="container">
-    <!-- Header -->
     <div class="panel reveal">
       <div class="headerBar">
         <div class="logo">MusicLens</div>
         <div class="sig">Produced by DAIJIRO MAJIMA</div>
       </div>
       <p class="subtitle" style="text-align:center">
-        Enter up to 10 artists/genres → analyze traits → Listening Map & Love Meter → open-web recommendations.<br>
-        （最大10件入力 → 特性分析 → 世界マップ＆音楽愛メーター → オープンWeb推薦）
+        Enter up to 10 artists/genres → analyze traits (dynamically) → Gold Listening Map & Love Meter → diverse
+        recommendations.<br>
+        （最大10件入力 → 毎回変動する特性分析 → ゴールド地図＆音楽愛メーター → 多ジャンル推薦）
       </p>
       <div class="headerRow" style="justify-content:center;gap:14px">
         <label class="small" style="display:inline-flex;gap:8px;align-items:center">
@@ -529,7 +548,6 @@
       </div>
     </div>
 
-    <!-- Input -->
     <div class="panel reveal">
       <label for="inputBox">Artists / Genres（アーティスト / ジャンル）</label>
       <input id="inputBox" type="text" placeholder="e.g. Daft Punk, FKJ, Tom Misch, BLACKPINK, Indie, House（例）" />
@@ -541,7 +559,6 @@
       <div class="chips" id="chips"></div>
     </div>
 
-    <!-- Profile & Today -->
     <div class="row">
       <div class="col panel reveal">
         <div class="section-title">Your Music Vector（あなたの音楽ベクトル）</div>
@@ -562,7 +579,6 @@
       <div id="abilities"></div>
     </div>
 
-    <!-- Listening Map -->
     <div class="panel reveal">
       <div class="section-title">Listening Map（リスニング・マップ：世界地図）</div>
       <div class="mapWrap">
@@ -571,14 +587,13 @@
       <div class="headerRow" style="margin-top:8px;justify-content:flex-start">
         <div class="legendItem"><span class="dot input"
             style="position:static;transform:none;width:10px;height:10px"></span><span class="small">Your
-            picks（入力アーティスト）</span></div>
+            picks（入力）</span></div>
         <div class="legendItem" style="margin-left:12px"><span class="dot"
             style="position:static;transform:none;width:10px;height:10px"></span><span
             class="small">Recommendations（推薦）</span></div>
       </div>
     </div>
 
-    <!-- Love Meter -->
     <div class="panel reveal">
       <div class="section-title">Music Love Level（音楽愛レベル / 10段階）</div>
       <div class="loveRow">
@@ -594,7 +609,6 @@
       </div>
     </div>
 
-    <!-- Spotlights & Recs -->
     <div class="panel reveal">
       <div class="section-title">Artist Spotlights（アーティスト紹介）</div>
       <div id="artists" class="artistGrid"></div>
@@ -604,20 +618,19 @@
       <div id="recs" class="artistGrid"></div>
     </div>
 
-    <p class="footer">Data: iTunes / MusicBrainz / Wikipedia（coordinates優先 → 国センタ座標fallback）。レスポンシブ対応・モーションはOS設定に追従。</p>
+    <p class="footer">Data: iTunes / MusicBrainz / Wikipedia（coordinates優先 → 国センタfallback）。レスポンシブ対応・モーションはOS設定に追従。</p>
   </div>
 
   <script>
-    /* ===== Utils ===== */
+    /* ========= 基本ユーティリティ ========= */
     const clamp = n => Math.max(0, Math.min(1, n));
     function avg(objs) { const k = Object.keys(objs[0] || {}), o = {}; for (const x of k) o[x] = objs.reduce((s, v) => s + v[x], 0) / objs.length; return o; }
     function cosine(a, b) { const K = Object.keys(a), d = K.reduce((s, k) => s + a[k] * b[k], 0), na = Math.sqrt(K.reduce((s, k) => s + a[k] * a[k], 0)), nb = Math.sqrt(K.reduce((s, k) => s + b[k] * b[k], 0)); return d / (na * nb || 1); }
     const sleep = ms => new Promise(r => setTimeout(r, ms));
-    /* ゆるい一致（同一/近似名判定用） */
     function norm(s) { return s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim(); }
     function similar(a, b) { a = norm(a); b = norm(b); return a === b || a.includes(b) || b.includes(a); }
 
-    /* ===== Feature Model / Seeds ===== */
+    /* ========= 特徴モデル & ジャンル推定 ========= */
     const BASE_GENRE = {
       "Electronic": { energy: .7, sophistication: .7, groove: .6, structure: .8, experiment: .55, urban: .35, global: .55 },
       "R&B": { energy: .5, sophistication: .6, groove: .8, structure: .5, experiment: .45, urban: .8, global: .45 },
@@ -625,6 +638,7 @@
       "Funk": { energy: .7, sophistication: .55, groove: .9, structure: .45, experiment: .4, urban: .75, global: .5 },
       "Indie": { energy: .5, sophistication: .5, groove: .55, structure: .55, experiment: .7, urban: .45, global: .45 },
       "Alternative": { energy: .55, sophistication: .5, groove: .55, structure: .55, experiment: .7, urban: .45, global: .45 },
+      "Post-rock": { energy: .45, sophistication: .6, groove: .5, structure: .6, experiment: .7, urban: .4, global: .45 },
       "Hip-hop": { energy: .7, sophistication: .55, groove: .85, structure: .5, experiment: .6, urban: .8, global: .6 },
       "K-Pop": { energy: .85, sophistication: .8, groove: .65, structure: .9, experiment: .55, urban: .65, global: .95 },
       "World": { energy: .7, sophistication: .45, groove: .85, structure: .45, experiment: .6, urban: .65, global: .9 },
@@ -633,10 +647,26 @@
       "Rock": { energy: .75, sophistication: .5, groove: .55, structure: .6, experiment: .55, urban: .5, global: .55 },
       "House": { energy: .75, sophistication: .65, groove: .85, structure: .75, experiment: .55, urban: .6, global: .7 }
     };
-    const GENRE_MAP = [[/hip.?hop|rap/i, "Hip-hop"], [/r.?&.?b|soul/i, "R&B"], [/electro|edm|dance|techno|house|club/i, "Electronic"], [/k-?pop/i, "K-Pop"], [/world|afro|latin|reggae|balkan/i, "World"], [/jazz/i, "Jazz"], [/indie|alt/i, "Indie"], [/funk|boogie|disco/i, "Funk"], [/pop/i, "Pop"], [/rock|metal|punk/i, "Rock"], [/house|garage|breakbeat/i, "House"]];
-    const LOCAL_SEED = [{ name: "Daft Punk", genres: ["Electronic"] }, { name: "FKJ", genres: ["R&B", "Electronic"] }, { name: "Tom Misch", genres: ["R&B", "Indie"] }, { name: "Peggy Gou", genres: ["Electronic"] }, { name: "Vulfpeck", genres: ["Funk"] }, { name: "Bonobo", genres: ["Electronic"] }, { name: "Kaytranada", genres: ["R&B", "Electronic"] }, { name: "Parcels", genres: ["Funk", "Indie"] }];
+    const GENRE_MAP = [
+      [/hip.?hop|rap/i, "Hip-hop"], [/r.?&.?b|neo.?soul|soul/i, "R&B"], [/electro|edm|dance|techno|house|club|idm|downtempo/i, "Electronic"],
+      [/k-?pop/i, "K-Pop"], [/world|afro|latin|reggae|balkan|cumbia|afrobeats/i, "World"], [/jazz|fusion|bebop/i, "Jazz"],
+      [/indie|alt(ernative)?/i, "Indie"], [/post.?rock/i, "Post-rock"], [/funk|boogie|disco/i, "Funk"], [/pop/i, "Pop"], [/rock|metal|punk/i, "Rock"], [/house|garage|breakbeat/i, "House"]
+    ];
+    function mapGenre(s) {
+      if (!s) return "Indie";
+      for (const [re, g] of GENRE_MAP) { if (re.test(String(s))) return g; }
+      return "Indie";
+    }
 
-    /* ===== Open Web Adapters ===== */
+    /* ========= シード（ローカル） ========= */
+    const LOCAL_SEED = [
+      { name: "Daft Punk", genres: ["Electronic"] }, { name: "FKJ", genres: ["R&B", "Electronic"] },
+      { name: "Tom Misch", genres: ["R&B", "Indie"] }, { name: "Peggy Gou", genres: ["Electronic"] },
+      { name: "Vulfpeck", genres: ["Funk"] }, { name: "Bonobo", genres: ["Electronic"] },
+      { name: "Kaytranada", genres: ["R&B", "Electronic"] }, { name: "Parcels", genres: ["Funk", "Indie"] }
+    ];
+
+    /* ========= オープンWeb取得 ========= */
     async function fetchITunesArtists(term, limit = 10) {
       const url = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=musicArtist&limit=${limit}`;
       const r = await fetch(url); const j = await r.json();
@@ -659,7 +689,6 @@
       return out;
     }
     function tagsToGenres(tags) { const txt = (tags || []).join(" ").toLowerCase(); for (const [re, g] of GENRE_MAP) { if (re.test(txt)) return [g]; } return []; }
-    function mapGenre(s) { if (!s) return "Indie"; for (const [re, g] of GENRE_MAP) { if (re.test(String(s))) return g; } return "Indie"; }
     async function buildOpenCatalog(keys) {
       const map = new Map();
       const add = arr => arr.forEach(a => {
@@ -674,7 +703,7 @@
       return [...map.values()];
     }
 
-    /* ===== Wiki profiles with coordinates ===== */
+    /* ========= Artist Profiles（画像＆座標） ========= */
     async function fetchWikiProfile(name) {
       const api = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`;
       const r = await fetch(api); if (!r.ok) return null;
@@ -695,7 +724,7 @@
     }
     async function fetchArtistProfile(name) { const wiki = await fetchWikiProfile(name).catch(() => null); if (wiki && (wiki.image || wiki.summary)) return wiki; const it = await fetchITunesArtwork(name).catch(() => null); return wiki || it; }
 
-    /* ===== Geo helpers ===== */
+    /* ========= 地理Fallback ========= */
     const COUNTRY_XY = {
       "Japan": [35.7, 139.7], "South Korea": [37.5, 127], "Korea, Republic of": [37.5, 127], "China": [39.9, 116.4], "Taiwan": [25.0, 121.5],
       "United States": [38.9, -77.0], "USA": [38.9, -77.0], "Canada": [45.4, -75.7], "United Kingdom": [51.5, -0.1], "England": [51.5, -0.1],
@@ -706,29 +735,67 @@
     };
     function project(lat, lon, w, h) { const x = (lon + 180) / 360 * w; const y = (90 - lat) / 180 * h; return [x, y]; }
 
-    /* ===== Profiling / Personality ===== */
-    function toVec(gs) { const v = gs.map(g => BASE_GENRE[g] || BASE_GENRE.Indie); return avg(v); }
-    function profileFromInputs(tokens) { return toVec(tokens.map(t => mapGenre(t))); }
-    function toAbilities(v) {
-      return [{ label: "Structure & Information Design（構造化・情報設計力）", score: clamp(0.6 * v.structure + 0.4 * v.sophistication) },
-      { label: "Empathy & Relationship Design（共感・関係性設計力）", score: clamp(0.55 * v.urban + 0.35 * v.groove) },
-      { label: "Experimental Creativity（実験・創造推進力）", score: clamp(0.7 * v.experiment + 0.2 * v.global) },
-      { label: "Execution Drive（推進・行動エネルギー）", score: v.energy },
-      { label: "Cross-cultural Integration（越境・多文化統合力）", score: clamp(0.7 * v.global + 0.2 * v.experiment) }];
+    /* ========= プロファイル計算（入力に強く反応） ========= */
+    // 入力トークン→推定ベクトル（カタログがあればそのジャンル、なければ正規表現で推定）
+    function tokenVector(token, catalog) {
+      // カタログ中の名前ゆる一致を優先
+      const hit = catalog?.find(a => similar(a.name, token));
+      const gs = hit?.genres?.length ? hit.genres : [mapGenre(token)];
+      return avg(gs.map(g => BASE_GENRE[g] || BASE_GENRE["Indie"]));
     }
-    function detectType(v) { if (v.experiment > 0.65 && v.global > 0.6) return "Curious Innovator"; if (v.groove > 0.7 && v.urban > 0.6) return "Empathic Connector"; if (v.structure > 0.7 && v.sophistication > 0.6) return "System Architect"; if (v.energy > 0.7 && v.groove > 0.6) return "Dynamic Performer"; return "Serene Observer"; }
-    function todayAdvice(t) { switch (t) { case "Curious Innovator": return "Curious Innovator（探究型）— 今日は未知の音や景色に触れてみよう。小さな回り道が発想の種に。"; case "Empathic Connector": return "Empathic Connector（共感型）— ペースを落として温かな会話を。心のリズムが整う日。"; case "System Architect": return "System Architect（構築型）— 整理・設計に最適。机やタスクを整えると次の一手がクリアに。"; case "Dynamic Performer": return "Dynamic Performer（行動型）— まず体を動かしてスイッチON。勢いで小さな勝ちを積もう。"; default: return "Serene Observer（静観型）— 静けさを味方に。お気に入りの曲を背景にリズムを整えよう。"; } }
+    // 入力の重み：最近追加したほど強め（0.9^距離）
+    function weight(i, n) { const t = n - i; return Math.pow(0.9, t); }
 
-    /* ===== Diverse Recommend（別人保証＋多ジャンル） ===== */
-    // 入力ジャンル分布
-    function countInputGenres(tokens) {
-      const c = {}; tokens.forEach(t => { const g = mapGenre(t); c[g] = (c[g] || 0) + 1; }); return c;
+    function profileFromInputsDynamic(tokens, catalog) {
+      if (!tokens.length) return BASE_GENRE["Indie"];
+      const vecs = tokens.map((t, i) => {
+        const v = tokenVector(t, catalog); const w = weight(i, tokens.length);
+        // 軽い揺らぎ（同一入力での硬直回避・視覚的変化用、±1%）
+        const jitter = (i * 37 % 5 - 2) / 5000;
+        const out = {}; for (const k in v) out[k] = clamp(v[k] * w + jitter);
+        return out;
+      });
+      // 合成→正規化
+      const sum = {}; for (const k in BASE_GENRE["Indie"]) sum[k] = 0;
+      vecs.forEach(v => { for (const k in v) sum[k] += v[k]; });
+      const wsum = tokens.map((_, i) => weight(i, tokens.length)).reduce((a, b) => a + b, 0);
+      for (const k in sum) sum[k] = clamp(sum[k] / wsum);
+      return sum;
     }
+
+    /* ========= 能力・タイプ ========= */
+    function toAbilities(v) {
+      return [
+        { label: "Structure & Information Design（構造化・情報設計力）", score: clamp(0.6 * v.structure + 0.4 * v.sophistication) },
+        { label: "Empathy & Relationship Design（共感・関係性設計力）", score: clamp(0.55 * v.urban + 0.35 * v.groove) },
+        { label: "Experimental Creativity（実験・創造推進力）", score: clamp(0.7 * v.experiment + 0.2 * v.global) },
+        { label: "Execution Drive（推進・行動エネルギー）", score: v.energy },
+        { label: "Cross-cultural Integration（越境・多文化統合力）", score: clamp(0.7 * v.global + 0.2 * v.experiment) }
+      ];
+    }
+    function detectType(v) {
+      if (v.experiment > 0.65 && v.global > 0.6) return "Curious Innovator";
+      if (v.groove > 0.7 && v.urban > 0.6) return "Empathic Connector";
+      if (v.structure > 0.7 && v.sophistication > 0.6) return "System Architect";
+      if (v.energy > 0.7 && v.groove > 0.6) return "Dynamic Performer";
+      return "Serene Observer";
+    }
+    function todayAdvice(t) {
+      switch (t) {
+        case "Curious Innovator": return "Curious Innovator（探究型）— 今日は未知の音や景色に触れてみよう。小さな回り道が発想の種に。";
+        case "Empathic Connector": return "Empathic Connector（共感型）— ペースを落として温かな会話を。心のリズムが整う日。";
+        case "System Architect": return "System Architect（構築型）— 整理・設計に最適。机やタスクを整えると次の一手がクリアに。";
+        case "Dynamic Performer": return "Dynamic Performer（行動型）— まず体を動かしてスイッチON。勢いで小さな勝ちを積もう。";
+        default: return "Serene Observer（静観型）— 静けさを味方に。お気に入りの曲を背景にリズムを整えよう。";
+      }
+    }
+
+    /* ========= 多様性レコメンド（別アーティスト保証） ========= */
+    function countInputGenres(tokens) { const c = {}; tokens.forEach(t => { const g = mapGenre(t); c[g] = (c[g] || 0) + 1; }); return c; }
     function recommend(userVec, have, catalog) {
       const inGenre = countInputGenres(tokens);
       const maxIn = Math.max(1, ...Object.values(inGenre));
 
-      // 入力名と近似名は除外
       const inputsLower = tokens.map(t => t.toLowerCase());
       const pool = catalog.filter(a => {
         const nm = a.name || ""; if (!nm) return false;
@@ -737,24 +804,19 @@
         return true;
       });
 
-      // スコアリング
       pool.forEach(a => {
-        const v = vecFromArtist(a);
-        const sim = cosine(userVec, v);
-        const growth = 0.3 * Math.max(0, v.experiment - userVec.experiment)
-          + 0.2 * Math.max(0, v.global - userVec.global)
-          + 0.2 * Math.max(0, v.urban - userVec.urban);
+        const gvec = avg((a.genres?.length ? a.genres : ["Indie"]).map(g => BASE_GENRE[g] || BASE_GENRE["Indie"]));
+        const sim = cosine(userVec, gvec);
+        const growth = 0.3 * Math.max(0, gvec.experiment - userVec.experiment)
+          + 0.2 * Math.max(0, gvec.global - userVec.global)
+          + 0.2 * Math.max(0, gvec.urban - userVec.urban);
         const g0 = (a.genres && a.genres[0]) || "Indie";
-        const explore = 0.25 * (1 - ((inGenre[g0] || 0) / maxIn)); // 未開拓ジャンルを上げる
+        const explore = 0.25 * (1 - ((inGenre[g0] || 0) / maxIn));
         a.__score = sim + growth + explore;
-        a.__g0 = g0;
-        a.__vec = v;
+        a.__g0 = g0; a.__vec = gvec;
       });
 
-      // 初期順位
       const ranked = pool.sort((x, y) => y.__score - x.__score);
-
-      // MMR風ピック：近さと多様性を両立
       const picked = []; const perGenre = {}; const maxPerGenre = 2; const targetN = 10; const lambda = 0.7;
       while (picked.length < targetN && ranked.length) {
         let best = -1, bestMMR = -Infinity;
@@ -768,7 +830,6 @@
         if (best === -1) break;
         const ch = ranked.splice(best, 1)[0]; picked.push(ch); perGenre[ch.__g0] = (perGenre[ch.__g0] || 0) + 1;
       }
-      // 未登場ジャンルの補完
       if (picked.length < targetN) {
         const used = new Set(picked.map(p => p.__g0));
         const fillers = ranked.filter(a => !used.has(a.__g0) && (perGenre[a.__g0] || 0) < maxPerGenre);
@@ -777,7 +838,7 @@
       return picked.slice(0, targetN).map(({ __score, __g0, __vec, ...rest }) => rest);
     }
 
-    /* ===== UI glue ===== */
+    /* ========= UI接着 ========= */
     const inputEl = document.getElementById("inputBox");
     const addBtn = document.getElementById("addBtn");
     const analyzeBtn = document.getElementById("analyzeBtn");
@@ -798,6 +859,7 @@
     const loveLabel = document.getElementById("loveLabel");
 
     let tokens = []; let openCatalogCache = null;
+
     inputEl.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addToken(inputEl.value); inputEl.value = ""; } });
     addBtn.addEventListener("click", () => { addToken(inputEl.value); inputEl.value = ""; });
     analyzeBtn.addEventListener("click", runAnalysis);
@@ -811,57 +873,58 @@
     function renderChips() { chipsEl.innerHTML = tokens.map((t, i) => `<span class="chip">${escapeHtml(t)} <a style="cursor:pointer" onclick="removeToken(${i})">✕</a></span>`).join(""); countBadge.textContent = `${tokens.length} / 10`; }
     function escapeHtml(s) { return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 
-    /* ===== Love Score ===== */
+    /* ========= Love Score ========= */
     function computeLoveAndDiversity() {
-      const n = tokens.length;                 // 入力数（0..10）
+      const n = tokens.length;
       const genres = tokens.map(t => mapGenre(t));
-      const unique = [...new Set(genres)].length; // ユニークジャンル数
-      const score = clamp(0.6 * (n / 10) + 0.4 * (unique / 10)); // 0..1
-      const level = Math.max(1, Math.round(score * 10));   // 1..10
+      const unique = [...new Set(genres)].length;
+      const score = clamp(0.6 * (n / 10) + 0.4 * (unique / 10));
+      const level = Math.max(1, Math.round(score * 10));
       return { level, unique, score };
     }
     function renderLoveUI() {
       const { level, unique } = computeLoveAndDiversity();
       const base = 36, size = base + level * 4;
       heartEl.style.width = size + "px"; heartEl.style.height = size + "px";
-      heartEl.style.boxShadow = `0 0 ${6 + level}px rgba(255,190,60,.7)`;
-      heartEl.style.animationDuration = `${2.2 - Math.min(1.8, level * 0.12)}s`;
+      heartEl.style.boxShadow = `0 0 ${6 + level}px rgba(255,190,60,.78)`;
+      heartEl.style.animationDuration = `${2.2 - Math.min(1.8, level * 0.12)}s`; // レベル高いほど早く脈打つ
       loveLabel.textContent = `Level ${level} / 10（入力 ${tokens.length}・ユニークジャンル ${unique}）`;
-      const maxG = 10; const gPct = Math.round(100 * Math.min(1, unique / maxG));
+      const maxG = 12; const gPct = Math.round(100 * Math.min(1, unique / maxG));
       genreFill.style.width = gPct + "%";
-      genreDetail.textContent = `Genres: ${unique} / ${maxG}（多いほど光り輝く）`;
+      genreDetail.textContent = `Genres: ${unique} / ${maxG}（多いほど光が強い）`;
     }
 
-    /* ===== Main run ===== */
+    /* ========= 実行 ========= */
     async function runAnalysis() {
       if (tokens.length === 0) addToken("Electronic");
-      statusEl.textContent = onlineToggle.checked ? "Fetching open catalog… / オンライン取得中…" : "Using local model / ローカルモデル使用";
+      statusEl.textContent = onlineToggle.checked ? "Fetching open catalog… / オンライン取得中…" : "Using local model / ローカル使用";
 
-      const userVec = profileFromInputs(tokens);
+      // カタログ（入力の中にアーティストがある時に効く）
+      let catalog = [...LOCAL_SEED];
+      if (onlineToggle.checked) {
+        try { openCatalogCache = await buildOpenCatalog(tokens); if (openCatalogCache.length) catalog = openCatalogCache; statusEl.textContent = `Catalog: ${catalog.length}`; }
+        catch { statusEl.textContent = "Online fetch failed. / 取得失敗→ローカル"; }
+      }
+
+      // 入力に強く反応するベクトル
+      const userVec = profileFromInputsDynamic(tokens, catalog);
       drawProfile(userVec); drawAbilities(userVec);
+
       const type = detectType(userVec);
       personalityEl.innerHTML = `<div class="card reveal show"><strong>${type}</strong><div class="small">${todayAdvice(type)}</div></div>`;
 
       // Spotlights
-      artistsEl.innerHTML = `<div class="small">Loading artist photos…（アーティスト写真を取得中）</div>`;
+      artistsEl.innerHTML = `<div class="small">Loading artist photos…（取得中）</div>`;
       const spotlightTargets = tokens.slice(0, 8);
       const profiles = (await Promise.all(spotlightTargets.map(n => fetchArtistProfile(n).catch(() => null)))).filter(Boolean);
       artistsEl.innerHTML = profiles.length ? profiles.map(p => artistCard(p)).join("") : `<div class="small">No artist profiles found.（見つかりませんでした）</div>`;
 
-      // Catalog & Recs
-      let catalog = [...LOCAL_SEED];
-      if (onlineToggle.checked) {
-        try {
-          openCatalogCache = await buildOpenCatalog(tokens); catalog = openCatalogCache.length ? openCatalogCache : LOCAL_SEED;
-          statusEl.textContent = `Catalog: ${catalog.length} artists from the web / 取得件数 ${catalog.length}`;
-        } catch { statusEl.textContent = "Online fetch failed. Fallback to local seed. / 取得失敗のためローカルに切替"; }
-      } else { statusEl.textContent = `Catalog: ${catalog.length} (local) / ローカル ${catalog.length} 件`; }
-
+      // Diverse Recs
       const have = new Set(tokens.map(t => t.toLowerCase()));
       const recs = recommend(userVec, have, catalog);
       drawRecs(recs);
 
-      // Listening Map（入力＋推薦を最大限プロット）
+      // Map（入力＋推薦）
       const inputPoints = await Promise.all(tokens.map(async n => {
         let p = await fetchWikiProfile(n).catch(() => null);
         let lat = p?.lat, lon = p?.lon;
@@ -879,14 +942,13 @@
         }
         return (lat != null && lon != null) ? { name: r.name, lat, lon, type: "rec" } : null;
       }));
-      const points = [...inputPoints.filter(Boolean), ...recPoints.filter(Boolean)];
-      drawMap(points);
+      drawMap([...inputPoints.filter(Boolean), ...recPoints.filter(Boolean)]);
 
       // Love meter
       renderLoveUI();
     }
 
-    /* ===== UI Pieces ===== */
+    /* ========= 表示系 ========= */
     function drawProfile(v) {
       const keys = [
         ["energy", "Energy（エネルギー）"], ["sophistication", "Sophistication（洗練）"],
@@ -895,16 +957,19 @@
         ["global", "Global Openness（越境性）"]
       ];
       profileBars.innerHTML = keys.map(([k, ja]) => bar(ja, Math.round((v[k] || 0) * 100))).join("");
+      // アニメ幅
       requestAnimationFrame(() => document.querySelectorAll('.fill').forEach(el => { el.style.width = el.getAttribute('data-w'); }));
+      // ジャンル構成
       const counts = {}; tokens.forEach(t => { const g = mapGenre(t); counts[g] = (counts[g] || 0) + 1; });
       genreDist.innerHTML = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}: ${n}`).join(" / ") || "—";
     }
     function bar(label, percent) { return `<div class="kpi"><div>${label}</div><div class="badge">${percent}%</div></div><div class="bar"><div class="fill" data-w="${percent}%"></div></div>` }
+    function toAbilitiesUI(v) { return toAbilities(v).map(a => ({ txt: a.label, pct: Math.round(a.score * 100) })); }
     function drawAbilities(v) {
-      const abs = toAbilities(v);
+      const abs = toAbilitiesUI(v);
       abilitiesEl.innerHTML = abs.map(a =>
-        `<div class="kpi"><div>${a.label}</div><div class="badge">${Math.round(a.score * 100)}%</div></div>
-     <div class="bar"><div class="fill" data-w="${Math.round(a.score * 100)}%"></div></div>`
+        `<div class="kpi"><div>${a.txt}</div><div class="badge">${a.pct}%</div></div>
+     <div class="bar"><div class="fill" data-w="${a.pct}%"></div></div>`
       ).join("");
       requestAnimationFrame(() => document.querySelectorAll('#abilities .fill').forEach(el => { el.style.width = el.getAttribute('data-w'); }));
     }
@@ -938,7 +1003,7 @@
     </div>`;
     }
 
-    /* ===== Map Renderer ===== */
+    /* ========= 地図描画 ========= */
     function drawMap(points) {
       mapEl.innerHTML = "";
       const { width: w, height: h } = mapEl.getBoundingClientRect();
@@ -953,18 +1018,18 @@
         const ring = document.createElement("div");
         ring.className = "ping";
         ring.style.left = `${x}px`; ring.style.top = `${y}px`;
-        ring.style.borderColor = p.type === "input" ? "rgba(0,170,255,.7)" : "rgba(255,200,80,.75)";
+        ring.style.borderColor = p.type === "input" ? "rgba(0,170,255,.8)" : "rgba(255,200,80,.85)";
         ring.style.animationDelay = `${delay}ms`;
         mapEl.appendChild(dot); mapEl.appendChild(ring);
-        setTimeout(() => { dot.style.transition = "all .5s ease"; dot.style.opacity = "1"; dot.style.transform = dot.style.transform.replace("scale(.6)", "scale(1)"); }, 60 + delay);
+        setTimeout(() => { dot.style.transition = "all .55s ease"; dot.style.opacity = "1"; dot.style.transform = dot.style.transform.replace("scale(.6)", "scale(1)"); }, 60 + delay);
         delay += 110;
       }
     }
 
-    /* レスポンシブ：サイズ変更で再レイアウト */
-    window.addEventListener("resize", () => { clearTimeout(window.__ml_resz); window.__ml_resz = setTimeout(() => { if (tokens.length) drawMap([]) || runAnalysis(); }, 350); });
+    /* ========= リサイズで再レイアウト ========= */
+    window.addEventListener("resize", () => { clearTimeout(window.__ml_resz); window.__ml_resz = setTimeout(() => { if (tokens.length) runAnalysis(); }, 350); });
 
-    /* ===== End ===== */
+    /* ========= ここまで ========= */
   </script>
 </body>
 
