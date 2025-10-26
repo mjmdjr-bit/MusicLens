@@ -216,7 +216,7 @@
       min-width: 320px
     }
 
-    /* 入力とライブサジェスト */
+    /* ===== 入力とライブサジェスト ===== */
     .inputWrap {
       position: relative
     }
@@ -271,7 +271,57 @@
       padding: 6px 10px
     }
 
-    /* Listening Map：黒に金線 */
+    /* ===== ボタン強化 ===== */
+    .btn-primary {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 900;
+      letter-spacing: .3px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      color: #111;
+      background: linear-gradient(90deg, #ffd766, #ff9f1c);
+      box-shadow: 0 10px 24px rgba(255, 170, 40, .35), inset 0 1px rgba(255, 255, 255, .45);
+    }
+
+    .btn-primary:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.08)
+    }
+
+    .btn-ghost {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, .35);
+      color: #fff;
+      cursor: pointer;
+      padding: 12px 18px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .06);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, .25), inset 0 1px rgba(255, 255, 255, .15);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, .1)
+    }
+
+    /* ===== 分析インジケーター ===== */
+    .insightHighlight {
+      margin-top: 10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-weight: 900;
+      letter-spacing: .2px;
+      color: #111;
+      background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
+      box-shadow: 0 12px 28px rgba(255, 170, 40, .35), inset 0 1px rgba(255, 255, 255, .4);
+    }
+
+    /* ===== Listening Map ===== */
     .mapContainer {
       position: relative;
       border-radius: 18px;
@@ -292,7 +342,8 @@
       background-repeat: no-repeat;
       background-position: center;
       background-size: contain;
-      filter: invert(100%) sepia(90%) saturate(1500%) hue-rotate(-20deg) brightness(1.1) contrast(1.1);
+      filter: none;
+      /* ここを none にして確実に地図を表示 */
     }
 
     .mapCanvas::after {
@@ -331,7 +382,7 @@
       height: 100%
     }
 
-    /* Player UI */
+    /* ===== Player UI ===== */
     .player {
       margin-top: 8px;
       border: 1px solid rgba(255, 255, 255, .18);
@@ -391,7 +442,7 @@
       inset: 0
     }
 
-    /* モーダル（ポップアップ） */
+    /* ===== モーダル ===== */
     .modal {
       position: fixed;
       inset: 0;
@@ -436,14 +487,10 @@
       font-size: 20px
     }
 
-    /* SP */
+    /* ===== SP ===== */
     @media (max-width:820px) {
       .logo {
         font-size: 30px
-      }
-
-      .loveWide {
-        grid-template-columns: 1fr
       }
 
       .mapCanvas {
@@ -484,11 +531,21 @@
           <div id="suggestions" class="suggestBox"></div>
         </div>
         <div style="display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap">
-          <button class="badge" id="addBtn">Add（追加）</button>
-          <button class="badge" id="analyzeBtn">Analyze（解析）</button>
+          <button class="btn-ghost" id="addBtn">Add（追加）</button>
+          <button class="btn-primary" id="analyzeBtn">Analyze（解析）</button>
           <span class="badge" id="countBadge">0 / 10</span>
           <span class="small" id="status"></span>
         </div>
+
+        <!-- 進捗インジケーター -->
+        <div id="analyzing" aria-live="polite" style="display:none;margin-top:10px">
+          <div style="height:6px;border-radius:999px;background:rgba(255,255,255,.15);overflow:hidden">
+            <div id="anabar" style="width:0%;height:100%;
+            background:linear-gradient(90deg,#ffd766,#ff9f1c);box-shadow:0 0 10px rgba(255,180,60,.6) inset"></div>
+          </div>
+          <div id="anatxt" class="small" style="margin-top:6px">Analyzing…</div>
+        </div>
+
         <div class="chips" id="chips"></div>
       </div>
 
@@ -510,8 +567,6 @@
         <div class="col panel" data-modal="personality">
           <div class="section-title">Personality & Today（性格タイプと今日の過ごし方）</div>
           <div id="personality"></div>
-          <div id="personalityExplain" class="small" style="margin-top:6px"></div>
-          <div id="microComment" class="small" style="margin-top:6px"></div>
         </div>
       </div>
 
@@ -538,7 +593,7 @@
         <div class="small" style="margin-top:6px">入力＝シアン ／ 推薦＝ゴールド（ホイール：ズーム、ドラッグ：パン）</div>
       </div>
 
-      <!-- Love & Genre（UIは前の版に準じているため簡略） -->
+      <!-- Love & Genre -->
       <div class="panel" data-modal="love">
         <div class="section-title">Music Love Level（音楽愛レベル / 10段階）</div>
         <div style="display:grid;grid-template-columns:minmax(320px,40%) 1fr;gap:18px;align-items:center">
@@ -559,7 +614,9 @@
           <div>
             <div class="small" style="font-weight:700">Genre Richness（ジャンル多様性）</div>
             <div class="genreMeterXL">
-              <div id="genreFill" class="genreFillXL"></div>
+              <div id="genreFill" class="genreFillXL"
+                style="height:22px;background:linear-gradient(90deg,#8ee7ff,#00c7ff,#00ecff);box-shadow:0 0 20px rgba(0,175,255,.75) inset, 0 0 10px rgba(0,210,255,.45);width:0%">
+              </div>
             </div>
             <div id="genreDetail" class="small" style="margin-top:6px"></div>
             <div id="loveExplain" class="small" style="margin-top:10px"></div>
@@ -594,36 +651,36 @@
        背景FX：プリズム粒子＋惑星軌道＋オーロラ
        ========================= */
     const fx = document.getElementById('fx');
-    let ctx, W, H, prisms = [], orbits = [], aur = 0;
-    function fxResize() { W = fx.width = innerWidth; H = fx.height = innerHeight; ctx = fx.getContext('2d'); ctx.globalCompositeOperation = 'lighter'; }
+    let ctxFX, WFX, HFX, prisms = [], orbits = [], aur = 0;
+    function fxResize() { WFX = fx.width = innerWidth; HFX = fx.height = innerHeight; ctxFX = fx.getContext('2d'); ctxFX.globalCompositeOperation = 'lighter'; }
     window.addEventListener('resize', fxResize); fxResize();
 
     function makePrisms(n = 90) {
       prisms = [...Array(n)].map(() => ({
-        x: Math.random() * W, y: Math.random() * H,
+        x: Math.random() * WFX, y: Math.random() * HFX,
         vx: (Math.random() - .5) * 0.4, vy: (Math.random() - .5) * 0.4,
         r: 1 + Math.random() * 2, h: Math.random() * 60 + 20, a: .25 + .45 * Math.random()
       }));
     }
     function makeOrbits(m = 5) {
       orbits = [...Array(m)].map((_, i) => ({
-        cx: W / 2, cy: H / 2, a: 180 + 80 * i, b: 120 + 60 * i, t: Math.random() * Math.PI * 2, sp: .0015 + .0006 * i
+        cx: WFX / 2, cy: HFX / 2, a: 180 + 80 * i, b: 120 + 60 * i, t: Math.random() * Math.PI * 2, sp: .0015 + .0006 * i
       }));
     }
     makePrisms(); makeOrbits();
 
     (function fxLoop() {
       requestAnimationFrame(fxLoop);
-      ctx.clearRect(0, 0, W, H);
+      ctxFX.clearRect(0, 0, WFX, HFX);
 
       // Aurora
       aur += 0.005;
-      for (let y = 0; y < H; y += 4) {
-        const g = ctx.createLinearGradient(0, y, W, y);
+      for (let y = 0; y < HFX; y += 4) {
+        const g = ctxFX.createLinearGradient(0, y, WFX, y);
         const w = (Math.sin(aur + y * 0.01) + 1) / 2;
         g.addColorStop(0, `hsla(${40 + 20 * w},100%,${30 + 20 * w}%,.06)`);
         g.addColorStop(1, `hsla(${30 + 10 * w},100%,${20 + 10 * w}%,.0)`);
-        ctx.fillStyle = g; ctx.fillRect(0, y, W, 3);
+        ctxFX.fillStyle = g; ctxFX.fillRect(0, y, WFX, 3);
       }
 
       // Orbits
@@ -631,21 +688,21 @@
         o.t += o.sp;
         const x = o.cx + o.a * Math.cos(o.t);
         const y = o.cy + o.b * Math.sin(o.t);
-        ctx.strokeStyle = 'rgba(255,200,80,.08)';
-        ctx.beginPath(); ctx.ellipse(o.cx, o.cy, o.a, o.b, 0, 0, Math.PI * 2); ctx.stroke();
-        const grd = ctx.createRadialGradient(x, y, 0, x, y, 8);
+        ctxFX.strokeStyle = 'rgba(255,200,80,.08)';
+        ctxFX.beginPath(); ctxFX.ellipse(o.cx, o.cy, o.a, o.b, 0, 0, Math.PI * 2); ctxFX.stroke();
+        const grd = ctxFX.createRadialGradient(x, y, 0, x, y, 8);
         grd.addColorStop(0, 'rgba(255,255,255,.9)');
         grd.addColorStop(1, 'rgba(255,170,40,.2)');
-        ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x, y, 8, 0, Math.PI * 2); ctx.fill();
+        ctxFX.fillStyle = grd; ctxFX.beginPath(); ctxFX.arc(x, y, 8, 0, Math.PI * 2); ctxFX.fill();
       });
 
       // Prisms
       for (const p of prisms) {
-        p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1;
-        const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 8);
+        p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > WFX) p.vx *= -1; if (p.y < 0 || p.y > HFX) p.vy *= -1;
+        const grd = ctxFX.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 8);
         grd.addColorStop(0, `hsla(${45 + p.h},100%,60%,${p.a})`);
         grd.addColorStop(1, 'transparent');
-        ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 8, 0, Math.PI * 2); ctx.fill();
+        ctxFX.fillStyle = grd; ctxFX.beginPath(); ctxFX.arc(p.x, p.y, p.r * 8, 0, Math.PI * 2); ctxFX.fill();
       }
     })();
 
@@ -733,7 +790,7 @@
       suggestions.innerHTML = items.map(a => `<div class="sugItem" data-name="${escapeHtml(a.name)}">${escapeHtml(a.name)}</div>`).join('');
       suggestions.style.display = items.length ? 'block' : 'none';
       Array.from(suggestions.querySelectorAll('.sugItem')).forEach(el => {
-        el.onclick = () => { addToken(el.dataset.name); inputBox.value = ''; suggestions.style.display = 'none'; playSE(); };
+        el.onclick = () => { addToken(el.dataset.name); inputBox.value = ''; suggestions.style.display = 'none'; playSE(); persist(); };
       });
     }
     async function fetchItunesArtists(term, limit = 10) {
@@ -840,18 +897,26 @@
     function hookupPlayers(scope) {
       const players = scope.querySelectorAll('.player');
       players.forEach(p => {
-        const btn = p.querySelector('.playBtn'); const audio = p.querySelector('audio'); const wave = p.querySelector('.wave');
+        const btn = p.querySelector('.playBtn'); const audio = p.querySelector('audio'); const wave = p.querySelector('div.wave');
         btn.onclick = async () => {
-          if (CURRENT_AUDIO && CURRENT_AUDIO !== audio) { CURRENT_AUDIO.pause(); const b = scope.querySelector('.playBtn.playing'); if (b) { b.textContent = '▶︎'; b.classList.remove('playing'); } }
-          if (audio.paused) { await audio.play(); CURRENT_AUDIO = audio; btn.textContent = '⏸'; btn.classList.add('playing'); attachWave(audio, wave); }
-          else { audio.pause(); btn.textContent = '▶︎'; btn.classList.remove('playing'); }
+          if (CURRENT_AUDIO && CURRENT_AUDIO !== audio) {
+            CURRENT_AUDIO.pause();
+            const prevBtn = scope.querySelector('.playBtn.playing');
+            if (prevBtn) { prevBtn.textContent = '▶︎'; prevBtn.classList.remove('playing'); }
+          }
+          if (audio.paused) {
+            await audio.play(); CURRENT_AUDIO = audio;
+            btn.textContent = '⏸'; btn.classList.add('playing'); attachWave(audio, wave);
+          } else {
+            audio.pause(); btn.textContent = '▶︎'; btn.classList.remove('playing');
+          }
         };
         audio.onended = () => { btn.textContent = '▶︎'; btn.classList.remove('playing'); };
       });
     }
 
     /* =========================
-       プロファイル・タイプ（簡易）
+       プロファイル・タイプ
        ========================= */
     const BASEV = { energy: .6, sophistication: .6, groove: .6, structure: .6, experiment: .6, urban: .6, global: .6 };
     function mapGenre(s) {
@@ -889,155 +954,81 @@
       return "Serene Observer";
     }
 
-    /* =========================
-       入力・解析・UI・マップ
-       ========================= */
-    const chips = document.getElementById('chips');
-    const countBadge = document.getElementById('countBadge');
-    const profileBars = document.getElementById('profileBars');
-    const vectorExplain = document.getElementById('vectorExplain');
-    const vectorInsight = document.getElementById('vectorInsight');
-    const abilitiesEl = document.getElementById('abilities');
-    const abilitiesExplain = document.getElementById('abilitiesExplain');
-    const abilitiesInsight = document.getElementById('abilitiesInsight');
-    const personalityEl = document.getElementById('personality');
-    const personalityExplain = document.getElementById('personalityExplain');
-    const microComment = document.getElementById('microComment');
-    const genreDist = document.getElementById('genreDist');
-    const mapViewport = document.getElementById('mapViewport');
-    const mapEl = document.getElementById('map');
-    const mapSvg = document.getElementById('mapSvg');
-    const loveLabel = document.getElementById('loveLabel');
-    const genreFill = document.getElementById('genreFill');
-    const genreDetail = document.getElementById('genreDetail');
-    const loveExplain = document.getElementById('loveExplain');
-    const genreExplain = document.getElementById('genreExplain');
-    const loveInsight = document.getElementById('loveInsight');
-    const input = document.getElementById('inputBox');
-    let TOKENS = [];
-
-    function addToken(t) { if (TOKENS.length >= 10) return; TOKENS.push(t); renderChips(); }
-    function removeToken(i) { TOKENS.splice(i, 1); renderChips(); }
-    function renderChips() { chips.innerHTML = TOKENS.map((t, i) => `<span class="chip">${t} <a style="cursor:pointer" onclick="removeToken(${i})">✕</a></span>`).join(''); countBadge.textContent = `${TOKENS.length} / 10`; }
-
-    document.getElementById('addBtn').onclick = () => { if (!input.value.trim()) return; addToken(input.value.trim()); input.value = ''; suggestions.style.display = 'none'; playSE(); };
-    document.getElementById('analyzeBtn').onclick = async () => {
-      playSE();
-      if (!TOKENS.length) TOKENS.push('Electronic');
-      const v = profileFromInputs(TOKENS);
-      drawProfile(v); drawVectorExplain(v); drawVectorInsight(v);
-      drawAbilities(v); drawAbilitiesExplain(v); drawAbilitiesInsight(v);
-
-      const type = detectType(v);
-      personalityEl.innerHTML = `<div class="card"><div class="kpi"><div><strong>${type}</strong></div><div class="badge">Today</div></div><div class="small">${todayAdvice(type)}</div></div>`;
-      personalityExplain.textContent = {
+    /* ===== Personality 出力（詳細・ランダム） ===== */
+    function personalityIdeas(type, vec, tokens) {
+      const pick = (arr, n) => arr.sort(() => 0.5 - Math.random()).slice(0, n);
+      const g = Object.entries(vec).sort((a, b) => b[1] - a[1]).map(([k]) => k);
+      const top = g[0], sec = g[1];
+      const lib = {
+        "Curious Innovator": [
+          "未踏ジャンルのプレイリストを15分だけ掘る。発見を1行メモし、次の打ち合わせに“問い”として持ち込む。",
+          "小さく作って小さく見せる。試作品を誰か1人に使ってもらい、反応を観察して改良。",
+          "今日の移動時間は“観察タイム”。街のサインや音にひそむ工夫を3つ記録し、明日の設計に転用。"
+        ],
+        "Empathic Connector": [
+          "1on1で“最近ハマってる音楽”を互いに交換。場の温度が上がり、次の相談がしやすくなる。",
+          "会議で“要約と感謝”を最後に入れる。流れの収束がよくなり、合意形成が早まる。",
+          "返事を10分遅らせ、相手の文脈を読み直す。“間”が思考の余白を生み、答えの質が上がる。"
+        ],
+        "System Architect": [
+          "案件の情報カードを1画面で見渡せるよう再配置。重複を除き、優先度ラベルをつける。",
+          "“失敗のパターン”を先に書き出す。回避設計の精度が一段上がる。",
+          "説明資料は“図→要点→結論”の順で。理解速度と納得感が両立する。"
+        ],
+        "Dynamic Performer": [
+          "朝いちで“身体を使うタスク”から着手。勢いが生まれ、迷いが消える。",
+          "短いデモを見せて空気を作る。反応から方向を確定する。",
+          "15分の集中×5本で1セット。休憩は外の空気に触れる。"
+        ],
+        "Serene Observer": [
+          "静かな場所で5分だけメモ書き。観察から仮説を1つ立てて、午後の実験に回す。",
+          "不要な通知を全OFF。深い集中で“本質の線”を見つける。",
+          "散歩で音のレイヤーを聴き分ける。気づきを次のデザインの指針に。"
+        ]
+      };
+      const spice = [
+        `今日のキーワードは「${top}」。次点の「${sec}」を意識するとバランスが取れる。`,
+        `入力アーティスト：${tokens.slice(0, 3).join(" / ")} を会話の“導入”に使うと空気が和む。`,
+        `“やらないことリスト”を先に3つ決めると、強みが際立つ。`
+      ];
+      return pick(lib[type] || lib["Serene Observer"], 2).concat(pick(spice, 1));
+    }
+    function renderPersonality(vec, tokens) {
+      const type = detectType(vec);
+      const target = document.getElementById('personality');
+      const explain = {
         "Curious Innovator": "新奇探索と越境の推進力。学習曲線が急な環境で真価。",
         "Empathic Connector": "関係性の質で成果を最大化。温度調整と場づくりが核。",
         "System Architect": "秩序と設計で複雑さを制御。見取り図を描くのが得意。",
         "Dynamic Performer": "体験の推進役。勢いで最初の一歩を生む。",
         "Serene Observer": "静かな洞察と精度。観察から本質を抜き出す。"
       }[type];
-
-      const order = Object.entries(v).sort((a, b) => b[1] - a[1]); const [k1, s1] = order[0], [k2, s2] = order[1]; const delta = Math.round((s1 - s2) * 100);
-      microComment.textContent = delta <= 2 ? "判定が拮抗：今日は“次点の軸”を意識して動くと新しい景色が見えます。" :
-        (k1 === "experiment" && k2 === "global" ? "実験×越境が強い：安全な砂場で未踏を小さく試す日。" :
-          (k1 === "structure" && k2 === "sophistication" ? "設計×洗練：見取り図＋トーンまで踏み込む。" :
-            (k1 === "groove" && k2 === "urban" ? "協調×感受性：会話の余白をデザイン。" : "トップ軸で15分の小さな行動を。")));
-
-      // Love & Genre
-      const n = TOKENS.length, uniq = [...new Set(TOKENS.map(mapGenre))].length;
-      const score = Math.max(0, Math.min(1, 0.6 * (n / 10) + 0.4 * (uniq / 12))); const level = Math.max(1, Math.round(score * 10));
-      const heart = document.getElementById('heart'); const vw = Math.max(320, innerWidth);
-      const base = vw >= 1000 ? 200 : 160, amp = vw >= 1000 ? 14 : 12, size = base + (level - 5) * amp;
-      heart.style.width = size + "px"; heart.style.height = size + "px";
-      loveLabel.textContent = `Level ${level} / 10（入力 ${n}・ユニークジャンル ${uniq}）`;
-      genreFill.style.width = Math.round(100 * Math.min(1, uniq / 12)) + "%";
-      genreDetail.textContent = `Genres: ${uniq} / 12（多いほど光が強い）`;
-      loveExplain.textContent = "Music Love Level＝入力数と幅から見た“没入度”。数は探索性、幅は柔軟性と学習転移を示す。";
-      genreExplain.textContent = "Genre Richness＝ユニークなジャンル数。多いほど越境的・多声的。";
-      loveInsight.textContent = level >= 8 ? "示唆：高い没入度。未開ジャンルを1つ混ぜると創造性が跳ねます。" :
-        (level <= 3 ? "示唆：尖った深掘り。近縁ジャンルで幅を一段増やすと気づきが生まれる。" : "示唆：バランス良好。今日は“少し異質”を足す日。");
-
-      // Recs with players
-      const recs = await buildRecs(TOKENS);
-      await drawRecs(recs);
-
-      // Map（デモ：いくつか主要都市）
-      const pts = []; const city = [[35.7, 139.7], [37.5, 127], [48.86, 2.35], [51.5, -0.1], [40.4, -3.7], [34.05, -118.24], [52.37, 4.9]];
-      TOKENS.forEach((t, i) => pts.push({ name: t, lat: city[i % city.length][0], lon: city[i % city.length][1], type: "input" }));
-      recs.slice(0, 6).forEach((r, i) => pts.push({ name: r.name, lat: city[(i + 3) % city.length][0], lon: city[(i + 3) % city.length][1], type: "rec" }));
-      drawMap(pts);
-    };
-
-    function drawProfile(v) {
-      const list = [["energy", "Energy（エネルギー）"], ["sophistication", "Sophistication（洗練）"], ["groove", "Groove（グルーヴ）"], ["structure", "Structure（構築力）"], ["experiment", "Experimentation（実験性）"], ["urban", "Urban Warmth（都市的温度）"], ["global", "Global Openness（越境性）"]];
-      profileBars.innerHTML = list.map(([k, ja]) => {
-        const pct = Math.round((v[k] || 0) * 100);
-        return `<div class="kpi"><div>${ja}</div><div class="badge">${pct}%</div></div><div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
-      }).join("");
-    }
-    function drawVectorExplain(v) {
-      const explain = {
-        energy: "行動の立ち上げ。高いほどアクティブ。", sophistication: "審美眼・品質志向。演出力に直結。",
-        groove: "協調のテンポ。チーム推進。", structure: "情報を並べる設計力。要件整理。",
-        experiment: "実験・探索ドライブ。新規に強い。", urban: "都市的感受性。共感と温度調整。",
-        global: "越境と学習転移。多文化適応。"
-      };
-      vectorExplain.innerHTML = Object.entries(explain).map(([k, txt]) => `<div class="small">• <strong>${k}</strong> — ${txt} <span class="badge">${Math.round((v[k] || 0) * 100)}%</span></div>`).join('');
-    }
-    function drawVectorInsight(v) {
-      const e = Object.entries(v).sort((a, b) => b[1] - a[1]); const top = e.slice(0, 2).map(([k]) => k).join(" × ");
-      vectorInsight.textContent = `総合示唆：あなたは「${top}」が際立つタイプ。ここを核に設計すると最短で成果が出ます。`;
-    }
-    function drawAbilities(v) {
-      const abs = [
-        { label: "Structure & Information Design（構造化・情報設計力）", score: Math.max(0, Math.min(1, 0.6 * v.structure + 0.4 * v.sophistication)) },
-        { label: "Empathy & Relationship Design（共感・関係性設計力）", score: Math.max(0, Math.min(1, 0.55 * v.urban + 0.35 * v.groove)) },
-        { label: "Experimental Creativity（実験・創造推進力）", score: Math.max(0, Math.min(1, 0.7 * v.experiment + 0.2 * v.global)) },
-        { label: "Execution Drive（推進・行動エネルギー）", score: v.energy },
-        { label: "Cross-cultural Integration（越境・多文化統合力）", score: Math.max(0, Math.min(1, 0.7 * v.global + 0.2 * v.experiment)) }
-      ];
-      abilitiesEl.innerHTML = abs.map(a => `<div class="kpi"><div>${a.label}</div><div class="badge">${Math.round(a.score * 100)}%</div></div><div class="bar"><div class="fill" style="width:${Math.round(a.score * 100)}%"></div></div>`).join("");
-    }
-    function drawAbilitiesExplain(v) {
-      const e = {
-        structure: "要件を言語化し、情報を正しく“並べる”力。仕様策定・IAで武器に。",
-        empathy: "関係性の温度を調整し、共感で推進。顧客折衝・ファシリに有効。",
-        creative: "仮説検証を回す実験ドライブ。0→1やPoCに強い。",
-        drive: "物事を動かす原動力。短期の山を越えるとき頼りに。",
-        xborder: "異文化や他部署を橋渡し。学びを横展開し再現性UP。"
-      };
-      abilitiesExplain.innerHTML = Object.values(e).map(x => `<div class="small">• ${x}</div>`).join('');
-    }
-    function drawAbilitiesInsight(v) {
-      const abs = [
-        { k: "structure", s: Math.max(0, Math.min(1, 0.6 * v.structure + 0.4 * v.sophistication)) },
-        { k: "empathy", s: Math.max(0, Math.min(1, 0.55 * v.urban + 0.35 * v.groove)) },
-        { k: "creative", s: Math.max(0, Math.min(1, 0.7 * v.experiment + 0.2 * v.global)) },
-        { k: "drive", s: v.energy },
-        { k: "xborder", s: Math.max(0, Math.min(1, 0.7 * v.global + 0.2 * v.experiment)) }
-      ].sort((a, b) => b.s - a.s);
-      const map = { structure: "構造化", empathy: "共感", creative: "実験", drive: "推進", xborder: "越境" };
-      abilitiesInsight.textContent = `総合示唆：${map[abs[0].k]} × ${map[abs[1].k]} が核。ここを主導に据えると成果の再現性が上がります。`;
+      const ideas = personalityIdeas(type, vec, tokens).map(t => `<li>${escapeHtml(t)}</li>`).join('');
+      target.innerHTML = `
+    <div class="card">
+      <div class="kpi"><div><strong>${type}</strong></div><div class="badge">Today</div></div>
+      <div class="small">${escapeHtml(explain)}</div>
+      <ul class="small" style="margin-top:8px">${ideas}</ul>
+    </div>`;
     }
 
     /* =========================
-       推薦（ダミー: 多様化のみ）
+       推薦（簡易デモ）
        ========================= */
     async function buildRecs(tokens) {
-      // 実運用はあなたの diverse recommend ロジックを利用してください（ここはデモ簡略）
       const pool = ["Bonobo", "Kaytranada", "Jungle", "Parcels", "Bicep", "Altın Gün", "Robert Glasper", "XG", "LE SSERAFIM", "NewJeans", "Cimafunk", "Vulfpeck"];
       const lower = tokens.map(t => t.toLowerCase());
       const out = []; for (const n of pool) { if (out.length >= 8) break; if (lower.some(t => n.toLowerCase().includes(t))) continue; out.push({ name: n, genres: [mapGenre(n)] }); }
       return out;
     }
-
-    /* =========================
-       Recs表示：プレーヤー付
-       ========================= */
     const recsEl = document.getElementById('recs');
     async function drawRecs(recs) {
       recsEl.innerHTML = '';
+      if (!recs || !recs.length) {
+        recsEl.innerHTML = `<div class="small">推薦を取得できませんでした。<button class="btn-ghost" id="retryRecs">Retry</button></div>`;
+        document.getElementById('retryRecs').onclick = async () => { const again = await buildRecs(TOKENS); drawRecs(again); };
+        return;
+      }
       for (const r of recs) {
         const card = document.createElement('div');
         card.className = 'card reveal artistCard';
@@ -1050,7 +1041,6 @@
         <div class="tracks"></div>
       </div>`;
         recsEl.appendChild(card);
-
         try {
           const tracks = await getTopTracks(r.name);
           const tracksEl = card.querySelector('.tracks');
@@ -1068,15 +1058,33 @@
     /* =========================
        マップ（ズーム・パン・タップでポップ）
        ========================= */
+    const mapViewport = document.getElementById('mapViewport');
+    const mapEl = document.getElementById('map');
+    const mapSvg = document.getElementById('mapSvg');
+
+    function renderContinentFallback(points) {
+      const conts = { "Europe": 0, "Asia": 0, "North America": 0, "South America": 0, "Africa": 0, "Oceania": 0 };
+      points.forEach(p => {
+        const { lat, lon } = p; let c = "Asia";
+        if (lat < 0 && lon > 110) c = "Oceania";
+        if (lat < 0 && lon < -30) c = "South America";
+        if (lat > 0 && lon < -30) c = "North America";
+        if (lat > 35 && lon > -10 && lon < 60) c = "Europe";
+        if (lat < 30 && lon > -20 && lon < 50 && lat > -35) c = "Africa";
+        conts[c] = (conts[c] || 0) + 1;
+      });
+      mapEl.innerHTML = `<div class="small"><strong>Continent Summary:</strong><br>${Object.entries(conts).map(([k, v]) => `${k}: ${v}`).join(' / ')}</div>`;
+    }
+
     function drawMap(points) {
       mapEl.innerHTML = ''; mapSvg.innerHTML = '';
       const rect = mapEl.getBoundingClientRect();
       const W = rect.width, H = rect.height;
 
-      // Plot
+      // プロット
       let delay = 0;
       for (const p of points) {
-        const [x, y] = project(p.lat, p.lon, W, H);
+        const [x, y] = [(p.lon + 180) / 360 * W, (90 - p.lat) / 180 * H];
         const dot = document.createElement('div');
         dot.className = 'dot ' + (p.type === 'input' ? 'input' : 'rec');
         dot.style.left = x + 'px'; dot.style.top = y + 'px'; dot.style.opacity = '0'; dot.style.transform += ' scale(.6)';
@@ -1085,7 +1093,6 @@
         setTimeout(() => { dot.style.transition = 'all .55s ease'; dot.style.opacity = '1'; dot.style.transform = dot.style.transform.replace('scale(.6)', 'scale(1)'); }, 60 + delay);
         delay += 110;
 
-        // Tap popup
         dot.addEventListener('click', async () => {
           playSE();
           const wrap = document.createElement('div');
@@ -1096,17 +1103,15 @@
           wrap.innerHTML = `<div style="font-weight:800;margin-bottom:6px">${escapeHtml(p.name)}</div>
         <div class="small" id="popSummary">Loading...</div>
         <div id="popTracks" style="margin-top:8px"></div>
-        <div style="text-align:right;margin-top:10px"><button id="popClose" class="playerBtn">Close</button></div>`;
+        <div style="text-align:right;margin-top:10px"><button id="popClose" class="btn-ghost">Close</button></div>`;
           document.body.appendChild(wrap);
           document.getElementById('popClose').onclick = () => wrap.remove();
 
-          // Wikipedia概要
           try {
             const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(p.name)}`);
             const j = await r.json(); wrap.querySelector('#popSummary').textContent = j.extract ? j.extract.slice(0, 240) + '…' : 'No summary';
           } catch { wrap.querySelector('#popSummary').textContent = 'No summary'; }
 
-          // 代表曲3曲
           try {
             const tr = await getTopTracks(p.name);
             if (tr.length) {
@@ -1119,11 +1124,13 @@
         });
       }
 
-      // 経路（入力→推薦）※デモ
+      if (!points.length) { renderContinentFallback(points); }
+
+      // 経路アニメ（入力→推薦）
       const inputs = points.filter(p => p.type === 'input'), recs = points.filter(p => p.type === 'rec');
       if (inputs.length && recs.length) {
-        const [sx, sy] = project(inputs[0].lat, inputs[0].lon, W, H);
-        const [tx, ty] = project(recs[0].lat, recs[0].lon, W, H);
+        const proj = (lat, lon) => [(lon + 180) / 360 * W, (90 - lat) / 180 * H];
+        const [sx, sy] = proj(inputs[0].lat, inputs[0].lon), [tx, ty] = proj(recs[0].lat, recs[0].lon);
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('d', `M ${sx} ${sy} Q ${(sx + tx) / 2} ${Math.min(sy, ty) - 80} ${tx} ${ty}`);
         path.setAttribute('stroke', 'rgba(255,200,80,.7)'); path.setAttribute('fill', 'transparent'); path.setAttribute('stroke-width', '2');
@@ -1142,13 +1149,156 @@
       mapEl.parentElement.onmousedown = (e) => { dragging = true; sx = e.clientX - ox; sy = e.clientY - oy; };
       mapEl.parentElement.onmousemove = (e) => { if (!dragging) return; ox = e.clientX - sx; oy = e.clientY - sy; apply(); };
       window.onmouseup = () => dragging = false;
-
-      // 補助：project
-      function project(lat, lon, W, H) { return [(lon + 180) / 360 * W, (90 - lat) / 180 * H]; }
     }
 
     /* =========================
-       モーダル（詳細）※各パネルクリックで拡大
+       UI描画（ベクトル/強み/統合示唆）
+       ========================= */
+    const profileBars = document.getElementById('profileBars');
+    const vectorExplain = document.getElementById('vectorExplain');
+    const vectorInsight = document.getElementById('vectorInsight');
+    const abilitiesEl = document.getElementById('abilities');
+    const abilitiesExplain = document.getElementById('abilitiesExplain');
+    const abilitiesInsight = document.getElementById('abilitiesInsight');
+    function drawProfile(v) {
+      const list = [["energy", "Energy（エネルギー）"], ["sophistication", "Sophistication（洗練）"], ["groove", "Groove（グルーヴ）"], ["structure", "Structure（構築力）"], ["experiment", "Experimentation（実験性）"], ["urban", "Urban Warmth（都市的温度）"], ["global", "Global Openness（越境性）"]];
+      profileBars.innerHTML = list.map(([k, ja]) => {
+        const pct = Math.round((v[k] || 0) * 100);
+        return `<div class="kpi"><div>${ja}</div><div class="badge">${pct}%</div></div><div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
+      }).join("");
+      const explain = {
+        energy: "行動の立ち上げ。高いほどアクティブ。", sophistication: "審美眼・品質志向。演出力に直結。",
+        groove: "協調のテンポ。チーム推進。", structure: "情報を並べる設計力。要件整理。",
+        experiment: "実験・探索ドライブ。新規に強い。", urban: "都市的感受性。共感と温度調整。",
+        global: "越境と学習転移。多文化適応。"
+      };
+      vectorExplain.innerHTML = Object.entries(explain).map(([k, txt]) => `<div class="small">• <strong>${k}</strong> — ${txt} <span class="badge">${Math.round((v[k] || 0) * 100)}%</span></div>`).join('');
+      const e = Object.entries(v).sort((a, b) => b[1] - a[1]); const top = e.slice(0, 2).map(([k]) => k).join(" × ");
+      vectorInsight.innerHTML = `<div class="insightHighlight">総合示唆：あなたは「${top}」が際立つタイプ。ここを核に設計すると最短で成果が出ます。</div>`;
+    }
+    function drawAbilities(v) {
+      const abs = [
+        { key: "structure", label: "Structure & Information Design（構造化・情報設計力）", score: Math.max(0, Math.min(1, 0.6 * v.structure + 0.4 * v.sophistication)) },
+        { key: "empathy", label: "Empathy & Relationship Design（共感・関係性設計力）", score: Math.max(0, Math.min(1, 0.55 * v.urban + 0.35 * v.groove)) },
+        { key: "creative", label: "Experimental Creativity（実験・創造推進力）", score: Math.max(0, Math.min(1, 0.7 * v.experiment + 0.2 * v.global)) },
+        { key: "drive", label: "Execution Drive（推進・行動エネルギー）", score: v.energy },
+        { key: "xborder", label: "Cross-cultural Integration（越境・多文化統合力）", score: Math.max(0, Math.min(1, 0.7 * v.global + 0.2 * v.experiment)) }
+      ];
+      abilitiesEl.innerHTML = abs.map(a => `<div class="kpi"><div>${a.label}</div><div class="badge">${Math.round(a.score * 100)}%</div></div><div class="bar"><div class="fill" style="width:${Math.round(a.score * 100)}%"></div></div>`).join("");
+      const e2 = abs.sort((a, b) => b.score - a.score); const mapLabel = { structure: "構造化", empathy: "共感", creative: "実験", drive: "推進", xborder: "越境" };
+      abilitiesExplain.innerHTML = [
+        "要件を言語化し情報を並べる力", "関係性の温度を調整し推進", "仮説検証を回す実験ドライブ",
+        "物事を動かす原動力", "異文化の橋渡し"
+      ].map(t => `<div class="small">• ${t}</div>`).join('');
+      abilitiesInsight.innerHTML = `<div class="insightHighlight">総合示唆：${mapLabel[e2[0].key]} × ${mapLabel[e2[1].key]} が核。ここを主導に据えると成果の再現性が上がります。</div>`;
+    }
+
+    /* =========================
+       Persistence（入力の保存/復元）
+       ========================= */
+    function persist() { localStorage.setItem('ml_tokens', JSON.stringify(TOKENS)); }
+    function loadTokens() {
+      try { const t = JSON.parse(localStorage.getItem('ml_tokens') || '[]'); if (Array.isArray(t)) TOKENS = t; } catch { }
+    }
+    function addToken(t) { if (TOKENS.length >= 10) return; TOKENS.push(t); renderChips(); persist(); }
+    function removeToken(i) { TOKENS.splice(i, 1); renderChips(); persist(); }
+
+    /* =========================
+       進捗インジケーター
+       ========================= */
+    function showAnalyzeProgress() {
+      const wrap = document.getElementById('analyzing');
+      const bar = document.getElementById('anabar');
+      const txt = document.getElementById('anatxt');
+      wrap.style.display = 'block'; bar.style.width = '0%'; let p = 0;
+      window.__ml_prog = setInterval(() => {
+        p = Math.min(97, p + 3 + Math.random() * 5);
+        bar.style.width = p + '%';
+        txt.textContent = 'Analyzing… ' + Math.floor(p) + '%';
+      }, 120);
+    }
+    function hideAnalyzeProgress() {
+      const wrap = document.getElementById('analyzing');
+      const bar = document.getElementById('anabar');
+      const txt = document.getElementById('anatxt');
+      if (window.__ml_prog) { clearInterval(window.__ml_prog); window.__ml_prog = null; }
+      bar.style.width = '100%'; txt.textContent = 'Done';
+      setTimeout(() => { wrap.style.display = 'none'; }, 350);
+    }
+
+    /* =========================
+       実行
+       ========================= */
+    const chips = document.getElementById('chips');
+    const countBadge = document.getElementById('countBadge');
+    const genreDist = document.getElementById('genreDist');
+    const loveLabel = document.getElementById('loveLabel');
+    const genreFill = document.getElementById('genreFill');
+    const genreDetail = document.getElementById('genreDetail');
+    const loveExplain = document.getElementById('loveExplain');
+    const genreExplain = document.getElementById('genreExplain');
+    const loveInsight = document.getElementById('loveInsight');
+    const input = document.getElementById('inputBox');
+    const personalityBox = document.getElementById('personality');
+
+    let TOKENS = [];
+    loadTokens(); renderChips();
+
+    document.getElementById('addBtn').onclick = () => { if (!input.value.trim()) return; addToken(input.value.trim()); input.value = ''; suggestions.style.display = 'none'; playSE(); };
+    document.getElementById('analyzeBtn').onclick = async () => {
+      playSE(); audioInit();
+      showAnalyzeProgress();
+      try { await runAnalysis(); } finally { hideAnalyzeProgress(); }
+    };
+
+    async function runAnalysis() {
+      if (!TOKENS.length) TOKENS.push('Electronic');
+      const v = profileFromInputs(TOKENS);
+
+      drawProfile(v);
+      drawAbilities(v);
+      renderPersonality(v, TOKENS);
+
+      // Love & Genre
+      const n = TOKENS.length, uniq = [...new Set(TOKENS.map(mapGenre))].length;
+      const score = Math.max(0, Math.min(1, 0.6 * (n / 10) + 0.4 * (uniq / 12))); const level = Math.max(1, Math.round(score * 10));
+      const heart = document.getElementById('heart'); const vw = Math.max(320, innerWidth);
+      const base = vw >= 1000 ? 200 : 160, amp = vw >= 1000 ? 14 : 12, size = base + (level - 5) * amp;
+      heart.style.width = size + "px"; heart.style.height = size + "px";
+      loveLabel.textContent = `Level ${level} / 10（入力 ${n}・ユニークジャンル ${uniq}）`;
+      genreFill.style.width = Math.round(100 * Math.min(1, uniq / 12)) + "%";
+      genreDetail.textContent = `Genres: ${uniq} / 12（多いほど光が強い）`;
+      loveExplain.textContent = "Music Love Level＝入力数と幅から見た“没入度”。数は探索性、幅は柔軟性と学習転移を示す。";
+      genreExplain.textContent = "Genre Richness＝ユニークなジャンル数。多いほど越境的・多声的。";
+      loveInsight.textContent = level >= 8 ? "示唆：高い没入度。未開ジャンルを1つ混ぜると創造性が跳ねます。" :
+        (level <= 3 ? "示唆：尖った深掘り。近縁ジャンルで幅を一段増やすと気づきが生まれる。" : "示唆：バランス良好。今日は“少し異質”を足す日。");
+
+      // ジャンル分布表示
+      const counts = {}; TOKENS.forEach(t => { const g = mapGenre(t); counts[g] = (counts[g] || 0) + 1; });
+      genreDist.innerHTML = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}: ${n}`).join(" / ") || "—";
+
+      // 推薦（プレーヤー付き）
+      const recs = await buildRecs(TOKENS);
+      await drawRecs(recs);
+
+      // マップ（デモ：主要都市）
+      const pts = []; const city = [[35.7, 139.7], [37.5, 127], [48.86, 2.35], [51.5, -0.1], [40.4, -3.7], [34.05, -118.24], [52.37, 4.9]];
+      TOKENS.forEach((t, i) => pts.push({ name: t, lat: city[i % city.length][0], lon: city[i % city.length][1], type: "input" }));
+      recs.slice(0, 6).forEach((r, i) => pts.push({ name: r.name, lat: city[(i + 3) % city.length][0], lon: city[(i + 3) % city.length][1], type: "rec" }));
+      drawMap(pts);
+
+      // Love心拍JS（CSSが止まっても軽く動く）
+      (function heartPulse() {
+        const h = document.getElementById('heart'); if (!h) return; let t = 0;
+        function step() { t += 0.05; const s = 1 + 0.02 * Math.sin(t * 3.2); h.style.transform = `scale(${s})`; requestAnimationFrame(step); }
+        step();
+      })();
+
+      persist();
+    }
+
+    /* =========================
+       モーダル（拡大）
        ========================= */
     const modal = document.getElementById('modal'), modalBody = document.getElementById('modalBody');
     document.getElementById('modalClose').onclick = () => { modal.classList.remove('show'); playSE(); };
@@ -1160,7 +1310,6 @@
           playSE();
           modalBody.innerHTML = `<div class="section-title">Detail: ${key}</div>` + panel.innerHTML;
           modal.classList.add('show');
-          // モーダル内のプレーヤーも単一再生制御
           hookupPlayers(modalBody);
         });
       });
