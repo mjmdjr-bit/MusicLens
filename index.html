@@ -15,9 +15,12 @@
       --muted: #a9b2c7;
       --glass: rgba(255, 255, 255, .18);
       --stroke: rgba(255, 255, 255, .22);
+      --aqua: #00d2ff;
+      --cyan: #00ecff;
+      --glow: 0 0 18px rgba(255, 180, 60, .45);
     }
 
-    /* ===== Base ===== */
+    /* Base */
     * {
       box-sizing: border-box
     }
@@ -33,22 +36,20 @@
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", Roboto, Segoe UI, sans-serif;
       background: linear-gradient(180deg, var(--ink), var(--ink2));
       overflow-x: hidden;
-      /* パーティクルが確実に見えるよう、セクションより後ろの z-index にしない */
       position: relative;
     }
 
-    /* 背面パーティクル（常に表示） */
+    /* Particles */
     #fx {
       position: fixed;
       inset: 0;
       width: 100vw;
       height: 100vh;
-      display: block;
       z-index: 0;
-      /* セクションより背面 */
+      display: block
     }
 
-    /* ===== Top (Hero) ===== */
+    /* Hero */
     #title {
       position: relative;
       z-index: 1;
@@ -56,7 +57,7 @@
       display: grid;
       place-items: center;
       padding: 24px;
-      text-align: center;
+      text-align: center
     }
 
     .hero {
@@ -67,7 +68,7 @@
       border-radius: 28px;
       background: linear-gradient(180deg, var(--glass), rgba(255, 255, 255, .07));
       backdrop-filter: saturate(180%) blur(22px);
-      box-shadow: 0 18px 48px rgba(0, 0, 0, .45), inset 0 1px rgba(255, 255, 255, .28);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, .45), inset 0 1px rgba(255, 255, 255, .28)
     }
 
     .logoWrap {
@@ -181,13 +182,13 @@
       }
     }
 
-    /* ===== App Section ===== */
+    /* App */
     #app {
       position: relative;
       z-index: 1;
       display: none;
       opacity: 0;
-      transition: opacity .5s ease;
+      transition: opacity .5s ease
     }
 
     #app.show {
@@ -234,7 +235,7 @@
     }
 
     .small {
-      color: #a9b2c7;
+      color: var(--muted);
       font-size: 12px
     }
 
@@ -245,7 +246,7 @@
       font-size: 12px
     }
 
-    /* Input + suggest */
+    /* Input/Suggest */
     input[type=text] {
       width: 100%;
       padding: 12px 14px;
@@ -309,7 +310,7 @@
       cursor: pointer
     }
 
-    /* KPI bars */
+    /* KPI bar */
     .kpi {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -327,7 +328,7 @@
     .fill {
       height: 100%;
       background: linear-gradient(90deg, #ffcc33, #ff8800);
-      box-shadow: 0 0 18px rgba(255, 180, 60, .7) inset;
+      box-shadow: var(--glow) inset;
       width: 0%
     }
 
@@ -375,15 +376,42 @@
       line-height: 1.4
     }
 
-    /* Map placeholder */
-    .map {
-      height: 320px;
-      border-radius: 12px;
+    /* Map Canvas */
+    .mapCanvas {
+      height: 360px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .22);
       background: #000;
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: contain
+      position: relative
+    }
+
+    #map {
+      width: 100%;
+      height: 100%
+    }
+
+    /* Analyze progress */
+    #progressWrap {
+      display: none;
+      margin-top: 10px
+    }
+
+    #progbar {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .15);
+      overflow: hidden
+    }
+
+    #progfill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ffd766, #ff9f1c);
+      box-shadow: 0 0 10px rgba(255, 180, 60, .6) inset
+    }
+
+    #progtext {
+      margin-top: 6px
     }
   </style>
 </head>
@@ -391,7 +419,7 @@
 <body>
   <canvas id="fx"></canvas>
 
-  <!-- ===== Top (Hero) ===== -->
+  <!-- Top -->
   <section id="title">
     <div class="hero">
       <div class="logoWrap">
@@ -403,7 +431,7 @@
     </div>
   </section>
 
-  <!-- ===== App (Unified in same file) ===== -->
+  <!-- App (Unified) -->
   <section id="app">
     <main class="container">
       <header class="header">
@@ -422,9 +450,16 @@
         <div style="display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap">
           <button id="addBtn" class="btn btn-ghost">Add</button>
           <button id="analyzeBtn" class="btn btn-primary">Analyze</button>
-          <span class="badge" id="countBadge">0 / 10</span>
+          <span class="badge" id="countBadge">0 / 20</span>
         </div>
         <div id="chips" class="chips"></div>
+        <!-- 進行表示 -->
+        <div id="progressWrap">
+          <div id="progbar">
+            <div id="progfill"></div>
+          </div>
+          <div id="progtext" class="small"></div>
+        </div>
       </section>
 
       <!-- Artist Info（Vectorの上） -->
@@ -434,83 +469,110 @@
         <div class="small" id="artistHint">※ 画像と要約は Wikipedia / iTunes から取得します。</div>
       </section>
 
-      <!-- 1) 音楽嗜好ベクトル -->
+      <!-- Vector -->
       <section class="panel">
         <div class="section-title">Your Music Vector（音楽嗜好ベクトル）</div>
         <div id="profileBars"></div>
         <div id="vectorInsight" class="insight" style="display:none"></div>
       </section>
 
-      <!-- 2) 仕事との関連 -->
+      <!-- Work Strengths -->
       <section class="panel">
         <div class="section-title">Work Strengths（仕事との関連分析）</div>
         <div id="abilities"></div>
         <div id="abilitiesInsight" class="insight" style="display:none"></div>
       </section>
 
-      <!-- 3) Music Love（別枠） -->
+      <!-- Music Love（別枠） -->
       <section class="panel">
         <div class="section-title">Music Love（音楽愛）</div>
         <div style="text-align:center">
-          <svg id="heart" viewBox="0 0 48 48" width="160" height="160" aria-hidden="true">
+          <svg id="loveGlass" viewBox="0 0 200 200" width="200" height="200" aria-hidden="true">
             <defs>
-              <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#fff3b0" />
-                <stop offset="40%" stop-color="#ffd166" />
-                <stop offset="100%" stop-color="#ff8a00" />
+              <clipPath id="heartClip">
+                <path
+                  d="M100 175c-3 0-6-.9-8.2-2.9C75 160 30 123 30 85 30 60 50 40 73 40c12 0 24 6 31 15 7-9 19-15 31-15 23 0 43 20 43 45 0 38-45 75-61.8 87.1-2.2 2-5.2 2.9-8.2 2.9z" />
+              </clipPath>
+              <linearGradient id="liquidGrad" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stop-color="#ff9f1c" />
+                <stop offset="100%" stop-color="#fff3b0" />
               </linearGradient>
             </defs>
-            <path id="heartPath"
-              d="M24 43c-1.1 0-2.2-.4-3-1.2C18.3 39.4 6 28.8 6 18.1 6 12.1 10.8 7 16.7 7c3.3 0 6.5 1.6 8.4 4.2C27 8.6 30.2 7 33.5 7 39.4 7 44.2 12.1 44.2 18.1c0 10.7-12.3 21.3-15 23.7-.8.7-1.9 1.2-3 1.2z"
-              fill="url(#heartGrad)" />
+            <path
+              d="M100 175c-3 0-6-.9-8.2-2.9C75 160 30 123 30 85 30 60 50 40 73 40c12 0 24 6 31 15 7-9 19-15 31-15 23 0 43 20 43 45 0 38-45 75-61.8 87.1-2.2 2-5.2 2.9-8.2 2.9z"
+              fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.35)" stroke-width="2" />
+            <g clip-path="url(#heartClip)">
+              <rect id="liquid" x="20" y="180" width="160" height="0" fill="url(#liquidGrad)" />
+              <rect id="liquidGlow" x="20" y="180" width="160" height="0" fill="rgba(255,200,60,.25)" />
+            </g>
           </svg>
-          <div id="loveLabel" class="badge" style="margin-top:8px">—</div>
+          <div class="kpi" style="max-width:420px;margin:10px auto">
+            <div>Love Level（%）</div>
+            <div class="badge" id="lovePercent">—</div>
+          </div>
+          <div class="bar" style="max-width:420px;margin:0 auto">
+            <div id="loveFill" class="fill" style="width:0%"></div>
+          </div>
+          <div class="small" style="margin-top:6px">Love＝入力数とジャンル幅から見た没入度。</div>
         </div>
       </section>
 
-      <!-- 4) Genre Richness（別枠） -->
+      <!-- Genre Richness（別枠） -->
       <section class="panel">
         <div class="section-title">Genre Richness（ユニークジャンル数）</div>
-        <div class="kpi">
-          <div>ユニークジャンル数</div>
-          <div class="badge" id="genreBadge">—</div>
+        <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center">
+          <svg viewBox="0 0 160 160" width="160" height="160" aria-hidden="true">
+            <circle cx="80" cy="80" r="64" stroke="rgba(255,255,255,.15)" stroke-width="14" fill="none" />
+            <circle id="genreRing" cx="80" cy="80" r="64" stroke="url(#ringGrad)" stroke-width="14" fill="none"
+              stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402" transform="rotate(-90 80 80)" />
+            <defs>
+              <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#8ee7ff" />
+                <stop offset="100%" stop-color="#00ecff" />
+              </linearGradient>
+            </defs>
+            <text id="genrePct" x="80" y="88" text-anchor="middle" font-size="28" fill="#eaf4ff"
+              font-weight="800">—%</text>
+          </svg>
+          <div style="min-width:260px">
+            <div class="kpi">
+              <div>ユニークジャンル数</div>
+              <div class="badge" id="genreBadge">—</div>
+            </div>
+            <div class="small" id="genreExplain">Genre Richness＝ユニークなジャンル数。多いほど越境的・多声的。</div>
+          </div>
         </div>
-        <div class="bar">
-          <div id="genreFill" class="fill" style="width:0%"></div>
-        </div>
-        <div class="small" id="genreExplain" style="margin-top:6px">Genre Richness＝ユニークなジャンル数。多いほど越境的・多声的。</div>
       </section>
 
-      <!-- Personality（参考） -->
+      <!-- Personality -->
       <section class="panel">
         <div class="section-title">Personality & Today</div>
         <div id="personality"></div>
       </section>
 
-      <!-- Map（プレースホルダ） -->
+      <!-- Map -->
       <section class="panel">
         <div class="section-title">Listening Map</div>
-        <div class="map"></div>
+        <div class="mapCanvas"><canvas id="map"></canvas></div>
+        <div class="small" style="margin-top:6px">※ ゴールドの緯線・経線グリッドとポイントをCanvasで描画（外部画像非依存）。</div>
       </section>
 
-      <!-- 推薦（プレースホルダ） -->
+      <!-- Recommendations -->
       <section class="panel">
-        <div class="section-title">Open-Web Recommendations</div>
+        <div class="section-title">Open-Web Recommendations（Spotifyなし・必ず表示）</div>
         <div id="recs" class="small">解析後に表示します。</div>
       </section>
     </main>
   </section>
 
   <script>
-    /* ==========================================================
-       A) 背面パーティクル：両セクションをまたいで常時表示
-       ========================================================== */
+    /* ===== Particles: always on ===== */
     (function initParticles() {
       const cvs = document.getElementById('fx');
       const ctx = cvs.getContext('2d', { alpha: true });
       let W = 0, H = 0, stars = [];
       function size() { W = cvs.width = innerWidth; H = cvs.height = innerHeight; }
-      function make() { stars = [...Array(140)].map(() => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35, r: 1 + Math.random() * 2, h: 20 + Math.random() * 40, a: .12 + .28 * Math.random() })); }
+      function make() { stars = [...Array(160)].map(() => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35, r: 1 + Math.random() * 2, h: 20 + Math.random() * 40, a: .12 + .28 * Math.random() })); }
       function draw() {
         ctx.clearRect(0, 0, W, H);
         for (const s of stars) {
@@ -525,30 +587,28 @@
       size(); make(); requestAnimationFrame(draw);
     })();
 
-    /* ==========================================================
-       B) 遷移：Top → App（多重イベント & iOS AudioContext）
-       ========================================================== */
+    /* ===== Transition: Top <-> App ===== */
     const topEl = document.getElementById('title');
     const appEl = document.getElementById('app');
     const startEl = document.getElementById('startBtn');
     const backTop = document.getElementById('backTop');
 
-    function showApp() { if (appEl.classList.contains('show')) return; topEl.style.display = 'none'; appEl.classList.add('show'); }
-    function showTop() { appEl.classList.remove('show'); appEl.style.display = 'none'; topEl.style.display = 'grid'; setTimeout(() => { appEl.style.opacity = 0 }, 0); }
-
-    async function startJourney(e) {
-      try { e && e.preventDefault() } catch (_) { }
-      try { audioInit(); if (window.AC && AC.state !== 'running' && AC.resume) await AC.resume(); } catch (_) { }
-      showApp();
+    function showApp() {
+      appEl.style.display = 'block';
+      requestAnimationFrame(() => appEl.classList.add('show'));
+      topEl.style.display = 'none';
+    }
+    function showTop() {
+      appEl.classList.remove('show');
+      appEl.style.display = 'none';
+      topEl.style.display = 'grid';
     }
     ['click', 'pointerdown', 'touchstart', 'keydown'].forEach(ev => {
-      startEl.addEventListener(ev, (e) => { if (ev === 'keydown' && !(e.key === 'Enter' || e.key === ' ')) return; startJourney(e); }, { passive: false });
+      startEl.addEventListener(ev, (e) => { if (ev === 'keydown' && !(e.key === 'Enter' || e.key === ' ')) return; e.preventDefault(); showApp(); }, { passive: false });
     });
-    backTop.addEventListener('click', (e) => { e.preventDefault(); showTop(); });
+    backTop?.addEventListener('click', (e) => { e.preventDefault(); showTop(); });
 
-    /* ==========================================================
-       C) 入力/サジェスト/保存・復元
-       ========================================================== */
+    /* ===== Inputs / Suggest / Persist ===== */
     const inputBox = document.getElementById('inputBox');
     const suggestions = document.getElementById('suggestions');
     const chips = document.getElementById('chips'); const countBadge = document.getElementById('countBadge');
@@ -556,19 +616,19 @@
     let TOKENS = [];
     function persist() { localStorage.setItem('ml_tokens', JSON.stringify(TOKENS)); }
     function loadTokens() { try { const t = JSON.parse(localStorage.getItem('ml_tokens') || '[]'); if (Array.isArray(t)) TOKENS = t; } catch { } }
-    function renderChips() { chips.innerHTML = TOKENS.map((t, i) => `<span class="chip">${esc(t)} <a style="cursor:pointer" onclick="removeToken(${i})">✕</a></span>`).join(''); countBadge.textContent = `${TOKENS.length} / 10`; }
-    function addToken(t) { if (TOKENS.length >= 10) return; TOKENS.push(t); renderChips(); persist(); renderArtistCards(); }
+    function renderChips() { chips.innerHTML = TOKENS.map((t, i) => `<span class="chip">${esc(t)} <a style="cursor:pointer" onclick="removeToken(${i})">✕</a></span>`).join(''); countBadge.textContent = `${TOKENS.length} / 20`; }
+    function addToken(t) { if (TOKENS.length >= 20) return; TOKENS.push(t); renderChips(); persist(); renderArtistCards(); }
     function removeToken(i) { TOKENS.splice(i, 1); renderChips(); persist(); renderArtistCards(); }
     loadTokens(); renderChips(); renderArtistCards();
 
-    /* サジェスト（ローカル候補例） */
+    /* Suggest (local sample) */
     let timer = null;
     inputBox.addEventListener('input', () => {
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
         const q = inputBox.value.trim(); if (q.length < 2) { suggestions.style.display = 'none'; return }
-        const data = ['Daft Punk', 'FKJ', 'Tom Misch', 'BLACKPINK', 'NewJeans', 'SZA', 'Jungle', 'Kaytranada', 'Bonobo', 'Bicep', 'XG', 'LE SSERAFIM', 'Parcels', 'Disclosure'];
-        const items = data.filter(n => n.toLowerCase().includes(q.toLowerCase())).slice(0, 10);
+        const data = ['Daft Punk', 'FKJ', 'Tom Misch', 'BLACKPINK', 'NewJeans', 'SZA', 'Jungle', 'Kaytranada', 'Bonobo', 'Bicep', 'XG', 'LE SSERAFIM', 'Parcels', 'Disclosure', 'Altın Gün', 'Vulfpeck', 'Gorillaz', 'James Blake', 'Thundercat', 'Robert Glasper', 'Sault', 'Khruangbin', 'Rosalía', 'Four Tet', 'Yaeji', 'Peggy Gou'];
+        const items = data.filter(n => n.toLowerCase().includes(q.toLowerCase())).slice(0, 14);
         suggestions.innerHTML = items.map(n => `<div class="sugItem" data-name="${esc(n)}">${esc(n)}</div>`).join('');
         suggestions.style.display = items.length ? 'block' : 'none';
       }, 150);
@@ -585,14 +645,12 @@
     })();
     document.getElementById('addBtn').onclick = () => { if (!inputBox.value.trim()) return; addToken(inputBox.value.trim()); inputBox.value = ''; suggestions.style.display = 'none'; };
 
-    /* ==========================================================
-       D) Artist Info（Wikipedia / iTunes）
-       ========================================================== */
+    /* ===== Artist Info ===== */
     async function fetchWiki(name) {
       try {
         const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`);
         if (!r.ok) return null; const j = await r.json();
-        return { summary: j.extract || "", image: j.thumbnail?.source || "", url: j.content_urls?.desktop?.page || "" };
+        return { summary: j.extract || "", image	j.thumbnail?.source || "", url	j.content_urls?.desktop?.page || "" };
       } catch (_) { return null }
     }
     async function fetchItunesArt(name) {
@@ -625,9 +683,7 @@
     </div>`).join("");
     }
 
-    /* ==========================================================
-       E) 4つの分析（Vector / Work / Love / Genre）
-       ========================================================== */
+    /* ===== Vector / Work / Love / Genre ===== */
     const BASEV = { energy: .6, sophistication: .6, groove: .6, structure: .6, experiment: .6, urban: .6, global: .6 };
     function mapGenre(s) {
       s = (s || '').toLowerCase();
@@ -650,6 +706,8 @@
     function mergeVec(vs) { const s = { ...BASEV }; for (const k in s) s[k] = 0; vs.forEach(v => { for (const k in v) s[k] += v[k] }); for (const k in s) s[k] /= vs.length || 1; return s }
     function profileFromInputs(tokens) { return tokens.length ? mergeVec(tokens.map(tokenVector)) : BASEV }
     function clamp(n) { return Math.max(0, Math.min(1, n)) }
+    function hashStr(str) { let h = 0; for (let i = 0; i < str.length; i++) { h = ((h << 5) - h) + str.charCodeAt(i); h |= 0 } return Math.abs(h) }
+    function sRand(seed) { let v = seed | 0; return () => (v = (v * 1664525 + 1013904223) | 0, (v >>> 0) / 4294967296); }
 
     /* Vector */
     function drawProfile(v) {
@@ -658,9 +716,23 @@
         const pct = Math.round((v[k] || 0) * 100);
         return `<div class="kpi"><div>${ja}</div><div class="badge">${pct}%</div></div><div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
       }).join('');
-      const order = Object.entries(v).sort((a, b) => b[1] - a[1]);
-      const top2 = order.slice(0, 2).map(([k]) => k).join(' × ');
-      const vi = document.getElementById('vectorInsight'); vi.style.display = 'block'; vi.textContent = `Vector Insight: あなたは「${top2}」が際立つタイプ。ここを核に設計すると最短で成果が出ます。`;
+      const order = Object.entries(v).sort((a, b) => b[1] - a[1]); const [k1] = order[0], [k2] = order[1];
+      const seed = hashStr(JSON.stringify(v) + TOKENS.join('|')); const rnd = sRand(seed);
+      const templates = [
+        `Vector Insight: 「${k1}」を先頭に、「${k2}」を補助線に。%HINT% を1つだけ試すと深度が増します。`,
+        `Vector Insight: 「${k1}×${k2}」の掛け算が効いています。今日は %HINT% を15分だけやってみよう。`,
+        `Vector Insight: ${k1}が高い日。逆サイドの${k2}を意識して %HINT% を足すとバランスが整います。`,
+        `Vector Insight: ${k1}が核。${k2}の文脈で %HINT% を作ると学習効果が跳ねます。`
+      ];
+      const hints = [
+        "未聴ジャンルの短尺プレイリスト探索",
+        "1曲だけ作業BGMを変えてみる",
+        "好きな曲の構造を手書きでスケッチ",
+        "友人におすすめ曲の理由を言語化して送る"
+      ];
+      const t = templates[Math.floor(rnd() * templates.length)];
+      const h = hints[Math.floor(rnd() * hints.length)];
+      const vi = document.getElementById('vectorInsight'); vi.style.display = 'block'; vi.textContent = t.replace('%HINT%', h);
     }
 
     /* Work */
@@ -679,55 +751,172 @@
         const pct = Math.round(a.s * 100);
         return `<div class="kpi"><div>${a.l}</div><div class="badge">${pct}%</div></div><div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
       }).join('');
-      const top = abs.slice().sort((a, b) => b.s - a.s).slice(0, 2).map(a => a.k);
+      const top = abs.slice().sort((a, b) => b.s - a.s).slice(0, 2);
       const label = { structure: "構造化", empathy: "共感", creative: "実験", drive: "推進", xborder: "越境" };
-      const ai = document.getElementById('abilitiesInsight'); ai.style.display = 'block'; ai.textContent = `Work Insight: ${label[top[0]]} × ${label[top[1]]} が核。ここを主導に据えると成果の再現性が上がります。`;
+      const seed = hashStr(JSON.stringify(v) + TOKENS.join('|') + 'work'); const rnd = sRand(seed);
+      const actions = {
+        structure: ["要件箇条書き→図解→結論の順で話す", "既存資料の重複を1枚に統合する", "テーブル定義や命名規則を先に決める"],
+        empathy: ["会議の最後に要約と感謝を一言添える", "相手の“最近の推し曲”を聞き出す", "相手の意図を鏡写しで言い換える"],
+        creative: ["未踏のUIパターンを3つだけスクラップ", "10分だけMVPを仮実装", "検証のToCを先に書く"],
+        drive: ["朝イチで“体を動かすタスク”から着手", "15分×4本のスプリントを組む", "完了基準を先に貼り出す"],
+        xborder: ["他部署の成果物を1つ借景して再利用", "海外事例を1つだけ加える", "異分野の人に5分レビューをもらう"]
+      };
+      const a1 = actions[top[0].k][Math.floor(rnd() * actions[top[0].k].length)];
+      const a2 = actions[top[1].k][Math.floor(rnd() * actions[top[1].k].length)];
+      const ai = document.getElementById('abilitiesInsight'); ai.style.display = 'block';
+      ai.textContent = `Work Insight: ${label[top[0].k]}×${label[top[1].k]}。今日は「${a1}」と「${a2}」で一手前進。`;
     }
 
-    /* Love（別枠） */
+    /* Love & Genre */
     function drawLove(tokens) {
       const n = tokens.length, uniq = [...new Set(tokens.map(mapGenre))].length;
-      const score = clamp(0.6 * (n / 10) + 0.4 * (uniq / 12));
-      const level = Math.max(1, Math.round(score * 10));
-      document.getElementById('loveLabel').textContent = `Love Level: ${level} / 10（入力 ${n}・ユニークジャンル ${uniq}）`;
-      // Heart pulse
-      (function pulse() { const h = document.getElementById('heart'); if (!h) return; let t = 0; (function step() { t += .05; h.style.transform = `scale(${1 + .02 * Math.sin(t * 3.2)})`; requestAnimationFrame(step); })() })();
+      const score = clamp(0.6 * (n / 20) + 0.4 * (uniq / 12));  /* ← 上限20対応 */
+      const pct = Math.round(score * 100);
+      document.getElementById('lovePercent').textContent = pct + "%";
+      document.getElementById('loveFill').style.width = pct + "%";
+      const h = Math.round((pct / 100) * 140);
+      const liquid = document.getElementById('liquid'); const glow = document.getElementById('liquidGlow');
+      liquid.setAttribute('y', 180 - h); liquid.setAttribute('height', h);
+      glow.setAttribute('y', 180 - h); glow.setAttribute('height', Math.max(0, h - 10));
+      (function pulse() { const g = document.getElementById('loveGlass'); if (!g) return; let t = 0; (function step() { t += .05; g.style.filter = `drop-shadow(0 0 ${6 + Math.sin(t) * 4}px rgba(255,180,60,.5))`; requestAnimationFrame(step); })() })();
     }
-
-    /* Genre（別枠） */
     function drawGenre(tokens) {
       const uniq = [...new Set(tokens.map(mapGenre))].length;
+      const pct = Math.round(100 * Math.min(1, uniq / 12));
       document.getElementById('genreBadge').textContent = `${uniq} / 12`;
-      document.getElementById('genreFill').style.width = Math.round(100 * Math.min(1, uniq / 12)) + "%";
+      document.getElementById('genrePct').textContent = pct + '%';
+      const C = 402; document.getElementById('genreRing').setAttribute('stroke-dashoffset', String(C - C * pct / 100));
     }
 
-    /* Personality（簡易） */
+    /* Personality — 変動ロジック（入力依存） */
     function renderPersonality(v, tokens) {
+      const genres = tokens.map(mapGenre);
+      const counts = {}; genres.forEach(g => counts[g] = (counts[g] || 0) + 1);
+      const dom = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Indie';
+      const missing = ['Electronic', 'R&B', 'Funk', 'Jazz', 'Hip-hop', 'K-Pop', 'World', 'Rock', 'Indie', 'Pop', 'House']
+        .filter(g => !counts[g]).slice(0, 2).join(' / ') || '—';
+
       const types = ['Curious Innovator', 'Empathic Connector', 'System Architect', 'Dynamic Performer', 'Serene Observer'];
-      const type = types[Math.floor(Math.random() * types.length)];
-      document.getElementById('personality').innerHTML =
-        `<div class="badge">Today</div>
-   <div style="margin-top:8px">あなたは <strong>${type}</strong> 傾向。<br>
-   ・未踏ジャンルを15分だけ掘る<br>・小さく試してすぐ見せる<br>・“やらないこと”を3つ決める</div>`;
+      const order = Object.entries(v).sort((a, b) => b[1] - a[1]); const [k1] = order[0], [k2] = order[1];
+      // タイプを決めるが、上位軸と支配ジャンルで揺らす
+      const seed = hashStr(tokens.join('|') + JSON.stringify(v) + dom); const rnd = sRand(seed);
+      const type = types[Math.floor(rnd() * types.length)];
+
+      const openers = {
+        'Electronic': "構築と洗練で静かに加速する日。",
+        'R&B': "温度とグルーヴで関係性を整える日。",
+        'Funk': "身体性でチームのテンポを上げる日。",
+        'Jazz': "観察とアレンジで精度を高める日。",
+        'Hip-hop': "自由度とビートで推進する日。",
+        'K-Pop': "完成度と演出を磨き上げる日。",
+        'World': "越境の感性で視野が広がる日。",
+        'Rock': "エネルギーで壁を突破する日。",
+        'Indie': "独自性を起点に企てる日。",
+        'Pop': "伝わり方にこだわる日。",
+        'House': "反復と抑揚で没入を作る日。"
+      };
+      const actions = [
+        "未聴の「%MISS%」から1曲だけ朝に取り入れる",
+        "トップ軸「%K1%」を使って今日のタスクを1つ再設計",
+        "入力上位：%TOP3% の“共通らしさ”を一言で要約して共有",
+        "作業BGMを「%DOM%」から離して30分だけ実験",
+        "終業前に“今日の発見”を3行でメモして明日へ繋ぐ"
+      ];
+      const replacements = {
+        '%MISS%': missing || '未開ジャンル',
+        '%K1%': k1,
+        '%DOM%': dom,
+        '%TOP3%': tokens.slice(0, 3).join(' / ')
+      };
+      function fillTpl(t) { return Object.keys(replacements).reduce((s, k) => s.replaceAll(k, replacements[k]), t); }
+
+      // 3つのアクションをランダム抽出（重複なし）
+      const acts = []; let pool = actions.slice(); for (let i = 0; i < 3 && pool.length; i++) { const idx = Math.floor(rnd() * pool.length); acts.push(fillTpl(pool[idx])); pool.splice(idx, 1); }
+
+      const body = `<div class="badge">Today</div>
+    <div style="margin-top:8px"><strong>${type}</strong> — ${fillTpl(openers[dom])} 上位軸は <strong>${k1}</strong> と <strong>${k2}</strong>。</div>
+    <ul class="small" style="margin-top:8px">${acts.map(a => `<li>${esc(a)}</li>`).join('')}</ul>
+    <div class="small" style="margin-top:6px">未開フック候補：<strong>${esc(missing || '（なし）')}</strong></div>`;
+      document.getElementById('personality').innerHTML = body;
     }
 
-    /* Analyze Flow */
+    /* ===== Map: Canvas ゴールドグリッド（常に見える） ===== */
+    function drawMap() {
+      const cvs = document.getElementById('map'); const ctx = cvs.getContext('2d');
+      function resize() { const rect = cvs.parentElement.getBoundingClientRect(); cvs.width = rect.width; cvs.height = rect.height; }
+      resize(); addEventListener('resize', resize);
+      const W = cvs.width, H = cvs.height;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = 'rgba(255,200,80,.35)'; ctx.lineWidth = 1;
+      for (let i = 0; i <= 12; i++) { const x = i * W / 12; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+      for (let j = 0; j <= 6; j++) { const y = j * H / 6; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+      // 仮プロット（将来: 実座標に置換）
+      const pts = [{ x: .9, y: .35 }, { x: .75, y: .42 }, { x: .15, y: .38 }, { x: .5, y: .45 }, { x: .35, y: .55 }];
+      ctx.fillStyle = 'rgba(255,200,80,.95)';
+      pts.forEach(p => { ctx.beginPath(); ctx.arc(p.x * W, p.y * H, 5, 0, Math.PI * 2); ctx.fill(); });
+    }
+
+    /* ===== Recommendations（Spotifyなし・必ず表示） ===== */
+    function buildRecs(tokens) {
+      const pool = ['Bonobo', 'Kaytranada', 'Jungle', 'Parcels', 'Bicep', 'Altın Gün', 'Robert Glasper', 'Thundercat', 'Gorillaz', 'Sault', 'Cimafunk', 'Vulfpeck', 'FKJ', 'Disclosure', 'Badbadnotgood', 'Toro y Moi', 'Yaeji', 'Peggy Gou', 'Rosalía', 'Khruangbin', 'Four Tet'];
+      const lower = new Set(tokens.map(t => t.toLowerCase()));
+      const recs = pool.filter(n => !lower.has(n.toLowerCase()))
+        .filter((n, i, a) => a.findIndex(x => x.toLowerCase() === n.toLowerCase()) === i)
+        .slice(0, 12);
+      while (recs.length < 8) { recs.push('New Discovery ' + (recs.length + 1)); }
+      return recs;
+    }
+    function renderRecs() {
+      const r = buildRecs(TOKENS);
+      document.getElementById('recs').innerHTML = r.map(n => `<span class="badge" style="margin:4px;display:inline-block">${esc(n)}</span>`).join('');
+    }
+
+    /* ===== Analyze progress（所要の経過を段階表示） ===== */
+    function simulateAnalyze(fn) {
+      const wrap = document.getElementById('progressWrap'), fill = document.getElementById('progfill'), text = document.getElementById('progtext');
+      wrap.style.display = 'block'; fill.style.width = '0%';
+      const uniq = [...new Set(TOKENS.map(mapGenre))].length;
+      const base = 1200 + TOKENS.length * 180 + uniq * 140; // 上限20前提で可変
+      const steps = [
+        { name: 'ベクトル算出', weight: .35 },
+        { name: '示唆テキスト生成', weight: .25 },
+        { name: '愛着度/ジャンル集計', weight: .20 },
+        { name: '推薦抽出', weight: .20 }
+      ];
+      let acc = 0, i = 0;
+      function step() {
+        if (i >= steps.length) { fill.style.width = '100%'; text.textContent = '完了'; setTimeout(() => wrap.style.display = 'none', 350); fn(); return; }
+        const dur = base * steps[i].weight;
+        const start = performance.now(); const startPct = acc;
+        function tick(now) {
+          const p = Math.min(1, (now - start) / dur);
+          const cur = startPct + (steps[i].weight * 100) * p;
+          fill.style.width = Math.min(99, cur).toFixed(1) + '%';
+          text.textContent = `${steps[i].name}… ${Math.min(99, cur | 0)}%`;
+          if (p < 1) requestAnimationFrame(tick); else { acc += steps[i].weight * 100; i++; step(); }
+        }
+        requestAnimationFrame(tick);
+      }
+      step();
+    }
+
+    /* ===== Analyze Flow ===== */
     document.getElementById('analyzeBtn').onclick = () => {
       if (!TOKENS.length) addToken('Electronic');
-      const v = profileFromInputs(TOKENS);
-      drawProfile(v);
-      drawAbilities(v);
-      drawLove(TOKENS);
-      drawGenre(TOKENS);
-      renderPersonality(v, TOKENS);
-      document.getElementById('recs').textContent = '例: Kaytranada / Jungle / Bonobo …';
+      simulateAnalyze(() => {
+        const v = profileFromInputs(TOKENS);
+        drawProfile(v);
+        drawAbilities(v);
+        drawLove(TOKENS);
+        drawGenre(TOKENS);
+        renderPersonality(v, TOKENS);
+        renderRecs();
+        drawMap();
+      });
     }
 
-    /* Helper */
+    /* Helpers */
     function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) }
-
-    /* （任意）AudioContext を作成するだけ。BGMは必要に応じて追加可 */
-    let AC; function audioInit() { if (AC) return; AC = new (window.AudioContext || window.webkitAudioContext)(); }
   </script>
 </body>
 
