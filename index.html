@@ -197,24 +197,58 @@
     }
 
     /* === Listening Map === */
-    #mapArea {
+    .genreGroup {
       position: relative;
-      min-height: 320px;
-      overflow: hidden
+      margin-bottom: 40px
+    }
+
+    .genreTitle {
+      font-weight: 800;
+      font-size: 16px;
+      color: #ffd36b;
+      margin: 10px 0
     }
 
     .bubble {
       position: absolute;
       border-radius: 50%;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
       color: #fff;
       font-weight: 700;
       text-align: center;
       cursor: pointer;
-      box-shadow: 0 0 12px rgba(255, 255, 255, .35);
+      box-shadow: 0 0 25px rgba(255, 255, 255, .4);
+      overflow: hidden;
       animation: floaty 6s ease-in-out infinite alternate;
+    }
+
+    .bubble::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, .3) 0%, transparent 70%);
+      z-index: 0;
+    }
+
+    .bubble span {
+      position: absolute;
+      bottom: 6px;
+      font-size: 11px;
+      z-index: 1;
+      background: rgba(0, 0, 0, .3);
+      border-radius: 8px;
+      padding: 2px 4px;
+    }
+
+    .bubble img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      z-index: 0
     }
 
     @keyframes floaty {
@@ -252,51 +286,30 @@
       }
     }
 
-    /* === Popup === */
-    #popup {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, .6);
-      z-index: 50
-    }
-
-    #popupContent {
-      background: rgba(255, 255, 255, .1);
-      border: 1px solid rgba(255, 255, 255, .3);
-      border-radius: 14px;
-      padding: 20px;
-      max-width: 320px;
-      text-align: center;
-      color: #fff
-    }
-
-    #popup img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover
-    }
-
-    #popup a {
-      color: #ffd766;
-      text-decoration: none;
-      font-size: 13px
-    }
-
-    #popup button {
+    /* === Progress === */
+    #progressWrap {
       margin-top: 10px;
-      padding: 6px 12px;
-      background: #222;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer
+      display: none
+    }
+
+    #progbar {
+      height: 10px;
+      background: rgba(255, 255, 255, .1);
+      border-radius: 999px;
+      overflow: hidden
+    }
+
+    #progfill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ffcc33, #ff8800);
+      transition: width .2s ease
+    }
+
+    #progtext {
+      margin-top: 6px;
+      font-size: 13px;
+      text-align: right
     }
 
     /* === Bars === */
@@ -361,11 +374,17 @@
           <button id="analyzeBtn" class="btn btn-primary">Analyze</button>
         </div>
         <div id="chips" class="chips"></div>
+        <div id="progressWrap">
+          <div id="progbar">
+            <div id="progfill"></div>
+          </div>
+          <div id="progtext">0%</div>
+        </div>
       </section>
 
       <!-- Listening Map -->
       <section class="panel">
-        <div class="section-title">Listening Map（音楽ジャンル分布）</div>
+        <div class="section-title">Listening Map（音楽ジャンル別アーティスト）</div>
         <div id="mapArea"></div>
       </section>
 
@@ -407,23 +426,11 @@
 
       <!-- Recommendation -->
       <section class="panel">
-        <div class="section-title">Open-Web Recommendations</div>
+        <div class="section-title">Music Recommendations</div>
         <div id="recs" class="small">Analyze後に表示されます。</div>
       </section>
     </main>
   </section>
-
-  <!-- Popup -->
-  <div id="popup">
-    <div id="popupContent">
-      <img id="popImg" src="">
-      <div id="popName" style="font-weight:800;margin:8px 0"></div>
-      <div id="popDesc" style="font-size:13px;margin-bottom:10px"></div>
-      <a id="popWiki" target="_blank">Wikipedia</a> ｜ <a id="popApple" target="_blank">Apple</a> ｜ <a id="popYT"
-        target="_blank">YouTube</a>
-      <br><button id="closePop">閉じる</button>
-    </div>
-  </div>
 
   <script>
     /* === 背景パーティクル === */
@@ -441,7 +448,7 @@
     document.getElementById('startBtn').onclick = () => { title.style.display = 'none'; app.style.display = 'block'; requestAnimationFrame(() => app.classList.add('show')); }
     document.getElementById('backTop').onclick = () => { app.classList.remove('show'); app.style.display = 'none'; title.style.display = 'grid'; }
 
-    /* === 入力 === */
+    /* === 入力管理 === */
     let TOKENS = []; const input = document.getElementById('inputBox'), chips = document.getElementById('chips');
     function renderChips() { chips.innerHTML = TOKENS.map((t, i) => `<span class="chip">${t}<a onclick="remove(${i})">✕</a></span>`).join(''); }
     function add() { if (!input.value.trim()) return; if (TOKENS.length >= 20) return; TOKENS.push(input.value.trim()); input.value = ''; renderChips(); localStorage.setItem('ml_hist', JSON.stringify(TOKENS)); }
@@ -450,41 +457,32 @@
     window.onload = () => { try { TOKENS = JSON.parse(localStorage.getItem('ml_hist') || '[]'); renderChips(); } catch { } }
 
     /* === ジャンル === */
-    const colors = { Pop: '#ff66cc', Jazz: '#66ccff', Rock: '#ff6666', Electronic: '#aa88ff', World: '#77ff88', Other: '#ffd966' };
-    function genreColor(g) { return colors[g] || colors.Other; }
+    const genreColors = { Pop: '#ff66cc', Jazz: '#66ccff', Rock: '#ff6666', Electronic: '#aa88ff', World: '#77ff88', Other: '#ffd966' };
     function genreOf(name) { const n = name.toLowerCase(); if (/jazz/.test(n)) return 'Jazz'; if (/rock|metal/.test(n)) return 'Rock'; if (/pop/.test(n)) return 'Pop'; if (/elect|techno|edm/.test(n)) return 'Electronic'; if (/world|latin|afro/.test(n)) return 'World'; return 'Other'; }
 
-    /* === アーティストデータ === */
+    /* === アーティストデータ取得 === */
     async function fetchArtistData(n) { try { const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(n)}`); const j = await r.json(); return { img: j.thumbnail?.source || `https://picsum.photos/seed/${encodeURIComponent(n)}/120/120`, desc: j.extract?.slice(0, 100) + "…" || "情報なし" }; } catch { return { img: `https://picsum.photos/seed/${encodeURIComponent(n)}/120/120`, desc: "情報取得失敗" } } }
 
     /* === Listening Map === */
     const mapArea = document.getElementById('mapArea');
-    const popup = document.getElementById('popup'), popImg = document.getElementById('popImg'),
-      popName = document.getElementById('popName'), popDesc = document.getElementById('popDesc'),
-      popWiki = document.getElementById('popWiki'), popApple = document.getElementById('popApple'),
-      popYT = document.getElementById('popYT'), closePop = document.getElementById('closePop');
-    closePop.onclick = () => popup.style.display = 'none';
     async function renderMap() {
       mapArea.innerHTML = "";
+      const groups = {};
       const data = await Promise.all(TOKENS.map(async n => { const g = genreOf(n); const d = await fetchArtistData(n); return { name: n, genre: g, img: d.img, desc: d.desc }; }));
-      data.forEach(a => {
-        const b = document.createElement('div');
-        const size = 60 + Math.random() * 80;
-        b.className = 'bubble';
-        b.style.width = b.style.height = size + 'px';
-        b.style.left = Math.random() * (mapArea.clientWidth - size) + 'px';
-        b.style.top = Math.random() * (mapArea.clientHeight - size) + 'px';
-        b.style.background = genreColor(a.genre);
-        b.style.position = 'absolute';
-        b.onclick = () => {
-          popImg.src = a.img; popName.textContent = a.name; popDesc.textContent = a.desc;
-          popWiki.href = `https://en.wikipedia.org/wiki/${encodeURIComponent(a.name)}`;
-          popApple.href = `https://music.apple.com/us/search?term=${encodeURIComponent(a.name)}`;
-          popYT.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(a.name + ' official')}`;
-          popup.style.display = 'flex';
-        };
-        mapArea.appendChild(b);
-      });
+      data.forEach(a => { if (!groups[a.genre]) groups[a.genre] = []; groups[a.genre].push(a); });
+      for (const [genre, arr] of Object.entries(groups)) {
+        const gEl = document.createElement('div'); gEl.className = 'genreGroup';
+        const title = document.createElement('div'); title.className = 'genreTitle'; title.textContent = genre; gEl.appendChild(title);
+        arr.forEach(a => {
+          const b = document.createElement('div'); const size = 70 + Math.random() * 70; b.className = 'bubble';
+          b.style.width = b.style.height = size + 'px'; b.style.background = genreColors[genre];
+          b.style.left = Math.random() * (window.innerWidth - 200) + 'px'; b.style.top = Math.random() * 200 + 'px';
+          b.innerHTML = `<img src="${a.img}"><span>${a.name}</span>`;
+          b.onclick = () => window.open(`https://music.apple.com/us/search?term=${encodeURIComponent(a.name)}`, '_blank');
+          gEl.appendChild(b);
+        });
+        mapArea.appendChild(gEl);
+      }
     }
 
     /* === Music Love === */
@@ -499,131 +497,6 @@
       else c.textContent = "音楽はあなたの人生そのもの。最高のシンフォニーを。";
     }
 
-    /* === Vector / Work/* === Vector === */
-    function randomVec() {
-      return {
-        energy: Math.random(),
-        sophistication: Math.random(),
-        groove: Math.random(),
-        structure: Math.random(),
-        experiment: Math.random(),
-        urban: Math.random(),
-        global: Math.random()
-      };
-    }
-    function drawProfile(v) {
-      const el = document.getElementById('profileBars');
-      el.innerHTML = '';
-      const labels = {
-        energy: "エネルギー",
-        sophistication: "洗練",
-        groove: "ノリ",
-        structure: "構成力",
-        experiment: "実験性",
-        urban: "都会感",
-        global: "グローバル感"
-      };
-      for (const [k, val] of Object.entries(v)) {
-        const pct = Math.round(val * 100);
-        el.innerHTML += `
-      <div class="kpi">
-        <div>${labels[k]}</div><div class="badge">${pct}%</div>
-      </div>
-      <div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
-      }
-      const msgs = [
-        "今日は自分の感性を信じて動く日。",
-        "ひらめきが湧きやすいタイミング。新しい挑戦を。",
-        "音のように柔軟に、流れに身を任せるのが吉。",
-        "リズムを刻むように、マイペースで進めば大丈夫。",
-        "想像力が高まっています。創作活動に最適。"
-      ];
-      const insight = document.getElementById('vectorInsight');
-      insight.style.display = 'block';
-      insight.textContent = msgs[Math.floor(Math.random() * msgs.length)];
-    }
-
-    /* === Work Strengths === */
-    function drawAbilities(v) {
-      const el = document.getElementById('abilities');
-      el.innerHTML = '';
-      const factors = {
-        collaboration: (v.groove + v.urban) / 2,
-        planning: (v.structure + v.sophistication) / 2,
-        creativity: (v.experiment + v.energy) / 2,
-        empathy: (v.urban + v.global) / 2,
-        leadership: (v.energy + v.structure) / 2
-      };
-      const labels = {
-        collaboration: "協働力",
-        planning: "計画力",
-        creativity: "創造力",
-        empathy: "共感力",
-        leadership: "リーダーシップ"
-      };
-      for (const [k, val] of Object.entries(factors)) {
-        const pct = Math.round(val * 100);
-        el.innerHTML += `
-      <div class="kpi">
-        <div>${labels[k]}</div><div class="badge">${pct}%</div>
-      </div>
-      <div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
-      }
-      const hints = [
-        "チームと協力することで成果が高まります。",
-        "冷静な判断ができる日。まとめ役として活躍できそう。",
-        "想像力が豊か。新しいアイデアが光ります。",
-        "周囲との信頼関係が深まりやすい日。",
-        "目標に向かって力強く進めるエネルギーが満ちています。"
-      ];
-      const insight = document.getElementById('abilitiesInsight');
-      insight.style.display = 'block';
-      insight.textContent = hints[Math.floor(Math.random() * hints.length)];
-    }
-
-    /* === Recommendations === */
-    function buildRecs(tokens) {
-      const pool = [
-        "FKJ", "Thundercat", "SZA", "Robert Glasper", "Disclosure",
-        "Khruangbin", "Bonobo", "Yaeji", "Tom Misch", "Cimafunk",
-        "Peggy Gou", "Vulfpeck", "Rosalía", "Kaytranada", "Toro y Moi"
-      ];
-      const used = new Set(tokens.map(t => t.toLowerCase()));
-      const recs = pool.filter(n => !used.has(n.toLowerCase())).sort(() => .5 - Math.random()).slice(0, 6);
-      return recs;
-    }
-    function renderRecs() {
-      const recs = document.getElementById('recs');
-      const list = buildRecs(TOKENS);
-      recs.innerHTML = list.map(p => `
-    <div style="display:flex;align-items:center;margin:6px 0">
-      <img src="https://picsum.photos/seed/${encodeURIComponent(p)}/60/60"
-           style="border-radius:50%;margin-right:8px"/>
-      <div>
-        <strong>${p}</strong><br>
-        <a href="https://music.apple.com/us/search?term=${encodeURIComponent(p)}"
-           target="_blank" style="color:#ffe28a">Apple</a> ／
-        <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(p + ' official')}"
-           target="_blank" style="color:#ffe28a">YouTube</a>
-      </div>
-    </div>`).join('');
-    }
-
-    /* === Analyze === */
-    async function analyze() {
-      if (!TOKENS.length) return;
-      await renderMap();   // バブル再生成
-      calcLove();          // Love計算
-      const v = randomVec(); // Vector生成
-      drawProfile(v);      // Vector描画
-      drawAbilities(v);    // Work描画
-      renderRecs();        // 推薦描画
-      TOKENS = []; renderChips();
-    }
-
-    /* === ボタン連動 === */
-    document.getElementById('analyzeBtn').onclick = analyze;
-  </script>
-</body>
-
-</html>
+    /* === Vector === */
+    function randomVec() { return { energy: Math.random(), sophistication: Math.random(), groove: Math.random(), structure: Math.random(), experiment: Math.random(), urban: Math.random(), global: Math.random() }; }
+    function drawProfile(v) { const el = document.getElementById('profileBars'); el.innerHTML = ''; const labels = { energy: "エネルギー", sophistication: "洗練", groove: "ノリ", structure: "構成力", experiment: "実験性", urban: "都会感", global: "グローバル感" }; for (const [k, val] of Object.entries(v)) { const pct = Math.round(val * 100); el.innerHTML += `<div class="kpi"><div>${labels[k
