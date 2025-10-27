@@ -495,106 +495,109 @@
 
       /* === Love === */
       function calcLove() {
-        const n = TOKENS.length; const g = [...new Set(TOKENS.map(t => genreOf(t)))].length;
+        const n = TOKENS.length;
+        const g = [...new Set(TOKENS.map(t => genreOf(t)))].length;
         const score = Math.min(100, Math.round(n * 5 + g * 10));
         document.getElementById('lovePercent').textContent = score + '%';
         document.getElementById('liquid').setAttribute('y', 180 - score * 1.3);
         const c = document.getElementById('loveComment');
         if (score < 40) c.textContent = "まだまだ音楽の旅は始まったばかり。";
         else if (score < 70) c.textContent = "音楽を通じて、あなたの世界が広がっています。";
-        /* === Your Music Vector === */
-        function randomVec() {
-          return {
-            energy: Math.random(),
-            sophistication: Math.random(),
-            groove: Math.random(),
-            structure: Math.random(),
-            experiment: Math.random(),
-            urban: Math.random(),
-            global: Math.random()
-          };
-        }
+        else c.textContent = "音楽はあなたの人生そのもの。最高のシンフォニーを。";
+      }   // 
+      /* === Your Music Vector === */
+      function randomVec() {
+        return {
+          energy: Math.random(),
+          sophistication: Math.random(),
+          groove: Math.random(),
+          structure: Math.random(),
+          experiment: Math.random(),
+          urban: Math.random(),
+          global: Math.random()
+        };
+      }
 
-        function drawProfile(v) {
-          const el = document.getElementById('profileBars');
-          el.innerHTML = '';
-          const labels = {
-            energy: "エネルギー", sophistication: "洗練", groove: "ノリ",
-            structure: "構成力", experiment: "実験性", urban: "都会感", global: "グローバル感"
-          };
-          for (const [k, val] of Object.entries(v)) {
-            const pct = Math.round(val * 100);
-            el.innerHTML += `
+      function drawProfile(v) {
+        const el = document.getElementById('profileBars');
+        el.innerHTML = '';
+        const labels = {
+          energy: "エネルギー", sophistication: "洗練", groove: "ノリ",
+          structure: "構成力", experiment: "実験性", urban: "都会感", global: "グローバル感"
+        };
+        for (const [k, val] of Object.entries(v)) {
+          const pct = Math.round(val * 100);
+          el.innerHTML += `
       <div class="kpi">
         <div>${labels[k]}</div><div class="badge">${pct}%</div>
       </div>
       <div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
-          }
-
-          const msgs = [
-            "今日は自分の感性を信じて動ける日。",
-            "穏やかに流れながらも、芯の強さが光ります。",
-            "ひらめきが冴えるタイミング。新しい発想に挑戦して。",
-            "音のリズムのように自然体で過ごすと運気アップ。",
-            "周囲と調和しながらも、独自の世界観が輝く日。"
-          ];
-          const insight = document.getElementById('vectorInsight');
-          insight.style.display = 'block';
-          insight.textContent = msgs[Math.floor(Math.random() * msgs.length)];
         }
 
-        /* === Work Strengths === */
-        function drawAbilities(v) {
-          const el = document.getElementById('abilities');
-          el.innerHTML = '';
-          const factors = {
-            collaboration: (v.groove + v.urban) / 2,
-            planning: (v.structure + v.sophistication) / 2,
-            creativity: (v.experiment + v.energy) / 2,
-            empathy: (v.urban + v.global) / 2,
-            leadership: (v.energy + v.structure) / 2
-          };
-          const labels = {
-            collaboration: "協働力", planning: "計画力", creativity: "創造力",
-            empathy: "共感力", leadership: "リーダーシップ"
-          };
-          for (const [k, val] of Object.entries(factors)) {
-            const pct = Math.round(val * 100);
-            el.innerHTML += `
+        const msgs = [
+          "今日は自分の感性を信じて動ける日。",
+          "穏やかに流れながらも、芯の強さが光ります。",
+          "ひらめきが冴えるタイミング。新しい発想に挑戦して。",
+          "音のリズムのように自然体で過ごすと運気アップ。",
+          "周囲と調和しながらも、独自の世界観が輝く日。"
+        ];
+        const insight = document.getElementById('vectorInsight');
+        insight.style.display = 'block';
+        insight.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+      }
+
+      /* === Work Strengths === */
+      function drawAbilities(v) {
+        const el = document.getElementById('abilities');
+        el.innerHTML = '';
+        const factors = {
+          collaboration: (v.groove + v.urban) / 2,
+          planning: (v.structure + v.sophistication) / 2,
+          creativity: (v.experiment + v.energy) / 2,
+          empathy: (v.urban + v.global) / 2,
+          leadership: (v.energy + v.structure) / 2
+        };
+        const labels = {
+          collaboration: "協働力", planning: "計画力", creativity: "創造力",
+          empathy: "共感力", leadership: "リーダーシップ"
+        };
+        for (const [k, val] of Object.entries(factors)) {
+          const pct = Math.round(val * 100);
+          el.innerHTML += `
       <div class="kpi">
         <div>${labels[k]}</div><div class="badge">${pct}%</div>
       </div>
       <div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
-          }
-
-          const hints = [
-            "協力しながら進めると良い成果が出やすい日です。",
-            "計画的に進めることで安心感が生まれます。",
-            "創造性が高まっています。新しい企画に挑戦を。",
-            "共感力が高まり、人との絆が深まりやすい日です。",
-            "リーダーシップを発揮してチームを導けるタイミング。"
-          ];
-          const insight = document.getElementById('abilitiesInsight');
-          insight.style.display = 'block';
-          insight.textContent = hints[Math.floor(Math.random() * hints.length)];
         }
 
-        /* === Music Recommendations === */
-        function buildRecs(tokens) {
-          const pool = [
-            "FKJ", "Thundercat", "SZA", "Robert Glasper", "Disclosure",
-            "Khruangbin", "Bonobo", "Yaeji", "Tom Misch", "Cimafunk",
-            "Peggy Gou", "Vulfpeck", "Rosalía", "Kaytranada", "Toro y Moi"
-          ];
-          const used = new Set(tokens.map(t => t.toLowerCase()));
-          const recs = pool.filter(n => !used.has(n.toLowerCase())).sort(() => .5 - Math.random()).slice(0, 6);
-          return recs;
-        }
+        const hints = [
+          "協力しながら進めると良い成果が出やすい日です。",
+          "計画的に進めることで安心感が生まれます。",
+          "創造性が高まっています。新しい企画に挑戦を。",
+          "共感力が高まり、人との絆が深まりやすい日です。",
+          "リーダーシップを発揮してチームを導けるタイミング。"
+        ];
+        const insight = document.getElementById('abilitiesInsight');
+        insight.style.display = 'block';
+        insight.textContent = hints[Math.floor(Math.random() * hints.length)];
+      }
 
-        function renderRecs() {
-          const recs = document.getElementById('recs');
-          const list = buildRecs(TOKENS);
-          recs.innerHTML = list.map(p => `
+      /* === Music Recommendations === */
+      function buildRecs(tokens) {
+        const pool = [
+          "FKJ", "Thundercat", "SZA", "Robert Glasper", "Disclosure",
+          "Khruangbin", "Bonobo", "Yaeji", "Tom Misch", "Cimafunk",
+          "Peggy Gou", "Vulfpeck", "Rosalía", "Kaytranada", "Toro y Moi"
+        ];
+        const used = new Set(tokens.map(t => t.toLowerCase()));
+        const recs = pool.filter(n => !used.has(n.toLowerCase())).sort(() => .5 - Math.random()).slice(0, 6);
+        return recs;
+      }
+
+      function renderRecs() {
+        const recs = document.getElementById('recs');
+        const list = buildRecs(TOKENS);
+        recs.innerHTML = list.map(p => `
     <div style="display:flex;align-items:center;margin:6px 0">
       <img src="https://picsum.photos/seed/${encodeURIComponent(p)}/60/60"
            style="border-radius:50%;margin-right:8px"/>
@@ -606,27 +609,27 @@
            target="_blank" style="color:#ffe28a">YouTube</a>
       </div>
     </div>`).join('');
-        }
+      }
 
-        /* === Analyze処理 === */
-        async function analyze() {
-          if (!TOKENS.length) return;
+      /* === Analyze処理 === */
+      async function analyze() {
+        if (!TOKENS.length) return;
 
-          // 進捗バー表示
-          runProgress(async () => {
-            await renderMap();    // マップ再描画
-            calcLove();           // Music Love計算
-            const v = randomVec();  // Vector算出
-            drawProfile(v);       // Vector描画
-            drawAbilities(v);     // Work描画
-            renderRecs();         // 推薦表示
-            TOKENS = [];            // 入力リセット
-            renderChips();        // Chipsリフレッシュ
-          });
-        }
+        // 進捗バー表示
+        runProgress(async () => {
+          await renderMap();    // マップ再描画
+          calcLove();           // Music Love計算
+          const v = randomVec();  // Vector算出
+          drawProfile(v);       // Vector描画
+          drawAbilities(v);     // Work描画
+          renderRecs();         // 推薦表示
+          TOKENS = [];            // 入力リセット
+          renderChips();        // Chipsリフレッシュ
+        });
+      }
 
-        /* === ボタン連動 === */
-        document.getElementById('analyzeBtn').onclick = analyze;
+      /* === ボタン連動 === */
+      document.getElementById('analyzeBtn').onclick = analyze;
   </script>
 </body>
 
