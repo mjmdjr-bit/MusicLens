@@ -35,7 +35,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", Roboto, Segoe UI, sans-serif;
       background: linear-gradient(180deg, var(--ink), var(--ink2));
       overflow-x: hidden;
-      position: relative;
+      position: relative
     }
 
     #fx {
@@ -46,7 +46,7 @@
       z-index: 0
     }
 
-    /* ===== Top / Hero ===== */
+    /* Top / Hero */
     #title {
       position: relative;
       z-index: 1;
@@ -58,8 +58,6 @@
     }
 
     .hero {
-      position: relative;
-      z-index: 3;
       max-width: 980px;
       width: 100%;
       padding: 36px 28px;
@@ -67,7 +65,7 @@
       border-radius: 28px;
       background: linear-gradient(180deg, var(--glass), rgba(255, 255, 255, .07));
       backdrop-filter: saturate(180%) blur(22px);
-      box-shadow: 0 18px 48px rgba(0, 0, 0, .45), inset 0 1px rgba(255, 255, 255, .28);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, .45), inset 0 1px rgba(255, 255, 255, .28)
     }
 
     .logo {
@@ -78,8 +76,7 @@
       background-size: 200% 100%;
       -webkit-background-clip: text;
       background-clip: text;
-      color: transparent;
-      animation: logoFloat 6s ease-in-out infinite, logoShine 4.5s linear infinite;
+      color: transparent
     }
 
     .cta {
@@ -93,33 +90,10 @@
       cursor: pointer;
       background: linear-gradient(90deg, var(--gold), var(--gold2));
       color: #111;
-      font-weight: 900;
-      box-shadow: 0 12px 28px rgba(255, 170, 40, .35), inset 0 1px rgba(255, 255, 255, .35)
+      font-weight: 900
     }
 
-    @keyframes logoFloat {
-
-      0%,
-      100% {
-        transform: translateY(0)
-      }
-
-      50% {
-        transform: translateY(-6px)
-      }
-    }
-
-    @keyframes logoShine {
-      0% {
-        background-position: 0% 50%
-      }
-
-      100% {
-        background-position: 200% 50%
-      }
-    }
-
-    /* ===== App ===== */
+    /* App */
     #app {
       position: relative;
       z-index: 1;
@@ -162,10 +136,6 @@
       border-radius: 18px;
       padding: 16px;
       margin-top: 16px
-    }
-
-    .panel .body {
-      cursor: auto
     }
 
     .section-title {
@@ -344,54 +314,13 @@
     #progtext {
       margin-top: 6px
     }
-
-    #modal {
-      position: fixed;
-      inset: 0;
-      display: none;
-      z-index: 20;
-      align-items: center;
-      justify-content: center
-    }
-
-    #modal.show {
-      display: flex
-    }
-
-    #shade {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, .55);
-      backdrop-filter: blur(6px)
-    }
-
-    #box {
-      position: relative;
-      max-width: 900px;
-      width: 92%;
-      background: linear-gradient(180deg, rgba(255, 255, 255, .15), rgba(255, 255, 255, .06));
-      border: 1px solid rgba(255, 255, 255, .25);
-      border-radius: 18px;
-      padding: 16px
-    }
-
-    #close {
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      cursor: pointer;
-      background: transparent;
-      color: #fff;
-      border: none;
-      font-size: 18px
-    }
   </style>
 </head>
 
 <body>
   <canvas id="fx"></canvas>
 
-  <!-- ===== Top ===== -->
+  <!-- Top -->
   <section id="title">
     <div class="hero">
       <div class="logo">MusicLens</div>
@@ -401,32 +330,16 @@
     </div>
   </section>
 
-  <!-- ===== App (same file) ===== -->
+  <!-- App -->
   <section id="app">
     <main class="container">
       <header class="header">
         <div class="titleSmall">MusicLens</div>
-        <a href="#" id="backTop" class="small" style="text-decoration:none;color:#cfe2ff">← Back to Top</a>
+        <!-- ミュート（ポップアップなし） -->
+        <button id="muteBtn" class="btn btn-ghost" title="BGM ミュート/解除">🔊 BGM</button>
       </header>
 
-      <!-- BGM (looping) -->
-      <section class="panel" data-modal="bgm">
-        <div class="section-title">Ambient BGM（選択でループ再生）</div>
-        <div class="body" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-          <button id="bgmPlay" class="btn btn-ghost">▶ 再生</button>
-          <button id="bgmStop" class="btn btn-ghost">■ 停止</button>
-          <select id="bgmSelect" class="btn-ghost"
-            style="padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.06);color:#fff">
-            <option value="harakami">Rei Harakami 風</option>
-            <option value="fkj">FKJ 風</option>
-            <option value="disclosure">Disclosure 風</option>
-            <option value="sk">Skrillex 風</option>
-          </select>
-          <span class="small">※ iPhoneは初回タップで音声許可が必要です</span>
-        </div>
-      </section>
-
-      <!-- Artists / Genres (NO POPUP) -->
+      <!-- Artists / Genres（ポップアップ無効） -->
       <section class="panel" data-modal="input">
         <div class="section-title">Artists / Genres（アーティスト / ジャンル）</div>
         <div class="body">
@@ -440,12 +353,14 @@
             <button id="analyzeBtn" class="btn btn-primary">Analyze</button>
             <span class="badge" id="countBadge">0 / 20</span>
           </div>
+
           <div id="progressWrap">
             <div id="progbar">
               <div id="progfill"></div>
             </div>
             <div id="progtext" class="small"></div>
           </div>
+
           <div id="chips" class="chips"></div>
         </div>
       </section>
@@ -454,23 +369,23 @@
       <section class="panel" data-modal="artist">
         <div class="section-title">Artist Info（入力したアーティスト）</div>
         <div class="body">
-          <div id="artistGrid" class="grid"></div>
-          <div class="small" id="artistHint">※ 紹介文はWikipedia、画像はWikipedia→iTunesの順で取得。Apple Music／YouTube へのリンク付き。</div>
+          <div id="artistGrid" class="flagGrid"></div>
+          <div class="small" id="artistHint">※ 紹介文はWikipedia、画像はWikipedia→iTunes。Apple Music／YouTubeリンク付き。</div>
         </div>
       </section>
 
-      <!-- Music Vector -->
+      <!-- Vector -->
       <section class="panel" data-modal="vector">
-        <div class="section-title">Your Music Vector（音楽嗜好ベクトル）</div>
+        <div class="section-title">Your Music Vector</div>
         <div class="body">
           <div id="profileBars"></div>
           <div id="vectorInsight" class="insight" style="display:none"></div>
         </div>
       </section>
 
-      <!-- Work Strengths -->
+      <!-- Work -->
       <section class="panel" data-modal="work">
-        <div class="section-title">Work Strengths（仕事との関連）</div>
+        <div class="section-title">Work Strengths</div>
         <div class="body">
           <div id="abilities"></div>
           <div id="abilitiesInsight" class="insight" style="display:none"></div>
@@ -479,28 +394,29 @@
 
       <!-- Love -->
       <section class="panel" data-modal="love">
-        <div class="section-title">Music Love（音楽愛）</div>
+        <div class="section-title">Music Love</div>
         <div class="body" style="text-align:center">
           <svg id="loveGlass" viewBox="0 0 200 200" width="200" height="200">
             <defs>
-              <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#fff3b0" />
-                <stop offset="40%" stop-color="#ffd166" />
-                <stop offset="100%" stop-color="#ff8a00" />
-              </linearGradient>
-              <linearGradient id="liquidGrad" x1="0" y1="1" x2="1" y2="0">
-                <stop offset="0%" stop-color="#ffb340" />
-                <stop offset="100%" stop-color="#ff6a00" />
+              <clipPath id="heartClip">
+                <path
+                  d="M100 175c-3 0-6-.9-8.2-2.9C75 160 30 123 30 85 30 60 50 40 73 40c12 0 24 6 31 15 7-9 19-15 31-15 23 0 43 20 43 45 0 38-45 75-61.8 87.1-2.2 2-5.2 2.9-8.2 2.9z" />
+              </clipPath>
+              <linearGradient id="liquidGrad" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stop-color="#ff9f1c" />
+                <stop offset="100%" stop-color="#fff3b0" />
               </linearGradient>
             </defs>
+            <!-- Glass outline（注：液体は下のrect） -->
             <path
-              d="M24 43c-1.1 0-2.2-.4-3-1.2C18.3 39.4 6 28.8 6 18.1 6 12.1 10.8 7 16.7 7c3.3 0 6.5 1.6 8.4 4.2C27 8.6 30.2 7 33.5 7 39.4 7 44.2 12.1 44.2 18.1c0 10.7-12.3 21.3-15 23.7-.8.7-1.9 1.2-3 1.2z"
-              fill="url(#heartGrad)" />
-            <clipPath id="cHeart">
-              <use href="#h" />
-            </clipPath>
+              d="M100 175c-3 0-6-.9-8.2-2.9C75 160 30 123 30 85 30 60 50 40 73 40c12 0 24 6 31 15 7-9 19-15 31-15 23 0 43 20 43 45 0 38-45 75-61.8 87.1-2.2 2-5.2 2.9-8.2 2.9z"
+              fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.35)" stroke-width="2" />
+            <g clip-path="url(#heartClip)">
+              <rect id="liquid" x="20" y="180" width="160" height="0" fill="url(#liquidGrad)" />
+              <rect id="liquidGlow" x="20" y="180" width="160" height="0" fill="rgba(255,200,60,.25)" />
+            </g>
           </svg>
-          <div class="kпи" style="max-width:420px;margin:10px auto">
+          <div class="kpi" style="max-width:420px;margin:10px auto">
             <div>Love Level（%）</div>
             <div class="badge" id="lovePercent">—</div>
           </div>
@@ -512,7 +428,7 @@
 
       <!-- Genre -->
       <section class="panel" data-modal="genre">
-        <div class="section-title">Genre Richness（ユニークジャンル数）</div>
+        <div class="section-title">Genre Richness</div>
         <div class="body" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
           <svg viewBox="0 0 160 160" width="160" height="160">
             <circle cx="80" cy="80" r="64" stroke="rgba(255,255,255,.15)" stroke-width="14" fill="none" />
@@ -537,8 +453,8 @@
         </div>
       </section>
 
-      <!-- Listening “Map” as flag + photo grid -->
-      <section class=" territory panel" data-modal="map">
+      <!-- “Listening Map” as flag + photo grid -->
+      <section class="panel" data-modal="map">
         <div class="section-title">Listening Map（国旗＋アーティスト写真＋名前）</div>
         <div class="body">
           <div id="flagGrid" class="flagGrid"></div>
@@ -547,381 +463,109 @@
 
       <!-- Recommendations -->
       <section class="panel" data-modal="recs">
-        <div class="section-title">Open-Web Recommendations（Apple Music / YouTubeリンク）</div>
+        <div class="section-title">Open-Web Recommendations（Apple / YouTube）</div>
         <div class="body" id="recs" class="small">Analyze 後に表示されます。</div>
       </section>
     </main>
   </section>
 
-  <!-- Modal -->
-  <div id="modal">
-    <div id="shade"></div>
-    <div id="box"><button id="close">✕</button>
-      <div id="modalBody"></div>
-    </div>
-  </div>
-
   <script>
-    /* ========== Particles (always on) ========== */
+    /* ========= Particles ========= */
     (function () {
-      const cvs = document.getElementById('fx');
-      const ctx = cvs.getContext('2d', { alpha: true });
-      let W = 0, H = 0, stars = [];
-      function resize() { W = (cvs.width = innerWidth); H = (cvs.height = innerHeight); }
-      function seedStars() {
-        stars = Array.from({ length: 160 }, () => ({
-          x: Math.random() * W, y: Math.random() * H,
-          vx: (Math.random() - .5) * .35, vy: (Math.random() - .35), r: 1 + Math.random() * 2, h: 20 + Math.random() * 40, a: .12 + .28 * Math.random()
-        }));
-      }
-      function loop() {
-        requestAnimationFrame(loop);
-        ctx.clearRect(0, 0, W, H);
-        for (const s of stars) {
-          s.x += s.vx; s.y += s.vy; if (s.x < 0 || s.x > W) s.vx *= -1; if (s.y < 0 || s.y > H) s.vy *= -1;
-          const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 7);
-          g.addColorStop(0, `hsla(${40 + s.h},100%,60%,${s.a})`);
-          g.addColorStop(1, 'transparent');
-          ctx.fillStyle = g;
-          ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 7, 0, 6.283); ctx.fill();
-        }
-      }
-      addEventListener('resize', () => { resize(); seedStars(); });
-      resize(); seedStars(); loop();
+      const cvs = document.getElementById('fx'), ctx = cvs.getContext('2d', { alpha: true }); let W = 0, H = 0, stars = [];
+      function res() { W = cvs.width = innerWidth; H = cvs.height = innerHeight }
+      function mk() { stars = Array.from({ length: 160 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35, r: 1 + Math.random() * 2, h: 20 + Math.random() * 40, a: .12 + .28 * Math.random() })) }
+      function loop() { requestAnimationFrame(loop); ctx.clearRect(0, 0, W, H); for (const s of stars) { s.x += s.vx; s.y += s.vy; if (s.x < 0 || s.x > W) s.vx *= -1; if (s.y < 0 || s.y > H) s.vy *= -1; const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 7); g.addColorStop(0, `hsla(${40 + s.h},100%,60%,${s.a})`); g.addColorStop(1, 'transparent'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 7, 0, 6.283); ctx.fill() } }
+      addEventListener('resize', () => { res(); mk() }); res(); mk(); loop()
     })();
 
-    /* ========== Top <-> App transition ========== */
-    const titleEl = document.getElementById('title');
-    const appEl = document.getElementById('app');
-    const startBtn = document.getElementById('startBtn');
-    const backTop = document.getElementById('backTop');
+    /* ========= Top <-> App ========= */
+    const titleEl = document.getElementById('title'), appEl = document.getElementById('app'), startBtn = document.getElementById('startBtn');
+    function showApp() { appEl.style.display = 'block'; requestAnimationFrame(() => appEl.classList.add('show')); titleEl.style.display = 'none'; unlockAudio(); startHarakamiLoop(); renderFlagGrid(); }
 
-    function showApp() {
-      appEl.style.display = 'block';
-      requestAnimationFrame(() => appEl.classList.add('show'));
-      titleEl.style.display = 'none';
-      resumeAudioOnce();
-      renderFlagGrid();
+    /* ========= BGM（ハラカミ風のみ・ループ・ミュート） ========= */
+    let AC = null, master, bus, delay, currentNodes = [], loopTimer = null, isLooping = false, isMuted = false, AUDIO_UNLOCKED = false;
+    function ensureAC() { if (AC) return; AC = new (window.AudioContext || window.webkitAudioContext)(); master = AC.createGain(); master.gain.value = isMuted ? 0 : .9; master.connect(AC.destination); bus = AC.createGain(); bus.gain.value = .22; bus.connect(master); delay = AC.createDelay(); delay.delayTime.value = .25; const fb = AC.createGain(); fb.gain.value = .25; delay.connect(fb); fb.connect(delay); delay.connect(bus) }
+    async function unlockAudio() { ensureAC(); try { if (AC.state !== 'running' && AC.resume) await AC.resume() } catch (_) { } try { const b = AC.createBuffer(1, 1, 22050); const s = AC.createBufferSource(); s.buffer = b; s.connect(master); s.start(0) } catch (_) { } AUDIO_UNLOCKED = (AC.state === 'running') }
+    function bindAudioUnlockOnce() { const once = async () => { await unlockAudio(); if (AUDIO_UNLOCKED) { window.removeEventListener('pointerdown', once, true); window.removeEventListener('touchstart', once, true); window.removeEventListener('keydown', once, true); document.removeEventListener('visibilitychange', vis, true) } }; const vis = async () => { if (document.visibilityState === 'visible') await unlockAudio() }; window.addEventListener('pointerdown', once, true); window.addEventListener('touchstart', once, true); window.addEventListener('keydown', once, true); document.addEventListener('visibilitychange', vis, true) }
+    function stopAll() { currentNodes.forEach(n => { try { n.stop(0) } catch (_) { } try { n.disconnect() } catch (_) { } }); currentNodes = [] }
+    function startHarakamiOnce() { ensureAC(); stopAll(); const t0 = AC.currentTime; const chord = [0, 4, 7]; chord.forEach((s, i) => { const o = AC.createOscillator(), m = AC.createOscillator(), mg = AC.createGain(), v = AC.createGain(), lp = AC.createBiquadFilter(), hp = AC.createBiquadFilter(); o.type = 'triangle'; o.frequency.value = 220 * Math.pow(2, (60 + s - 57) / 12); m.type = 'sine'; m.frequency.value = .7 + i * .2; mg.gain.value = 6; m.connect(mg); mg.connect(o.frequency); lp.type = 'lowpass'; lp.frequency.value = 1200 + i * 280; hp.type = 'highpass'; hp.frequency.value = 90; o.connect(lp); lp.connect(hp); hp.connect(v); v.connect(delay); v.connect(bus); v.gain.setValueAtTime(.0001, t0); v.gain.exponentialRampToValueAtTime(.18, t0 + 1.2 + i * .2); v.gain.exponentialRampToValueAtTime(.0001, t0 + 6.2); o.start(t0); m.start(t0); o.stop(t0 + 6.4); m.stop(t0 + 6.4); currentNodes.push(o, m) }) }
+    function startHarakamiLoop() { unlockAudio(); if (isLooping) return; startHarakamiOnce(); loopTimer = setInterval(startHarakamiOnce, 7000); isLooping = true }
+    function stopLoop() { if (loopTimer) { clearInterval(loopTimer); loopTimer = null } stopAll(); isLooping = false }
+    document.getElementById('muteBtn').addEventListener('click', async () => { ensureAC(); await unlockAudio(); isMuted = !isMuted; master.gain.value = isMuted ? 0 : .9; document.getElementById('muteBtn').textContent = isMuted ? '🔇 BGM' : '🔊 BGM' })
+    bindAudioUnlockOnce();
+
+    /* ========= 入力/保存（20件） ========= */
+    const inputBox = document.getElementById('inputBox'), suggestions = document.getElementById('suggestions'), chips = document.getElementById('chips'), countBadge = document.getElementById('countBadge');
+    let TOKENS = []; function persist() { localStorage.setItem('ml_tokens', JSON.stringify(TOKENS)) } function loadTokens() { try { const t = JSON.parse(localStorage.getItem('ml_tokens') || '[]'); if (Array.isArray(t)) TOKENS = t } catch { } }
+    function renderChips() { chips.innerHTML = TOKENS.map((t, i) => `<span class="chip">${esc(t)} <a style="cursor:pointer" onclick="removeToken(${i})">✕</a></span>`).join(''); countBadge.textContent = `${TOKENS.length} / 20` }
+    function addToken(t) { if (!t || !t.trim()) return; if (TOKENS.length >= 20) return; TOKENS.push(t.trim()); renderChips(); persist(); renderArtistCards(); renderFlagGrid() }
+    function removeToken(i) { TOKENS.splice(i, 1); renderChips(); persist(); renderArtistCards(); renderFlagGrid() }
+    loadTokens(); renderChips(); renderArtistCards(); renderFlagGrid();
+    let sTimer = null;
+    inputBox.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addToken(inputBox.value); inputBox.value = ''; suggestions.style.display = 'none' } })
+    inputBox.addEventListener('input', () => {
+      if (sTimer) clearTimeout(sTimer); sTimer = setTimeout(() => {
+        const q = (inputBox.value || '').trim(); if (q.length < 2) { suggestions.style.display = 'none'; return }
+        const base = ['Daft Punk', 'FKJ', 'Tom Misch', 'BLACKPINK', 'NewJeans', 'SZA', 'Jungle', 'Kaytranada', 'Bonobo', 'Bicep', 'XG', 'LE SSERAFIM', 'Parcels', 'Disclosure', 'Altın Gün', 'Vulfpeck', 'Gorillaz', 'James Blake', 'Thundercat', 'Robert Glasper', 'Sault', 'Khruangbin', 'Rosalía', 'Four Tet', 'Yaeji', 'Peggy Gou'];
+        const list = base.filter(n => n.toLowerCase().includes(q.toLowerCase())).slice(0, 12);
+        suggestions.innerHTML = list.map(n => `<div class="sugItem" data-name="${esc(n)}">${esc(n)}</div>`).join('');
+        suggestions.style.display = list.length ? 'block' : 'none'
+      }, 150)
+    });
+    (function () { if (suggestions.__b) return; suggestions.__b = true; const h = e => { const it = e.target.closest('.sugItem'); if (!it) return; e.preventDefault(); addToken(it.dataset.name || it.textContent.trim()); inputBox.value = ''; suggestions.style.display = 'none' }; suggestions.addEventListener('pointerdown', h, { passive: false }); suggestions.addEventListener('touchstart', h, { passive: false }); suggestions.addEventListener('click', h, { passive: false }) })();
+    document.getElementById('addBtn').addEventListener('click', () => { addToken(inputBox.value); inputBox.value = ''; suggestions.style.display = 'none' });
+
+    /* ========= Artist Info（Wiki + iTunes + Apple/YouTube） ========= */
+    const artistGrid = document.getElementById('artistGrid'), artistHint = document.getElementById('artistHint');
+    async function fetchWiki(name) { try { const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`); if (!r.ok) return null; const j = await r.json(); return { summary: j.extract || "", image: j.thumbnail?.source || "", url: j.content_urls?.desktop?.page || "" } } catch (_) { return null } }
+    async function fetchItunesArt(name) { try { const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=album&limit=1`); const j = await r.json(); const art = j.results?.[0]?.artworkUrl100; return art ? art.replace('100x100', '256x256') : "" } catch (_) { return "" } }
+    function appleLink(name) { return `https://music.apple.com/us/search?term=${encodeURIComponent(name)}` } function ytLink(name) { return `https://www.youtube.com/results?search_query=${encodeURIComponent(name + ' official')}` }
+    async function artistProfile(name) { const w = await fetchWiki(name); let img = w?.image || ""; if (!img) img = await fetchItunesArt(name); const sum = w?.summary ? w.summary.replace(/\s+/g, ' ').slice(0, 140) + '…' : '情報が見つかりません。'; return { name, image: img || `https://picsum.photos/seed/${encodeURIComponent(name)}/112/112`, summary: sum, apple: appleLink(name), yt: ytLink(name) } }
+    async function renderArtistCards() { artistGrid.innerHTML = ""; if (!TOKENS.length) { artistHint.style.display = 'block'; return } artistHint.style.display = 'none'; const list = await Promise.all(TOKENS.slice(0, 20).map(artistProfile)); artistGrid.innerHTML = list.map(p => `<div class="flagCard"><img class="art" src="${p.image}" alt="${esc(p.name)}"><div class="meta"><div class="name">${esc(p.name)}</div><div class="small">${esc(p.summary)}</div><div class="small"><a href="${p.apple}" target="_blank" style="color:#ffe28a">Apple Music</a> ／ <a href="${p.yt}" target="_blank" style="color:#ffe28a">YouTube</a></div></div></div>`).join('') }
+
+    /* ========= Listening Map（国旗＋写真＋名前） ========= */
+    const flagGrid = document.getElementById('flagGrid');
+    async function mbCountry(name) { try { const r = await fetch(`https://musicbrainz.org/ws/2/artist?query=${encodeURIComponent(name)}&limit=1&fmt=json`); if (!r.ok) return { code: "", country: "" }; const j = await r.json(); const a = j.artists?.[0]; const code = (a?.country || "").toLowerCase(); const country = a?.area?.name || ""; return { code, country } } catch (_) { return { code: "", country: "" } } }
+    const flagURL = c => c ? `https://flagcdn.com/48x36/${c}.png` : 'https://flagcdn.com/48x36/un.png';
+    async function renderFlagGrid() { flagGrid.innerHTML = ""; if (!TOKENS.length) { flagGrid.innerHTML = '<div class="small">アーティストを追加してください。</div>'; return } const profiles = await Promise.all(TOKENS.slice(0, 20).map(artistProfile)); const countries = await Promise.all(TOKENS.slice(0, 20).map(mbCountry)); flagGrid.innerHTML = profiles.map((p, i) => { const c = countries[i] || { code: "", country: "" }; return `<div class="flagCard"><img class="flag" src="${flagURL(c.code)}" alt="${esc(c.country || 'Flag')}"><img class="art" src="${p.image}" alt="${esc(p.name)}"><div class="meta"><div class="name">${esc(p.name)}</div><div class="small">${esc(c.country || '—')}</div></div></div>` }).join('') }
+
+    /* ========= Vector / Work / Love / Genre / Personality ========= */
+    const BASEV = { energy: .6, sophistication: .6, groove: .6, structure: .6, experiment: .6, urban: .6, global: .6 };
+    function mapGenre(s) { s = (s || '').toLowerCase(); if (/hip|rap/.test(s)) return 'Hip-hop'; if (/r&b|soul/.test(s)) return 'R&B'; if (/electro|edm|techno|house|dance|club/.test(s)) return 'Electronic'; if (/k-?pop/.test(s)) return 'K-Pop'; if (/jazz|fusion/.test(s)) return 'Jazz'; if (/funk|disco|boogie/.test(s)) return 'Funk'; if (/rock|metal|punk/.test(s)) return 'Rock'; if (/world|afro|latin|reggae|balkan|cumbia/.test(s)) return 'World'; if (/indie|alt|pop/.test(s)) return 'Indie'; return 'Indie' }
+    function tokenVector(t) {
+      const seed = [...t].reduce((a, c) => a + c.charCodeAt(0), 0); let v = seed | 0; const rnd = () => (v = (v * 1664525 + 1013904223) | 0, (v >>> 0) / 4294967296); const g = mapGenre(t), z = JSON.parse(JSON.stringify(BASEV));
+      if (g === 'Electronic') { z.structure += .12; z.sophistication += .05 } if (g === 'R&B') { z.urban += .12; z.groove += .08 } if (g === 'Funk') { z.groove += .14; z.energy += .06 } if (g === 'Jazz') { z.sophistication += .12; z.experiment += .06 } if (g === 'Hip-hop') { z.groove += .10; z.urban += .10 } if (g === 'K-Pop') { z.structure += .14; z.sophistication += .10 } if (g === 'World') { z.global += .16; z.groove += .06 } if (g === 'Rock') { z.energy += .12 }
+      for (const k in z) { z[k] = Math.min(1, Math.max(0, z[k] + (rnd() - .5) * .1)) } return z
     }
-    function showTop() {
-      appEl.classList.remove('show');
-      appEl.style.display = 'none';
-      titleEl.style.display = 'grid';
-    }
+    function mergeVec(vs) { const s = { ...BASEV }; for (const k in s) s[k] = 0; vs.forEach(v => { for (const k in v) s[k] += v[k] }); for (const k in s) s[k] /= vs.length || 1; return s }
+    function profileFromInputs(tokens) { return tokens.length ? mergeVec(tokens.map(tokenVector)) : BASEV }
+    function clamp(n) { return Math.max(0, Math.min(1, n)) }
+    function drawProfile(v) { const L = [["energy", "元気さ"], ["sophistication", "洗練"], ["groove", "ノリ"], ["structure", "まとまり"], ["experiment", "新しさ"], ["urban", "都会感"], ["global", "越境感"]]; document.getElementById('profileBars').innerHTML = L.map(([k, lab]) => { const p = Math.round((v[k] || 0) * 100); return `<div class="kpi"><div>${lab}</div><div class="badge">${p}%</div></div><div class="bar"><div class="fill" style="width:${p}%"></div></div>` }).join(''); const ord = Object.entries(v).sort((a, b) => b[1] - a[1]); const [k1] = ord[0], [k2] = ord[1]; const lines = [`今日は「${k1}」が主役。${k2}を少し意識してみよう。`, `芯は${k1}。${k2}を添えるとちょうどいい感じ。`, `今は${k1}の気分。${k2}の要素で軽く味変を。`]; const el = document.getElementById('vectorInsight'); el.style.display = 'block'; el.textContent = lines[Math.floor(Math.random() * lines.length)] }
+    function toAbilities(v) { return [{ k: "structure", l: "整理・構造化", s: clamp(0.6 * v.structure + 0.25 * v.sophistication) }, { k: "empathy", l: "共感・関係性", s: clamp(0.55 * v.urban + 0.35 * v.groove) }, { k: "creative", l: "実験・創造", s: clamp(0.7 * v.experiment + 0.2 * v.global) }, { k: "drive", l: "推進力", s: clamp(v.energy) }, { k: "xborder", l: "越境・つなぐ", s: clamp(0.7 * v.global + 0.2 * v.experiment) }] }
+    function drawAbilities(v) { const arr = toAbilities(v); document.getElementById('abilities').innerHTML = arr.map(a => `<div class="kpi"><div>${a.l}</div><div class="badge">${Math.round(a.s * 100)}%</div></div><div class="bar"><div class="fill" style="width:${Math.round(a.s * 100)}%"></div></div>`).join(''); const top = arr.slice().sort((a, b) => b.s - a.s).slice(0, 2), label = { structure: "整理", empathy: "共感", creative: "実験", drive: "推進", xborder: "越境" }; const ai = document.getElementById('abilitiesInsight'); ai.style.display = 'block'; ai.textContent = `今日は ${label[top[0].k]} と ${label[top[1].k]} を意識して動こう。` }
+    function drawLove(tokens) { const n = tokens.length, uniq = [...new Set(tokens.map(mapGenre))].length; const score = clamp(0.6 * (n / 20) + 0.4 * (uniq / 12)); const pct = Math.round(score * 100); document.getElementById('lovePercent').textContent = pct + "%"; document.getElementById('loveFill').style.width = pct + "%"; const h = Math.round((pct / 100) * 140); document.getElementById('liquid').setAttribute('y', 180 - h); document.getElementById('liquid').setAttribute('height', h); document.getElementById('liquidGlow').setAttribute('y', 180 - h); document.getElementById('liquidGlow').setAttribute('height', Math.max(0, h - 10)) }
+    function drawGenre(tokens) { const uniq = [...new Set(tokens.map(mapGenre))].length; const pct = Math.round(100 * Math.min(1, uniq / 12)); document.getElementById('genreBadge').textContent = `${uniq} / 12`; document.getElementById('genrePct').textContent = pct; document.getElementById('genreRing').setAttribute('stroke-dashoffset', String(402 - pct * 4.02)) }
+    function renderPersonality(v, tokens) { const gs = tokens.map(mapGenre), counts = {}; gs.forEach(g => counts[g] = (counts[g] || 0) + 1); const dom = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Indie'; const ord = Object.entries(v).sort((a, b) => b[1] - a[1]); const t1 = ord[0][0], t2 = ord[1][0]; const tips = [`今日は${t1}を活かすと調子が出ます。${t2}を少し足すとさらに◎`, `まずは${t1}の雰囲気でスタート。途中で${t2}も試してみよう。`, `${t1}が主役の日。${t2}で軽く味変してみるのもアリ。`]; const el = document.createElement('div'); el.className = 'small'; el.innerHTML = `<div class="badge">Today</div><div style="margin-top:6px">${tips[Math.floor(Math.random() * tips.length)]}</div>`; const wrap = document.querySelector('[data-modal="pers"] .body'); if (wrap) { wrap.innerHTML = ''; wrap.appendChild(el) } }
+
+    /* ========= Recommendations ========= */
+    function buildRecs(tokens) { const pool = ['Bonobo', 'Kaytranada', 'Jungle', 'Parcels', 'Bicep', 'Altın Gün', 'Robert Glasper', 'Thundercat', 'Gorillaz', 'Sault', 'Cimafunk', 'Vulfpeck', 'FKJ', 'Disclosure', 'Badbadnotgood', 'Toro y Moi', 'Yaeji', 'Peggy Gou', 'Rosalía', 'Khruangbin', 'Four Tet']; const set = new Set(tokens.map(t => t.toLowerCase())); const out = pool.filter(n => !set.has(n.toLowerCase())).slice(0, 12); while (out.length < 8) out.push('New Discovery ' + (out.length + 1)); return out }
+    function renderRecs() { const list = buildRecs(TOKENS); document.getElementById('recs').innerHTML = list.map(n => { const a = `https://music.apple.com/us/search?term=${encodeURIComponent(n)}`, y = `https://www.youtube.com/results?search_query=${encodeURIComponent(n + ' official')}`; return `<span class="badge" style="margin:4px;display:inline-block">${esc(n)}</span> <a href="${a}" target="_blank" class="small" style="color:#ffe28a">Apple</a> ・ <a href="${y}" target="_blank" class="small" style="color:#ffe28a">YouTube</a>` }).join('<br/>') }
+
+    /* ========= Analyze：5機能を確実に更新 ========= */
+    const progressWrap = document.getElementById('progressWrap'), progressFill = document.getElementById('progfill'), progressText = document.getElementById('progtext');
+    function runAnalyze() { progressWrap.style.display = 'block'; progressFill.style.width = '0%'; const steps = ['ベクトル算出', 'やさしいコメント', '指標集計', '推薦作成']; let i = 0; function step() { if (i >= steps.length) { progressFill.style.width = '100%'; progressText.textContent = '完了'; setTimeout(() => progressWrap.style.display = 'none', 350); const v = profileFromInputs(TOKENS); drawProfile(v); drawAbilities(v); drawLove(TOKENS); drawGenre(TOKENS); renderPersonality(v, TOKENS); renderArtistCards(); renderFlagGrid(); renderRecs(); return } let p = 0; const id = setInterval(() => { p += 8 + Math.random() * 6; progressFill.style.width = Math.min(99, p) + '%'; progressText.textContent = `${steps[i]}… ${Math.min(99, Math.floor(p))}%`; if (p >= 100) { clearInterval(id); i++; step() } }, 90) } step() }
+    document.getElementById('analyzeBtn').addEventListener('click', () => { if (!TOKENS.length) addToken('Electronic'); runAnalyze() })
+
+    /* ========= Hooks ========= */
     ['click', 'pointerdown', 'touchstart', 'keydown'].forEach(ev => {
       startBtn.addEventListener(ev, e => {
         if (ev === 'keydown' && !(e.key === 'Enter' || e.key === ' ')) return;
         e.preventDefault(); showApp();
       }, { passive: false });
     });
-    backTop?.addEventListener('click', e => { e.preventDefault(); showTop(); });
 
-    /* ========== Looping BGM (4 presets) ========== */
-    let AC, master, bus, delay, currentNodes = [], loopTimer = null, isPlaying = false;
-    function ensureAC() {
-      if (AC) return;
-      AC = new (window.AudioContext || window.webkitAudioContext)();
-      master = AC.createGain(); master.value = .85; master.connect(AC.destination);
-      bus = AC.createGain(); bus.gain.value = .22; bus.connect(master);
-      delay = AC.createDelay(); delay.delayTime.value = .25; const fb = AC.createGain(); fb.gain.value = .25; delay.connect(fb); fb.connect(delay); delay.connect(bus);
-    }
-    async function resumeAudioOnce() { ensureAC(); try { if (AC.state !== 'running' && AC.resume) await AC.resume(); } catch (_) { } }
-    function stopAll() { currentNodes.forEach(n => { try { n.stop(0) } catch (_) { } try { n.disconnect() } catch (_) { } }); currentNodes = []; }
-    function stopLoop() { if (loopTimer) { clearInterval(loopTimer); loopTimer = null; } stopAll(); isPlaying = false; }
-    function addNode(n) { currentNodes.push(n); }
-    function playPresetOnce(p) {
-      const t0 = AC.currentTime;
-      if (p === 'harakami') {
-        const chord = [0, 4, 7];
-        chord.forEach((s, i) => {
-          const o = AC.createOscillator(), m = AC.createOscillator(), mg = AC.createGain(), v = AC.createGain(), lp = AC.createBiquadFilter(), hp = AC.createBiquadFilter();
-          o.type = 'triangle'; o.frequency.value = 220 * Math.pow(2, (60 + s - 57) / 12);
-          m.type = 'sine'; m.frequency.value = .7 + i * .2; mg.gain.value = 6; m.connect(mg); mg.connect(o.frequency);
-          lp.type = 'lowpass'; lp.frequency.value = 1200 + i * 280; hp.type = 'highpass'; hp.frequency.value = 90;
-          o.connect(lp); lp.connect(hp); hp.connect(v); v.connect(delay); v.connect(bus);
-          v.gain.setValueAtTime(.0001, t0); v.gain.exponentialRampToValueAtTime(.18, t0 + 1.2 + i * .2); v.gain.exponentialRampToValueAtTime(.0001, t0 + 6.2);
-          o.start(t0); m.start(t0); o.stop(t0 + 6.4); m.stop(t0 + 6.4);
-          addNode(o); addNode(m);
-        });
-      } else if (p === 'fkj') {
-        const seq = [0, 4, 7, 11];
-        seq.forEach((s, i) => {
-          const o = AC.createOscillator(), g = AC.createGain();
-          o.type = 'sine'; o.frequency.value = 220 * Math.pow(2, (64 + s - 57) / 12);
-          g.gain.value = .0001; o.connect(g); g.connect(bus);
-          const t = t0 + i * .4; g.gain.linearRampToValueAtTime(.22, t + .02); g.gain.linearRampToValueAtTime(.0001, t + .55);
-          o.start(t); o.stop(t + .6); addNode(o);
-        });
-      } else if (p === 'disclosure') {
-        const beat = .5;
-        for (let i = 0; i < 16; i++) {
-          const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sawtooth'; o.frequency.value = 110;
-          o.connect(g); g.connect(bus); g.gain.value = .0001;
-          const t = t0 + i * beat; g.gain.linearRampToValueAtTime(.18, t + .04); g.gain.exponentialRampToValueAtTime(.0001, t + .25);
-          o.start(t); o.stop(t + .5); addNode(o);
-        }
-      } else { // skrillex-ish blips
-        for (let i = 0; i < 12; i++) {
-          const o = AC.createOscillator(), g = AC.createGain(); o.type = 'square'; o.frequency.setValueAtTime(220, t0 + i * .25);
-          g.gain.value = .15; o.connect(g); g.connect(bus); g.gain.exponentialRampToValueAtTime(.0001, AC.currentTime + .22);
-          o.start(t0 + i * .25); o.stop(t0 + i * .5); addNode(o);
-        }
-      }
-    }
-    function playLoop(p) { resumeAudioOnce(); stopLoop(); ensureAC(); playPresetOnce(p); const period = { harakami: 7000, fkj: 4000, disclosure: 8000, sk: 4000 }[p] || 6000; loopTimer = setInterval(() => playPresetOnce(p), period); isPlaying = true; }
-    document.getElementById('bgmPlay').addEventListener('click', () => { playLoop(document.getElementById('bgmSelect').value); });
-    document.getElementById('bgmStop').addEventListener('click', () => { stopLoop(); });
-    document.getElementById('bgmSelect').addEventListener('change', e => { playLoop(e.target.value); });
-    ['pointerdown', 'touchstart'].forEach(evt => { window.addEventListener(evt, () => resumeAudioOnce(), { once: true, capture: true }); });
-
-    /* ========== Inputs / Suggest / Persist ========== */
-    const inputBox = document.getElementById('inputBox');
-    const suggestions = document.getElementById('suggestions');
-    const chips = document.getElementById('chips');
-    const countBadge = document.getElementById('countBadge');
-    const artistGrid = document.getElementById('artistGrid');
-    const artistHint = document.getElementById('artistHint');
-
-    let TOKENS = [];
-    function persist() { localStorage.setItem('ml_tokens', JSON.stringify(TOKENS)); }
-    function loadTokens() { try { const t = JSON.parse(localStorage.getItem('ml_tokens') || '[]'); if (Array.isArray(t)) TOKENS = t; } catch { } }
-    function renderChips() { chips.innerHTML = TOKENS.map((t, i) => `<span class="chip">${esc(t)} <a style="cursor:pointer" onclick="removeToken(${i})">✕</a></span>`).join(''); countBadge.textContent = `${TOKENS.length} / 20`; }
-    function addToken(t) { if (!t || !t.trim()) return; if (TOKENS.length >= 20) return; TOKENS.push(t.trim()); renderChips(); persist(); renderArtistCards(); renderFlagGrid(); }
-    function removeToken(i) { TOKENS.splice(i, 1); renderChips(); persist(); renderArtistCards(); renderFlagGrid(); }
-    loadTokens(); renderChips(); renderArtistCards(); renderFlagGrid();
-
-    let sTimer = null;
-    inputBox.addEventListener('input', () => {
-      if (sTimer) clearTimeout(sTimer);
-      sTimer = setTimeout(() => {
-        const q = inputBox.content || inputBox.value || '';
-        if (!q || q.trim().length < 2) { suggestions.style.display = 'none'; return; }
-        const base = ['Daft Punk', 'FKJ', 'Tom Misch', 'BLACKPINK', 'NewJeans', 'SZA', 'Jungle', 'Kaytranada', 'Bonobo', 'Bicep', 'XG', 'LE SSERAFIM', 'Parcels', 'Disclosure', 'Altın Gün', 'Vulfpeck', 'Gorillaz', 'James Blake', 'Thundercat', 'Robert Glasper', 'Sault', 'Khora', 'Röyksopp', 'Nujabes', 'FKJ', 'ODESZA'];
-        const items = base.filter(n => n.toLowerCase().includes(q.toLowerCase())).slice(0, 12);
-        suggestions.innerHTML = items.map(n => `<div class="sugItem" data-name="${esc(n)}">${esc(n)}</div>`).join('');
-        suggestions.style.display = items.length ? 'block' : 'none';
-      }, 150);
-    });
-    (function bindSuggestTap() {
-      if (suggestions.__bound) return; suggestions.__bound = true;
-      const handler = e => {
-        const it = e.target.closest('.sugItem'); if (!it) return;
-        e.preventDefault(); addToken(it.dataset.name || it.textContent.trim()); inputBox.value = ''; suggestions.style.display = 'none';
-      };
-      suggestions.addEventListener('pointerdown', handler, { passive: false });
-      suggestions.addEventListener('touchstart', handler, { passive: false });
-      suggestions.addEventListener('click', handler, { passive: false });
-    })();
-
-    /* ========== Artist Info (Wiki + iTunes + links) ========== */
-    async function fetchWiki(name) {
-      try {
-        const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`);
-        if (!r.ok) return null;
-        const j = await r.json();
-        return { summary: j.extract || "", image: (j.thumbnail?.source || ""), url: (j.content_urls?.desktop?.page || "") };
-      } catch (_) { return null; }
-    }
-    async function fetchItunesArt(name) {
-      try {
-        const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=album&limit=1`);
-        const j = await r.json();
-        const art = j.results?.[0]?.artworkUrl100;
-        return art ? art.replace('100x100', '256x256') : "";
-      } catch (_) { return ""; }
-    }
-    function linkApple(name) { return `https://www.apple.com/jp/search/${encodeURIComponent(name)}?src=globalnav`; }
-    function linkYouTube(q) { return `https://www.youtube.com/results?search_query=${encodeURIComponent(q + ' official')}`; }
-    async function artistProfile(name) {
-      const w = await fetchWiki(name);
-      let image = w?.['image'] && w.image ? w.image : "";
-      if (!image) image = await fetchItunesArt(name);
-      const summary = w?.summary ? w.summary.replace(/\s+/g, ' ').slice(0, 140) + '…' : '情報が見つかりませんでした。';
-      return {
-        name, image: image || 'https://picsum.photos/seed/' + encodeURIComponent(name) + '/112/112', summary,
-        apple: linkApple(name), yt: linkYouTube(name)
-      };
-    }
-    async function renderArtistCards() {
-      artistGrid.innerHTML = "";
-      if (!TOKENS.length) { artistHint.style.display = 'block'; return; }
-      artistHint.style.display = 'none';
-      const profiles = await Promise.all(TOKENS.slice(0, 20).map(artistProfile));
-      artistGrid.innerHTML = profiles.map(p => `
-    <div class="card">
-      <img class="art"  src="${p.image}" alt="${esc(p.name)}">
-      <div>
-        <div class="name">${esc(p.name)}</div>
-        <div class="small">${esc(p.summary)}</div>
-        <div class="small" style="margin-top:6px">
-          <a href="${p.apple}" target="_blank" style="color:#ffe28a">Apple Music</a> ／
-          <a href="${p.yt}" target="_blank" style="color:#ffe28a">YouTube</a>
-        </div>
-      </div>
-    </div>`).join('');
-    }
-
-    /* ===== Flags “map” (country flag + artist photo + name) ===== */
-    async function mbCountry(name) {
-      try {
-        const r = await fetch(`https://musicbrainz.org/ws/2/artist?query=${encodeURIComponent(name)}&limit=1&fmt=json`);
-        if (!r.ok) return { code: "", country: "" };
-        const j = await r.json();
-        const a = j.artists?.[0];
-        const code = (a?.country || a?.area?.['iso-3165-1-alpha-2'] || "").toLowerCase();
-        const country = a?.area?.name || "";
-        return { code, country };
-      } catch (_) { return { code: "", country: "" }; }
-    }
-    function flagURL(code) { return code ? `https://flagcdn.com/48x36/${code}.png` : 'https://flagcdn.com/48x36/un.png'; }
-    async function renderFlagGrid() {
-      const grid = document.getElementById('flagGrid');
-      if (!grid) return;
-      grid.innerHTML = "";
-      const names = TOKENS.slice(0, 20);
-      if (!names.length) { grid.innerHTML = '<div class="small">アーティストを追加するとここに表示します。</div>'; return; }
-      const profiles = await Promise.all(names.map(artistProfile));
-      const countries = await Promise.all(names.map(mbCountry));
-      grid.innerHTML = profiles.map((p, idx) => {
-        const c = countries[idx] || { code: "", country: "" };
-        return `<div class="flagCard">
-      <img class="flag" src="${flagURL(c.code)}" alt="${esc(c.country || 'Flag')}">
-      <img class="art"  src="${p.image}" alt="${esc(p.name)}">
-      <div class="meta">
-        <div class="name">${esc(p.name)}</div>
-        <div class="small">${esc(c.country || '出身国情報なし')}</div>
-      </div>
-    </div>`;
-      }).join('');
-    }
-
-    /* ===== Vector / Work / Love / Genre / Personality ===== */
-    function tokenVector(t) {
-      const g = mapGenre(t), base = { ...BASEV }; const rand = (() => { let r = 0; for (const ch of t) r = (r * 31 + ch.charCodeAt(0)) >>> 0; return () => { r = (r * 1664525 + 1013904223) >>> 0; return (r >>> 1) / 2147483648; }; })(); if (g === 'electronic') { base.structure += .12; base.sophistication += .05 }
-      if (g === 'r&b') { base.urban += .12; base.groove += .08 }
-      if (g === 'funk') { base.groove += .14; base.energy += .06 }
-      if (g === 'jazz') { base.sophistication += .12; base.experiment += .06 }
-      if (g === 'hip-hop') { base.groove += .10; base.urban += .10 }
-      if (g === 'k-pop') { base.structure += .14; base.sophistication += .10 }
-      if (g === 'world') { base.global += .16; base.groove += .06 }
-      if (g === 'rock') { base.energy += .12 }
-      for (const k in base) { base[k] = Math.min(1, Math.max(0, base[k] + (rand() - .5) * .1)); } return base;
-    }
-    function mergeVec(vs) { const s = { ...BASEV }; for (const k in s) s[k] = 0; vs.forEach(v => { for (const k in v) s[k] += v[k]; }); for (const k in s) s[k] /= vs.length || 1; return s; }
-    function profileFromInputs(tokens) { return tokens.length ? mergeF(tokens.map(tokenVector)) : BASEV; }
-    function mergeF(vs) { const s = { ...BASEV }; for (const k in s) s[k] = 0; for (const v of vs) { for (const k in v) { s[k] += v[k]; } } for (const k in s) { s[k] /= vs.length; } return s; }
-    function drawProfile(v) {
-      const L = [["energy", "Energy（元気さ）"], ["sophistication", "洗練"], ["groove", "ノリ"], ["structure", "まとまり"], ["experiment", "新しさ"], ["urban", "都会感"], ["global", "越境感"]];
-      document.getElementById('profileBars').innerHTML = L.map(([k, lab]) => { const p = Math.round((v[k] || 0) * 100); return `<div class="kpi"><div>${lab}</div><div class="badge">${p}%</div></div><div class="bar"><div class="fill" style="width:${p}%"></div></div>`; }).toString().replace(/>,/g, '>');
-      const order = Object.entries(v).sort((a, b) => b[1] - a[1]);
-      const top1 = order[0][0], top2 = order[1][0];
-      const seed = [...Object.keys(v).join('')].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
-      const rnd = (() => { let r = seed; return () => { r = (r * 1664525 + 1013904223) >>> 0; return (r >>> 1) / 2147483648; } })();
-      const lines = [
-        `今日は「${top1}」が主役。${top2}を少し意識するとバランス◎`,
-        `芯は${top1}。${top2}で遊び心を加えると世界が広がる。`,
-        `${top1}の感性が冴える日。${top2}の要素で輪郭をシャープに。`
-      ];
-      const el = document.getElementById('vectorBanana') || document.createElement('div');
-      el.id = 'vectorBanana';
-      el.className = 'insight';
-      el.textContent = lines[Math.floor(rnd() * lines.length)];
-      const holder = document.getElementById('vectorInsight');
-      holder.style.display = 'block';
-      holder.textContent = el.textContent;
-    }
-    function toAbilities(v) {
-      return [
-        { k: "structure", l: "整理・構造化", s: Math.min(1, Math.max(0, 0.6 * v.structure + 0.25 * v.sophistication)) },
-        { k: "empathy", l: "共感・関係性", s: Math.min(1, Math.max(0, 0.55 * v.urban + 0.35 * v.groove)) },
-        { k: "creative", l: "実験・創造", s: Math.min(1, Math.max(0, 0.7 * v.experiment + 0.2 * v.global)) },
-        { k: "drive", l: "推進力", s: Math.min(1, v.energy) },
-        { k: "xborder", l: "越境・統合", s: Math.min(1, 0.7 * v.global + 0.2 * v.experiment) }
-      ];
-    }
-    function drawAbilities(v) {
-      const arr = toAbilities(v);
-      document.getElementById('imageforsure'); // keep DOM alive
-      document.getElementById('abilities').innerHTML = arr.map(a => `<div class="kpi"><div>${a.l}</div><div class="badge">${Math.round(a.s * 100)}%</div></div><div class="bar"><div class="fill" style="width:${Math.round(a.s * 100)}%"></div></div>`).join('');
-      const top = [...arr].sort((a, b) => b.s - a.s).slice(0, 2);
-      const map = { structure: "“描く”", empathy: "“寄り添う”", creative: "“試す”", drive: "“動かす”", xborder: "“つなぐ”" };
-      const insight = `今日は ${map[top[0].k]} と ${map[top[1].k]} を意識。強みを核に、次の一歩を。`;
-      const holder = document.getElementById('abilitiesInsight'); holder.style.display = 'block'; holder.textContent = insight;
-    }
-    function drawLove(tokens) {
-      const n = tokens.length, uniq = [...new Set(tokens.map(mapGenre))].length;
-      const score = Math.min(1, Math.max(0, 0.6 * (n / 20) + 0.4 * (uniq / 12)));
-      const pct = Math.round(score * 100);
-      document.getElementById('lovePercent').textContent = `${pct}%`;
-      document.getElementById('loveFill').style.width = `${pct}%`;
-      const h = Math.round((pct / 100) * 140);
-      const liquid = document.getElementById('loveGlass').querySelector('#loveGlass #liquid');
-      const glow = document.getElementById('loveGlass').querySelector('#liquidGlow');
-      if (liquid) { liquid.setAttribute('y', 180 - h); liquid.setAttribute('height', h); }
-      if (glow) { glow.setAttribute('y', 180 - h); glow.setAttribute('height', h); }
-    }
-    function drawGenre(tokens) {
-      const uniq = [...new Double(tokens.map(mapGenre))].size || [...new Set(tokens.map(mapGenre))].length;
-      const pct = Math.round(100 * Math.min(1, uniq / 12));
-      document.getElementById('genreBadge').textContent = `${uniq} / 12`;
-      document.getElementById('genrePct').textContent = pct;
-      document.getElementById('genreRing').setAttribute('stroke-dashoffset', String(402 - pct * 4.02));
-    }
-    function renderPersonality(v, tokens) {
-      const genres = tokens.map(mapGenre);
-      const counts = {}; for (const g of genres) { counts[g] = (counts[g] || 0) + 1; }
-      const dom = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Indie';
-      const order = Object.entries(v).sort((a, b) => b[1] - a[1]);
-      const t1 = order[0][0], t2 = order[1]?.[0] || 'balance';
-      const hints = [
-        `今日は${t1}を活かして、${t2}を少し足す日。`,
-        `「${t1}」らしさを大事に、別ジャンルも一曲だけ。`,
-        `迷ったら${t1}に戻る。そこからの展開が鍵。`
-      ];
-      const tip = hints[Math.floor(Math.random() * hints.length)];
-      document.getElementById('persHolder')?.remove?.();
-      const el = document.createElement('div'); el.id = 'persHolder'; el.className = 'small'; el.innerHTML = `<div class="badge">Today</div><div style="margin-top:6px">${tip}</div>`;
-      const wrap = document.querySelector('[data-modal="pers"] .body'); wrap.innerHTML = ''; wrap.appendChild(el);
-    }
-
-    /* ===== Recommendations ===== */
-    function buildRecs(tokens) {
-      const pool = ['Bonobo', 'Kaytranada', 'Jungle', 'Parcels', 'Bicep', 'Altın Gün', 'Robert Glasper', 'Thundercat', 'Gorillaz', 'Sault', 'Cimafunk', 'Vulfpeck', 'FKJ', 'Disclosure', 'Badbadnotgood', 'Toro y Moi', 'Yaeji', 'Peggy Gou', 'Rosalía', 'Khruangbin', 'Four Tet'];
-      const lower = new Set(tokens.map(t => t.toLowerCase()));
-      const out = pool.filter(n => !lower.has(n.toLowerCase())).filter((n, i, arr) => arr.indexOf(n) === i).slice(0, 12);
-      while (out.length < 8) out.push('New Discovery ' + (out.length + 1));
-      return out;
-    }
-    function renderRecs() { const r = buildRecs(TOKENS); const el = document.getElementById('recs'); el.innerHTML = r.map(n => { const a = `https://www.apple.com/jp/search/${encodeURIComponent(n)}`; const y = `https://www.youtube.com/results?search_query=${encodeURIComponent(n + ' official')}`; return `<span class="badge" style="margin:4px;display:inline-block">${esc(n)}</span> <a class="small" style="color:#ffe28a" href="${a}" target="_blank">Apple Music</a> ・ <a class="small" style="color:#ffe28a" href="${y}" target="_blank">YouTube</a>`; }).join('<br/>'); }
-
-    /* ===== Analyze flow ===== */
-    function showAnalyzeProgress() { const w = document.getElementById('olleh') || document.getElementById('progressWrap'); w.style.display = 'block'; const bar = document.getElementById('progfill'), txt = document.getElementById('progtext'); bar.style.width = '0%'; let p = 0; const t = setInterval(() => { p = Math.min(97, p + 3 + Math.random() * 5); bar.style.width = p + '%'; txt.textContent = 'Analyzing… ' + Math.floor(p) + '%'; if (p >= 97) { clearInterval(t); bar.style.width = '100%'; txt.textContent = 'Done'; setTimeout(() => { w.style.display = 'none'; }, 350); } }, 120); return () => clearInterval(t); }
-    document.getElementById('analyzeBtn').addEventListener('click', () => {
-      if (!TOKENS.length) addToken('Electronic');
-      const stopTimer = showAnalyzeProgress();
-      // compute
-      const v = mergeF(TOKENS.map(tokenVector));
-      drawProfile(v); drawAbilities(v); drawLove(TOKENS); drawGenre(TOKENS); renderPersonality(v, TOKENS); renderArtistCards(); renderFlagGrid(); renderRecs();
-      stopTimer();
-    });
-
-    /* ===== Modal: disable for “input” panel; enable others ===== */
-    (function () {
-      const modal = document.getElementById('modal'), shade = document.getElementById('shade'), box = document.getElementById('box'), body = document.getElementById('box').querySelector('#box > div');
-      document.querySelectorAll('.panel').forEach(p => {
-        // Do NOT attach modal to the "Artists / Genres" panel
-        if (p.dataset && p.dataset.modal === 'input') return;
-        p.addEventListener('click', e => {
-          if (e.target.closest('button, a, input')) return;
-          body.innerHTML = p.querySelector('.body') ? p.querySelector('.body').innerHTML : p.innerHTML;
-          modal.classList.add('show');
-        });
-      });
-      document.getElementById('close').addEventListener('click', () => modal.classList.remove('show'));
-      document.getElementById('shade').addEventListener('click', () => modal.classList.remove('show'));
-    })();
-
-    /* ===== Helpers ===== */
+    /* ========= Utils ========= */
     function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) }
   </script>
 </body>
