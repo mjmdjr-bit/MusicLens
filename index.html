@@ -18,42 +18,30 @@
     }
 
     * {
-      box-sizing: border-box
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
     }
 
-    html,
     body {
-      height: 100%;
-      margin: 0;
-      color: var(--txt);
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", Roboto, Segoe UI, sans-serif;
       background: linear-gradient(180deg, var(--ink), var(--ink2));
-      overflow-x: hidden
+      color: var(--txt);
+      overflow-x: hidden;
     }
 
-    #fx {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none
-    }
-
-    /* === Top === */
+    /* === TOP === */
     #title {
-      position: relative;
-      z-index: 2;
-      min-height: 100dvh;
       display: grid;
       place-items: center;
+      min-height: 100vh;
       text-align: center;
-      padding: 40px
+      position: relative;
+      z-index: 2
     }
 
     .hero {
       max-width: 900px;
-      width: 100%;
       padding: 40px;
       border: 1px solid var(--stroke);
       border-radius: 28px;
@@ -62,35 +50,30 @@
     }
 
     .logo {
-      font-weight: 900;
       font-size: 48px;
-      letter-spacing: 1.6px;
+      font-weight: 900;
       background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
-      background-size: 200% 100%;
-      -webkit-background-clip: text;
       background-clip: text;
-      color: transparent
+      -webkit-background-clip: text;
+      color: transparent;
     }
 
     .cta {
       margin-top: 20px;
+      padding: 14px 24px;
       border: none;
-      border-radius: 14px;
-      padding: 16px 28px;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: 900;
+      border-radius: 12px;
       background: linear-gradient(90deg, var(--gold), var(--gold2));
-      color: #111
+      color: #111;
+      font-weight: 900;
+      cursor: pointer
     }
 
-    /* === App === */
+    /* === APP === */
     #app {
-      position: relative;
-      z-index: 1;
       display: none;
       opacity: 0;
-      transition: opacity .5s ease
+      transition: opacity .6s ease
     }
 
     #app.show {
@@ -115,37 +98,48 @@
       font-weight: 900;
       font-size: 20px;
       background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
-      -webkit-background-clip: text;
       background-clip: text;
-      color: transparent
+      -webkit-background-clip: text;
+      color: transparent;
     }
 
     #backTop {
       color: #ffe28a;
-      text-decoration: underline;
       cursor: pointer;
+      text-decoration: underline;
       font-size: 14px
     }
 
-    /* === Panels === */
+    /* === BGM === */
+    #bgmBtn {
+      background: rgba(255, 255, 255, .1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, .25);
+      border-radius: 12px;
+      padding: 8px 14px;
+      font-size: 14px;
+      cursor: pointer
+    }
+
+    /* === Panel === */
     .panel {
       background: rgba(255, 255, 255, .08);
       border: 1px solid rgba(255, 255, 255, .2);
-      border-radius: 16px;
-      padding: 18px;
+      border-radius: 14px;
+      padding: 16px;
       margin-top: 14px
     }
 
     .section-title {
       font-weight: 800;
       color: #ffd36b;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       font-size: 14px
     }
 
     input[type=text] {
       width: 100%;
-      padding: 12px 14px;
+      padding: 10px 14px;
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, .25);
       background: rgba(255, 255, 255, .1);
@@ -185,35 +179,38 @@
       padding: 6px 10px
     }
 
-    /* === Bubble Map === */
+    /* === Listening Map === */
     #bubbleMap {
-      min-height: 300px;
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
       gap: 12px;
-      padding: 12px
+      justify-content: center;
+      min-height: 260px;
+      padding: 8px
     }
 
     .bubble {
-      width: 70px;
-      height: 70px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      text-align: center;
+      font-size: 11px;
       font-weight: 700;
       color: #fff;
-      overflow: hidden;
       cursor: pointer;
-      animation: float 4s ease-in-out infinite
+      background: rgba(255, 200, 80, .35);
+      border: 1px solid rgba(255, 255, 255, .3);
+      transition: .3s;
+      animation: float 5s ease-in-out infinite
     }
 
-    .bubble img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%
+    .bubble:hover {
+      transform: scale(1.15);
+      background: rgba(255, 220, 120, .6)
     }
 
     @keyframes float {
@@ -224,46 +221,35 @@
       }
 
       50% {
-        transform: translateY(-6px)
+        transform: translateY(-8px)
       }
     }
 
-    /* === Bars === */
-    .kpi {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 6px;
-      margin: 6px 0
+    /* === Artist Info === */
+    #artistInfo img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      margin-right: 8px;
+      vertical-align: middle;
+      object-fit: cover
     }
 
-    .bar {
-      height: 10px;
-      background: rgba(255, 255, 255, .12);
+    #artistInfo div {
+      margin-bottom: 8px
+    }
+
+    /* === Music Love === */
+    #loveFill {
+      height: 12px;
       border-radius: 999px;
-      overflow: hidden
-    }
-
-    .fill {
-      height: 100%;
       background: linear-gradient(90deg, #ffcc33, #ff8800);
-      width: 0%
-    }
-
-    .insight {
-      margin-top: 10px;
-      padding: 12px;
-      border-radius: 12px;
-      background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
-      color: #111;
-      font-weight: 700
+      transition: width .6s ease
     }
   </style>
 </head>
 
 <body>
-  <canvas id="fx"></canvas>
-
-  <!-- Top -->
   <section id="title">
     <div class="hero">
       <div class="logo">MusicLens</div>
@@ -272,14 +258,17 @@
     </div>
   </section>
 
-  <!-- App -->
   <section id="app">
     <main class="container">
       <header class="header">
         <div class="titleSmall">MusicLens</div>
-        <div id="backTop">← TOPへ戻る</div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button id="bgmBtn">🔊 BGM ON</button>
+          <div id="backTop">← TOPへ戻る</div>
+        </div>
       </header>
 
+      <!-- Today's Feeling -->
       <section class="panel">
         <div class="section-title">Today's Feeling（いま聴きたいアーティストを入力）</div>
         <input id="inputBox" type="text" placeholder="例：Daft Punk, BLACKPINK, FKJ…">
@@ -290,132 +279,84 @@
         <div id="chips" class="chips"></div>
       </section>
 
+      <!-- Listening Map + Artist Info -->
       <section class="panel">
-        <div class="section-title">Listening Map</div>
+        <div class="section-title">Listening Map（アーティスト分布）</div>
         <div id="bubbleMap"></div>
+        <div id="artistInfo" style="margin-top:10px"></div>
       </section>
 
+      <!-- Music Love -->
       <section class="panel">
-        <div class="section-title">Music Love</div>
-        <div style="text-align:center">
-          <svg viewBox="0 0 200 200" width="200" height="200">
-            <defs>
-              <clipPath id="heartClip">
-                <path
-                  d="M100 175c-3 0-6-.9-8.2-2.9C75 160 30 123 30 85 30 60 50 40 73 40c12 0 24 6 31 15 7-9 19-15 31-15 23 0 43 20 43 45 0 38-45 75-61.8 87.1-2.2 2-5.2 2.9-8.2 2.9z" />
-              </clipPath>
-              <linearGradient id="liquidGrad" x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0%" stop-color="#ff9f1c" />
-                <stop offset="100%" stop-color="#fff3b0" />
-              </linearGradient>
-            </defs>
-            <g clip-path="url(#heartClip)">
-              <rect id="wave" x="0" y="150" width="200" height="50" fill="url(#liquidGrad)"></rect>
-            </g>
-          </svg>
+        <div class="section-title">Music Love（音楽愛）</div>
+        <div class="bar" style="height:12px;background:rgba(255,255,255,.1);border-radius:999px">
+          <div id="loveFill" style="width:0%"></div>
         </div>
+        <div id="lovePercent" style="margin-top:6px;text-align:right;font-size:13px">—%</div>
       </section>
 
-      <section class="panel">
-        <div class="section-title">Your Music Vector</div>
-        <div id="profileBars"></div>
-        <div id="vectorInsight" class="insight" style="display:none"></div>
-      </section>
-
-      <section class="panel">
-        <div class="section-title">Work Strengths</div>
-        <div id="abilities"></div>
-        <div id="abilitiesInsight" class="insight" style="display:none"></div>
-      </section>
-
-      <section class="panel">
-        <div class="section-title">Open-Web Recommendations</div>
-        <div id="recs" class="small">Analyze後に表示されます。</div>
-      </section>
     </main>
   </section>
 
   <script>
-    /* === 背景パーティクル === */
-    (function () {
-      const cvs = document.getElementById('fx'), ctx = cvs.getContext('2d', { alpha: true });
-      let W = 0, H = 0, stars = [];
-      function size() { W = cvs.width = innerWidth; H = cvs.height = innerHeight; }
-      function make() { stars = Array.from({ length: 150 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3, r: 1 + Math.random() * 2, h: 20 + Math.random() * 40, a: .2 + .2 * Math.random() })); }
-      function draw() { ctx.clearRect(0, 0, W, H); for (const s of stars) { s.x += s.vx; s.y += s.vy; if (s.x < 0 || s.x > W) s.vx *= -1; if (s.y < 0 || s.y > H) s.vy *= -1; const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 8); g.addColorStop(0, `hsla(${40 + s.h},100%,60%,${s.a})`); g.addColorStop(1, 'transparent'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 8, 0, 6.283); ctx.fill(); } requestAnimationFrame(draw); }
-      addEventListener('resize', () => { size(); make(); }); size(); make(); draw();
-    })();
+    /* === TOP→APP遷移 === */
+    const title = document.getElementById('title');
+    const app = document.getElementById('app');
+    document.getElementById('startBtn').onclick = () => { title.style.display = 'none'; app.style.display = 'block'; requestAnimationFrame(() => app.classList.add('show')); startBGM(); }
+    document.getElementById('backTop').onclick = () => { app.classList.remove('show'); app.style.display = 'none'; title.style.display = 'grid'; }
 
-    /* === Top→App遷移 === */
-    (function () {
-      const title = document.getElementById('title'), app = document.getElementById('app');
-      document.getElementById('startBtn').addEventListener('click', () => { title.style.display = 'none'; app.style.display = 'block'; requestAnimationFrame(() => app.classList.add('show')); startBGM(); });
-      document.getElementById('backTop').addEventListener('click', () => { app.classList.remove('show'); app.style.display = 'none'; title.style.display = 'grid'; });
-    })();
+    /* === BGM：ハラカミ風メロディ（約1分） === */
+    let AC, master, isPlaying = false;
+    function ensureAC() { if (AC) return; AC = new (window.AudioContext || window.webkitAudioContext)(); master = AC.createGain(); master.connect(AC.destination); master.gain.value = .6; }
+    function startBGM() { ensureAC(); if (isPlaying) return; isPlaying = true; const t0 = AC.currentTime; const seq = [261, 293, 329, 392, 440, 392, 329, 293, 261]; seq.forEach((f, i) => { const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine'; o.frequency.value = f; o.connect(g); g.connect(master); const t = t0 + i * 0.6; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.2, t + 0.1); g.gain.exponentialRampToValueAtTime(0.001, t + 0.55); o.start(t); o.stop(t + 0.6); }); setInterval(() => startBGM(), 60000); }
+    function toggleBGM() { ensureAC(); if (isPlaying) { AC.suspend(); isPlaying = false; bgmBtn.textContent = "🔈 BGM OFF"; } else { AC.resume(); isPlaying = true; bgmBtn.textContent = "🔊 BGM ON"; } }
+    document.getElementById('bgmBtn').onclick = toggleBGM;
 
-    /* === メロディ付きハラカミ風BGM === */
-    let AC, master, isLoop = false;
-    function startBGM() {
-      if (isLoop) return; AC = new (window.AudioContext || window.webkitAudioContext)();
-      master = AC.createGain(); master.connect(AC.destination); master.gain.value = .5;
-      function play() { const base = [220, 246, 261, 293, 329, 392]; base.forEach((f, i) => { const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine'; o.frequency.value = f; o.connect(g); g.connect(master); const t = AC.currentTime + i * 0.4; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.2, t + 0.1); g.gain.exponentialRampToValueAtTime(0.001, t + 0.35); o.start(t); o.stop(t + 0.4); }); }
-      play(); setInterval(play, 2800); isLoop = true;
-    }
-
-    /* === Today's Feeling === */
+    /* === アーティスト入力・リスト === */
     let TOKENS = []; const input = document.getElementById('inputBox'), chips = document.getElementById('chips');
     function renderChips() { chips.innerHTML = TOKENS.map((t, i) => `<span class="chip">${t}<a onclick="remove(${i})">✕</a></span>`).join(''); }
     function add() { if (!input.value.trim()) return; TOKENS.push(input.value.trim()); input.value = ''; renderChips(); }
     function remove(i) { TOKENS.splice(i, 1); renderChips(); }
     document.getElementById('addBtn').onclick = add;
 
-    /* === Listening Map：Apple Watch風 === */
-    function renderBubbles() {
-      const map = document.getElementById('bubbleMap'); map.innerHTML = '';
-      TOKENS.forEach(t => {
-        const b = document.createElement('div'); b.className = 'bubble'; b.style.background = `hsla(${Math.random() * 360},70%,60%,0.8)`; b.textContent = t; map.appendChild(b);
+    /* === Listening Map + Artist Info === */
+    async function fetchArtistInfo(name) {
+      try {
+        const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`); const j = await res.json();
+        const image = j.thumbnail?.source || `https://picsum.photos/seed/${encodeURIComponent(name)}/100/100`;
+        const desc = j.extract?.slice(0, 100) + "…" || "詳細情報なし";
+        const country = ["🇯🇵 Tokyo", "🇺🇸 Los Angeles", "🇫🇷 Paris", "🇬🇧 London", "🇰🇷 Seoul", "🇨🇦 Toronto"];
+        const loc = country[Math.floor(Math.random() * country.length)];
+        return { name, image, desc, loc };
+      } catch (_) { return { name, image: `https://picsum.photos/seed/${encodeURIComponent(name)}/100/100`, desc: "情報取得失敗", loc: "" }; }
+    }
+    async function renderBubbles() {
+      const map = document.getElementById('bubbleMap');
+      const info = document.getElementById('artistInfo');
+      map.innerHTML = ""; info.innerHTML = "";
+      const data = await Promise.all(TOKENS.map(fetchArtistInfo));
+      data.forEach(d => {
+        const b = document.createElement('div');
+        b.className = 'bubble'; b.innerHTML = `<div>${d.name}</div><div style="font-size:10px">${d.loc}</div>`;
+        b.onclick = () => window.open(`https://music.apple.com/us/search?term=${encodeURIComponent(d.name)}`, '_blank');
+        map.appendChild(b);
+        info.innerHTML += `<div><img src="${d.image}"/> <strong>${d.name}</strong>：${d.desc}</div>`;
       });
     }
 
-    /* === Music Love（水面アニメ） === */
-    (function animateWave() {
-      const wave = document.getElementById('wave'); if (!wave) return; let p = 0;
-      function step() { p += .1; const y = 150 + Math.sin(p) * 5; wave.setAttribute('y', y); requestAnimationFrame(step); }
-      step();
-    })();
+    /* === Music Love（多様性スコア） === */
+    function calcLove() {
+      const n = TOKENS.length; const genres = [...new Set(TOKENS.map(t => t.toLowerCase().charAt(0)))].length;
+      const score = Math.min(100, Math.round((n * 5) + (genres * 10)));
+      document.getElementById('loveFill').style.width = score + '%';
+      document.getElementById('lovePercent').textContent = score + '%';
+    }
 
-    /* === 分析 === */
-    function analyze() {
+    /* === Analyze === */
+    document.getElementById('analyzeBtn').onclick = async () => {
       if (!TOKENS.length) return;
-      renderBubbles();
-      // Vector & Work (差を大きくランダム化)
-      const vec = { energy: Math.random(), sophistication: Math.random(), groove: Math.random(), structure: Math.random(), experiment: Math.random(), urban: Math.random(), global: Math.random() };
-      drawProfile(vec); drawAbilities(vec); renderRecs(); TOKENS = []; renderChips();
-    }
-
-    /* === Vector === */
-    function drawProfile(v) {
-      const el = document.getElementById('profileBars'); el.innerHTML = '';
-      for (const [k, val] of Object.entries(v)) { const p = Math.round(val * 100); el.innerHTML += `<div class="kpi"><div>${k}</div><div class="badge">${p}%</div></div><div class="bar"><div class="fill" style="width:${p}%"></div></div>`; }
-      const msgs = ['今日はエネルギッシュに動けそう。', '静かに集中できる時間を大切に。', '新しい発見がありそうな一日。', '仲間とのつながりが深まりそう。', 'リズムに身を任せて、流れに乗ろう。']; document.getElementById('vectorInsight').style.display = 'block'; document.getElementById('vectorInsight').textContent = msgs[Math.floor(Math.random() * msgs.length)];
-    }
-
-    /* === Work === */
-    function drawAbilities(v) {
-      const el = document.getElementById('abilities'); el.innerHTML = '';
-      for (const [k, val] of Object.entries(v)) { const p = Math.round(val * 100); el.innerHTML += `<div class="kpi"><div>${k}</div><div class="badge">${p}%</div></div><div class="bar"><div class="fill" style="width:${p}%"></div></div>`; }
-      const hints = ['協力が成功の鍵。チームと一歩踏み出そう。', '整理力が光る日。情報をまとめよう。', '感性が冴える。少し冒険してみよう。', '冷静に判断できる日。先を読んで行動を。']; document.getElementById('abilitiesInsight').style.display = 'block'; document.getElementById('abilitiesInsight').textContent = hints[Math.floor(Math.random() * hints.length)];
-    }
-
-    /* === Recommendations === */
-    function renderRecs() {
-      const recs = document.getElementById('recs');
-      const pool = ['FKJ', 'Thundercat', 'SZA', 'Robert Glasper', 'Disclosure', 'Khruangbin', 'Bonobo', 'Yaeji', 'Tom Misch', 'Cimafunk', 'Peggy Gou', 'Vulfpeck'];
-      const pick = pool.sort(() => .5 - Math.random()).slice(0, 5);
-      recs.innerHTML = pick.map(p => `<div style="margin:6px 0;display:flex;align-items:center"><img src="https://picsum.photos/seed/${encodeURIComponent(p)}/60/60" style="border-radius:50%;margin-right:6px"/><div>${p}<br><a href="https://music.apple.com/us/search?term=${encodeURIComponent(p)}" target="_blank" style="color:#ffe28a">Apple</a> ／ <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(p + ' official')}" target="_blank" style="color:#ffe28a">YouTube</a></div></div>`).join('');
-    }
-
-    document.getElementById('analyzeBtn').onclick = analyze;
+      await renderBubbles(); calcLove(); TOKENS = []; renderChips();
+    };
   </script>
 </body>
 
