@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MusicLens — Final Integrated Edition</title>
+  <title>MusicLens — Final Integrated Edition v3.1</title>
   <style>
     :root {
       --gold: #ffcc33;
@@ -39,15 +39,12 @@
       pointer-events: none;
     }
 
-    /* === 共通ロゴアニメーション === */
     .logo {
       font-size: 56px;
       font-weight: 900;
-      letter-spacing: .5px;
       background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
       background-size: 300% 100%;
       -webkit-background-clip: text;
-      background-clip: text;
       color: transparent;
       animation: float 6s ease-in-out infinite, shine 5s linear infinite, glow 3s ease-in-out infinite;
     }
@@ -91,17 +88,25 @@
       position: fixed;
       inset: 0;
       display: flex;
-      z-index: 20;
+      z-index: 5;
       overflow: hidden;
+      pointer-events: none;
+      /* ← 通常は無効 */
     }
 
     .door {
       flex: 1;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(20px) saturate(130%);
+      transform: translateX(0);
       transition: transform 3s cubic-bezier(.25, .8, .25, 1);
     }
 
+    body.doors-active #doorContainer {
+      pointer-events: auto;
+    }
+
+    /* ← アニメ中のみ操作ブロック */
     body.doors-open .door.left {
       transform: translateX(-100%)
     }
@@ -172,7 +177,7 @@
     #app.show {
       display: block;
       opacity: 1;
-      transform: translateY(0)
+      transform: translateY(0);
     }
 
     .container {
@@ -200,7 +205,6 @@
     <div class="door left"></div>
     <div class="door right"></div>
   </div>
-  <!-- === APP === -->
   <section id="app">
     <main class="container">
       <header class="header" style="text-align:center;">
@@ -231,6 +235,7 @@
         <div class="section-title">Listening Map</div>
         <div id="mapArea"></div>
       </section>
+
       <section class="panel" style="text-align:center">
         <div class="section-title">Music Love</div>
         <svg id="loveSvg" viewBox="0 0 200 200">
@@ -266,38 +271,48 @@
         <div class="section-title">Music Recommendations</div>
         <div id="recs" class="small">Analyze後に表示されます。</div>
       </section>
-      <section class="panel" style="text-align:center">
-        <button id="bgmBtn" class="btn btn-ghost">BGM: FKJ – TUI ■</button>
+      <section class="panel" style="text-align:center"><button id="bgmBtn" class="btn btn-ghost">BGM: FKJ – TUI
+          ■</button>
       </section>
     </main>
   </section>
   <script>
-    // === Spotify OAuth設定 ===
     const clientId = "9ba439fa2d564681aaabe96e6c4a5fd4";
     const redirectUri = "https://mjmdjr-bit.github.io/MusicLens/callback.html";
     const scopes = ["user-read-private", "user-read-email"];
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scopes.join("%20")}`;
     document.getElementById("spotifyLogin").onclick = () => window.location.href = authUrl;
 
-    // === 扉アニメーション ===
+    // スライド扉アニメーション修正版
     document.getElementById("startBtn").onclick = () => {
-      document.body.classList.add("doors-open");
+      document.body.classList.add("doors-active");
+      setTimeout(() => document.body.classList.add("doors-open"), 50);
       setTimeout(() => {
+        document.body.classList.remove("doors-active");
         document.getElementById("title").style.display = "none";
         const app = document.getElementById("app");
         app.classList.add("show");
-        // BGM自動再生
         playBGM();
       }, 3000);
     };
-
-    // === TOPへ戻る ===
     document.getElementById("backTop").onclick = () => {
       const app = document.getElementById("app");
       app.classList.remove("show");
       document.getElementById("title").style.display = "flex";
       document.body.classList.remove("doors-open");
     };
+
+    // BGM自動再生
+    let bgm = null;
+    const bgmBtn = document.getElementById("bgmBtn");
+    async function playBGM() {
+      if (bgm) return;
+      const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent("FKJ TUI")}&entity=musicTrack&limit=1`);
+      const j = await r.json(); const t = j.results?.[0];
+      bgm = new Audio(t?.previewUrl || ""); bgm.loop = true; bgm.volume = 0.5;
+      try { await bgm.play(); } catch { }
+    }
+    bgmBtn.onclick = () => { if (!bgm) return; if (bgm.paused) { bgm.play(); bgmBtn.textContent = "BGM: FKJ – TUI ■"; } else { bgm.pause(); bgmBtn.textContent = "BGM: FKJ – TUI ▶︎"; } };
     // === 背景パーティクル ===
     (function () {
       const cvs = document.getElementById('fx'), ctx = cvs.getContext('2d', { alpha: true });
@@ -322,7 +337,7 @@
       size(); make(); draw();
     })();
 
-    // === Spotifyユーザー名表示 ===
+    // === Spotifyユーザー情報 ===
     const token = localStorage.getItem("spotify_token") || "";
     async function fetchSpotifyUser() {
       if (!token) return;
@@ -350,7 +365,6 @@
     }
     function remove(i) { TOKENS.splice(i, 1); renderChips(); }
     document.getElementById('addBtn').onclick = add;
-
     // === Progressバー ===
     const progressWrap = document.getElementById('progressWrap');
     const progressFill = document.getElementById('progfill');
@@ -372,7 +386,7 @@
       }, 80);
     }
 
-    // === Listening Map（Spotify画像＋ジャンル別＋ポップアップ） ===
+    // === Listening Map ===
     const mapArea = document.getElementById("mapArea");
     async function fetchArtistData(name) {
       try {
@@ -427,7 +441,7 @@
       else c.textContent = "音楽はあなたの人生そのもの。最高のシンフォニーを。";
     }
 
-    // === Vector / Work Strengths ===
+    // === Vector / Work ===
     function randomVec() {
       return {
         energy: Math.random(), sophistication: Math.random(), groove: Math.random(),
@@ -457,7 +471,7 @@
       }
     }
 
-    // === Recommendations（試聴＋YouTube＋重複除外） ===
+    // === Recommendations（試聴＋YouTubeリンク＋重複除外） ===
     async function fetchITunesPreview(n) {
       try {
         const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(n)}&entity=musicArtist&limit=1`);
@@ -484,19 +498,7 @@
   </div>`).join('');
     }
 
-    // === BGM（FKJ – TUI） ===
-    let bgm = null;
-    const bgmBtn = document.getElementById("bgmBtn");
-    async function playBGM() {
-      if (bgm) return;
-      const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent("FKJ TUI")}&entity=musicTrack&limit=1`);
-      const j = await r.json(); const t = j.results?.[0];
-      bgm = new Audio(t?.previewUrl || ""); bgm.loop = true; bgm.volume = 0.5;
-      try { await bgm.play(); } catch { }
-    }
-    bgmBtn.onclick = () => { if (!bgm) return; if (bgm.paused) { bgm.play(); bgmBtn.textContent = "BGM: FKJ – TUI ■"; } else { bgm.pause(); bgmBtn.textContent = "BGM: FKJ – TUI ▶︎"; } };
-
-    // === Analyze ===
+    // === Analyze統合 ===
     async function analyze() {
       if (!TOKENS.length) return;
       runProgress(async () => {
@@ -519,6 +521,8 @@
   <style>
     body {
       margin: 0;
+      position: relative;
+      z-index: 100;
       background: radial-gradient(circle at center, #0a0a0e, #000);
       display: flex;
       flex-direction: column;
@@ -530,18 +534,18 @@
     }
 
     .loader {
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
       border: 3px solid rgba(255, 215, 100, .6);
       border-top-color: #ffd36b;
       border-radius: 50%;
       animation: spin 1.2s linear infinite;
-      margin-top: 20px;
+      margin-top: 30px;
     }
 
     @keyframes spin {
       to {
-        transform: rotate(360deg);
+        transform: rotate(360deg)
       }
     }
 
@@ -560,7 +564,7 @@
     }
 
     .msg {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 700;
       letter-spacing: 1px;
       animation: pulse 2s ease-in-out infinite;
