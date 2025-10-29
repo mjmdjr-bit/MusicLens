@@ -4,17 +4,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MusicLens — Final Integrated Edition v3.1</title>
+  <title>MusicLens — Final Integrated Edition v3.2</title>
+
   <style>
     :root {
       --gold: #ffcc33;
       --gold2: #ff8800;
       --ink: #0a0a0e;
       --ink2: #151722;
-      --txt: #eef2ff;
-      --glass: rgba(255, 255, 255, .18);
-      --stroke: rgba(255, 255, 255, .22);
-      --spotify: #1DB954;
+      --txt: #f9f9f9;
+      --spotify: #1db954;
+      --accent: #ff9f1c;
     }
 
     * {
@@ -24,10 +24,11 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", Roboto, Segoe UI, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", Roboto, sans-serif;
       background: linear-gradient(180deg, var(--ink), var(--ink2));
       color: var(--txt);
       overflow-x: hidden;
+      min-height: 100vh;
     }
 
     #fx {
@@ -39,9 +40,20 @@
       pointer-events: none;
     }
 
+    /* === Responsive Container === */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 16px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* === Logo Animation === */
     .logo {
-      font-size: 56px;
+      font-size: 60px;
       font-weight: 900;
+      letter-spacing: 1px;
       background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
       background-size: 300% 100%;
       -webkit-background-clip: text;
@@ -79,25 +91,90 @@
       }
 
       50% {
-        filter: drop-shadow(0 0 16px rgba(255, 220, 120, .75))
+        filter: drop-shadow(0 0 18px rgba(255, 220, 120, .75))
       }
     }
 
-    /* === スライド扉 === */
+    /* === TOP Screen === */
+    #title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      position: relative;
+      z-index: 5;
+    }
+
+    .hero {
+      padding: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+    }
+
+    .hero p {
+      margin-top: 8px;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .hero button {
+      margin-top: 14px;
+    }
+
+    .hero small {
+      display: block;
+      margin-top: 18px;
+      opacity: 0.7;
+    }
+
+    /* === Buttons === */
+    button {
+      cursor: pointer;
+      border: none;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .spotify-login {
+      padding: 10px 22px;
+      background: var(--spotify);
+      border-radius: 8px;
+      color: #fff;
+    }
+
+    .spotify-login:hover {
+      background: #1ed760;
+    }
+
+    .cta {
+      padding: 10px 24px;
+      background: linear-gradient(90deg, var(--gold), var(--gold2));
+      color: #111;
+      border-radius: 8px;
+    }
+
+    .cta:hover {
+      filter: brightness(1.2);
+    }
+
+    /* === Sliding Doors === */
     #doorContainer {
       position: fixed;
       inset: 0;
       display: flex;
-      z-index: 5;
-      overflow: hidden;
+      z-index: 3;
       pointer-events: none;
-      /* ← 通常は無効 */
+      overflow: hidden;
     }
 
     .door {
       flex: 1;
       background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px) saturate(130%);
+      backdrop-filter: blur(18px) saturate(130%);
       transform: translateX(0);
       transition: transform 3s cubic-bezier(.25, .8, .25, 1);
     }
@@ -106,71 +183,19 @@
       pointer-events: auto;
     }
 
-    /* ← アニメ中のみ操作ブロック */
     body.doors-open .door.left {
-      transform: translateX(-100%)
+      transform: translateX(-100%);
     }
 
     body.doors-open .door.right {
-      transform: translateX(100%)
+      transform: translateX(100%);
     }
 
-    /* === TOP === */
-    #title {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      position: relative;
-      z-index: 10;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 40px;
-      border: 1px solid var(--stroke);
-      border-radius: 28px;
-      background: linear-gradient(180deg, var(--glass), rgba(255, 255, 255, .07));
-      backdrop-filter: blur(22px);
-    }
-
-    .cta {
-      margin-top: 20px;
-      padding: 14px 24px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(90deg, var(--gold), var(--gold2));
-      color: #111;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .hero small {
-      display: block;
-      margin-top: 14px;
-      color: #ccc
-    }
-
-    .spotify-login {
-      margin-top: 16px;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      background: var(--spotify);
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background .3s;
-    }
-
-    .spotify-login:hover {
-      background: #1ed760;
-    }
-
+    /* === App Section === */
     #app {
       display: none;
       opacity: 0;
-      transform: translateY(50px);
+      transform: translateY(40px);
       transition: opacity 1.8s ease, transform 1.8s ease;
     }
 
@@ -180,10 +205,181 @@
       transform: translateY(0);
     }
 
-    .container {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 20px;
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #userStatus {
+      font-size: 14px;
+      margin-top: 4px;
+      color: #ffd36b;
+    }
+
+    #backTop {
+      color: #ffd36b;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    .section-title {
+      font-weight: 800;
+      color: #ffd36b;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    input[type=text] {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* === Buttons in Panel === */
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 18px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #ffd766, #ff9f1c);
+      color: #111;
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, .1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, .3);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      background: rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .22);
+      border-radius: 999px;
+      padding: 6px 10px;
+    }
+
+    /* === Graph Bars === */
+    .kpi {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      margin: 6px 0;
+    }
+
+    .bar {
+      height: 10px;
+      background: rgba(255, 255, 255, .12);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ffcc33, #ff8800);
+      width: 0%;
+      transition: width 1.2s ease;
+    }
+
+    /* === Music Love (Heart Wave) === */
+    #loveSvg {
+      width: 220px;
+      height: 220px;
+      margin: 20px auto;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, .4));
+    }
+
+    #heartGlass {
+      fill: rgba(255, 182, 193, 0.18);
+      stroke: rgba(255, 215, 0, 0.95);
+      stroke-width: 2.2;
+    }
+
+    #wave {
+      animation: waveMotion 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes waveMotion {
+      0% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    /* === Recommendations === */
+    .recs-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+    }
+
+    .recs-item img {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    /* === BGM === */
+    #bgmBtn {
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      border-radius: 8px;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    #bgmBtn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* === Smooth fade-in === */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeIn 1.5s forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
@@ -191,6 +387,7 @@
 <body>
   <canvas id="fx"></canvas>
 
+  <!-- === TOP SCREEN === -->
   <section id="title">
     <div class="hero">
       <div class="logo">MusicLens</div>
@@ -201,19 +398,22 @@
     </div>
   </section>
 
+  <!-- === SLIDING DOORS === -->
   <div id="doorContainer">
     <div class="door left"></div>
     <div class="door right"></div>
   </div>
+
+  <!-- === MAIN APP === -->
   <section id="app">
     <main class="container">
-      <header class="header" style="text-align:center;">
+      <header class="header">
         <div class="logo">MusicLens</div>
-        <div id="userStatus" style="font-size:14px;margin-top:4px;">🎵 Spotify: 未接続</div>
-        <div id="backTop" style="cursor:pointer;color:#ffd36b;margin-top:6px;">← TOPへ戻る</div>
+        <div id="userStatus">🎵 Spotify: 未接続</div>
+        <div id="backTop">← TOPへ戻る</div>
       </header>
-
-      <section class="panel">
+      <!-- === Today's Feeling === -->
+      <section class="panel fade-in">
         <div class="section-title">Today's Feeling（アーティストを入力）</div>
         <input id="inputBox" type="text" placeholder="例：Daft Punk, Disclosure, FKJ, 7co …（カンマ区切りOK）">
         <div style="margin-top:8px">
@@ -221,6 +421,8 @@
           <button id="analyzeBtn" class="btn btn-primary">Analyze</button>
         </div>
         <div id="chips" class="chips"></div>
+
+        <!-- Progress Bar -->
         <div id="progressWrap" style="display:none;margin-top:10px;">
           <div style="height:10px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;">
             <div id="progfill"
@@ -231,13 +433,17 @@
         </div>
       </section>
 
-      <section class="panel">
-        <div class="section-title">Listening Map</div>
-        <div id="mapArea"></div>
+      <!-- === Listening Map === -->
+      <section class="panel fade-in">
+        <div class="section-title">Listening Map（音楽ジャンル別アーティスト）</div>
+        <div id="mapArea"
+          style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center;text-align:center;">
+        </div>
       </section>
 
-      <section class="panel" style="text-align:center">
-        <div class="section-title">Music Love</div>
+      <!-- === Music Love === -->
+      <section class="panel fade-in" style="text-align:center">
+        <div class="section-title">Music Love（音楽愛）</div>
         <svg id="loveSvg" viewBox="0 0 200 200">
           <defs>
             <clipPath id="heartClip">
@@ -249,41 +455,56 @@
               <stop offset="100%" stop-color="#fff3b0" />
             </linearGradient>
           </defs>
+
+          <!-- Gold outline + pink heart -->
           <use href="#heartGlass" fill="rgba(255,182,193,0.2)" stroke="rgba(255,215,0,0.95)" stroke-width="2.2" />
-          <path id="wave" fill="url(#liquidGrad)" d="M0 150 Q50 145 100 150 T200 150 V200 H0 Z">
-            <animateTransform attributeName="transform" attributeType="XML" type="translate" from="0,0" to="-50,0"
-              dur="2s" repeatCount="indefinite" />
-          </path>
+
+          <!-- Liquid inside heart -->
+          <g clip-path="url(#heartClip)">
+            <path id="wave" fill="url(#liquidGrad)" d="M0 150 Q50 145 100 150 T200 150 V200 H0 Z">
+              <animateTransform attributeName="transform" attributeType="XML" type="translate" from="0,0" to="-50,0"
+                dur="2s" repeatCount="indefinite" />
+            </path>
+          </g>
         </svg>
         <div id="lovePercent" style="font-size:18px;margin-top:6px">—%</div>
         <div id="loveComment" style="font-size:14px;color:#fff;margin-top:4px"></div>
       </section>
 
-      <section class="panel">
+      <!-- === Your Music Vector === -->
+      <section class="panel fade-in">
         <div class="section-title">Your Music Vector</div>
         <div id="profileBars"></div>
       </section>
-      <section class="panel">
+
+      <!-- === Work Strengths === -->
+      <section class="panel fade-in">
         <div class="section-title">Work Strengths</div>
         <div id="abilities"></div>
       </section>
-      <section class="panel">
+
+      <!-- === Recommendations === -->
+      <section class="panel fade-in">
         <div class="section-title">Music Recommendations</div>
         <div id="recs" class="small">Analyze後に表示されます。</div>
       </section>
-      <section class="panel" style="text-align:center"><button id="bgmBtn" class="btn btn-ghost">BGM: FKJ – TUI
-          ■</button>
+
+      <!-- === BGM Button === -->
+      <section class="panel" style="text-align:center">
+        <button id="bgmBtn" class="btn btn-ghost">BGM: FKJ – TUI ■</button>
       </section>
     </main>
   </section>
+
   <script>
+    /* === Spotify認証設定 === */
     const clientId = "9ba439fa2d564681aaabe96e6c4a5fd4";
     const redirectUri = "https://mjmdjr-bit.github.io/MusicLens/callback.html";
     const scopes = ["user-read-private", "user-read-email"];
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scopes.join("%20")}`;
     document.getElementById("spotifyLogin").onclick = () => window.location.href = authUrl;
 
-    // スライド扉アニメーション修正版
+    /* === 扉アニメーション === */
     document.getElementById("startBtn").onclick = () => {
       document.body.classList.add("doors-active");
       setTimeout(() => document.body.classList.add("doors-open"), 50);
@@ -301,24 +522,12 @@
       document.getElementById("title").style.display = "flex";
       document.body.classList.remove("doors-open");
     };
-
-    // BGM自動再生
-    let bgm = null;
-    const bgmBtn = document.getElementById("bgmBtn");
-    async function playBGM() {
-      if (bgm) return;
-      const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent("FKJ TUI")}&entity=musicTrack&limit=1`);
-      const j = await r.json(); const t = j.results?.[0];
-      bgm = new Audio(t?.previewUrl || ""); bgm.loop = true; bgm.volume = 0.5;
-      try { await bgm.play(); } catch { }
-    }
-    bgmBtn.onclick = () => { if (!bgm) return; if (bgm.paused) { bgm.play(); bgmBtn.textContent = "BGM: FKJ – TUI ■"; } else { bgm.pause(); bgmBtn.textContent = "BGM: FKJ – TUI ▶︎"; } };
-    // === 背景パーティクル ===
+    /* === 背景パーティクル === */
     (function () {
       const cvs = document.getElementById('fx'), ctx = cvs.getContext('2d', { alpha: true });
       let W = 0, H = 0, stars = [];
       function size() { W = cvs.width = innerWidth; H = cvs.height = innerHeight; }
-      function make() { stars = Array.from({ length: 160 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25, r: 1 + Math.random() * 2, a: .2 + .2 * Math.random() })); }
+      function make() { stars = Array.from({ length: 150 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3, r: 1 + Math.random() * 2, a: .15 + .25 * Math.random() })); }
       function draw() {
         ctx.clearRect(0, 0, W, H);
         for (const s of stars) {
@@ -328,16 +537,15 @@
           const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 8);
           g.addColorStop(0, `rgba(255,255,200,${s.a})`);
           g.addColorStop(1, 'transparent');
-          ctx.fillStyle = g;
-          ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 8, 0, 6.283); ctx.fill();
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 8, 0, 6.283); ctx.fill();
         }
         requestAnimationFrame(draw);
       }
-      addEventListener('resize', () => { size(); make() });
+      addEventListener('resize', () => { size(); make(); });
       size(); make(); draw();
     })();
 
-    // === Spotifyユーザー情報 ===
+    /* === Spotifyユーザー情報 === */
     const token = localStorage.getItem("spotify_token") || "";
     async function fetchSpotifyUser() {
       if (!token) return;
@@ -350,10 +558,24 @@
     }
     fetchSpotifyUser();
 
-    // === アーティスト入力 ===
+    /* === BGM === */
+    let bgm = null;
+    const bgmBtn = document.getElementById("bgmBtn");
+    async function playBGM() {
+      if (bgm) return;
+      try {
+        const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent("FKJ TUI")}&entity=musicTrack&limit=1`);
+        const j = await r.json(); const t = j.results?.[0];
+        bgm = new Audio(t?.previewUrl || "");
+        bgm.loop = true; bgm.volume = 0.5;
+        await bgm.play();
+      } catch (e) { console.warn("BGM load failed", e); }
+    }
+    bgmBtn.onclick = () => { if (!bgm) return; if (bgm.paused) { bgm.play(); bgmBtn.textContent = "BGM: FKJ – TUI ■"; } else { bgm.pause(); bgmBtn.textContent = "BGM: FKJ – TUI ▶︎"; } };
+
+    /* === 入力管理 === */
     let TOKENS = [];
-    const input = document.getElementById('inputBox');
-    const chips = document.getElementById('chips');
+    const input = document.getElementById('inputBox'), chips = document.getElementById('chips');
     function renderChips() {
       chips.innerHTML = TOKENS.map((t, i) => `<span class="chip">${t}<a onclick="remove(${i})">✕</a></span>`).join('');
     }
@@ -365,19 +587,18 @@
     }
     function remove(i) { TOKENS.splice(i, 1); renderChips(); }
     document.getElementById('addBtn').onclick = add;
-    // === Progressバー ===
-    const progressWrap = document.getElementById('progressWrap');
-    const progressFill = document.getElementById('progfill');
-    const progressText = document.getElementById('progtext');
+
+    /* === Progressバー === */
+    const progressWrap = document.getElementById('progressWrap'),
+      progressFill = document.getElementById('progfill'),
+      progressText = document.getElementById('progtext');
     function runProgress(cb) {
-      progressWrap.style.display = 'block';
-      let p = 0;
+      progressWrap.style.display = 'block'; let p = 0;
       const id = setInterval(() => {
-        p += 3 + Math.random() * 5;
+        p += 4 + Math.random() * 5;
         if (p >= 100) {
           clearInterval(id); p = 100;
-          progressFill.style.width = '100%';
-          progressText.textContent = '100%';
+          progressFill.style.width = '100%'; progressText.textContent = '100%';
           setTimeout(() => { progressWrap.style.display = 'none'; cb(); }, 400);
         } else {
           progressFill.style.width = p + '%';
@@ -386,25 +607,30 @@
       }, 80);
     }
 
-    // === Listening Map ===
+    /* === Listening Map === */
     const mapArea = document.getElementById("mapArea");
     async function fetchArtistData(name) {
       try {
-        const res = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(name)}&type=artist&limit=1`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const j = await res.json();
-        const a = j.artists?.items?.[0];
-        if (!a) return null;
-        return {
-          name: a.name,
-          img: a.images?.[0]?.url || `https://picsum.photos/seed/${encodeURIComponent(name)}/160/160`,
-          genre: a.genres?.[0] || "Other",
-          url: a.external_urls.spotify
-        };
+        if (token) {
+          const r = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(name)}&type=artist&limit=1`, { headers: { Authorization: `Bearer ${token}` } });
+          const j = await r.json(); const a = j.artists?.items?.[0];
+          if (!a) return null;
+          return {
+            name: a.name,
+            img: a.images?.[0]?.url || `https://picsum.photos/seed/${encodeURIComponent(name)}/200/200`,
+            genre: a.genres?.[0] || "Other",
+            url: a.external_urls.spotify
+          };
+        } else {
+          return {
+            name,
+            img: `https://picsum.photos/seed/${encodeURIComponent(name)}/200/200`,
+            genre: "Other",
+            url: `https://www.youtube.com/results?search_query=${encodeURIComponent(name)}`
+          };
+        }
       } catch { return null; }
     }
-
     async function renderMap() {
       mapArea.innerHTML = "";
       const data = await Promise.all(TOKENS.map(t => fetchArtistData(t)));
@@ -422,7 +648,6 @@
         arr.forEach(a => {
           const b = document.createElement("div");
           b.className = "bubble";
-          b.style.color = "#ffcc33";
           b.innerHTML = `<img src="${a.img}"><span>${a.name}</span>`;
           b.onclick = () => window.open(a.url, "_blank");
           gEl.appendChild(b);
@@ -431,9 +656,11 @@
       }
     }
 
-    // === Music Love ===
+    /* === Music Love（ハート波面） === */
     function calcLove() {
-      const score = Math.min(100, Math.round(TOKENS.length * 5));
+      const n = TOKENS.length;
+      const g = [...new Set(TOKENS.map(t => t.toLowerCase()))].length;
+      const score = Math.min(100, Math.round(n * 5 + g * 10));
       document.getElementById("lovePercent").textContent = score + "%";
       const c = document.getElementById("loveComment");
       if (score < 40) c.textContent = "まだまだ音楽の旅は始まったばかり。";
@@ -441,43 +668,86 @@
       else c.textContent = "音楽はあなたの人生そのもの。最高のシンフォニーを。";
     }
 
-    // === Vector / Work ===
+    /* === Vector / Work Strengths === */
     function randomVec() {
       return {
-        energy: Math.random(), sophistication: Math.random(), groove: Math.random(),
-        structure: Math.random(), experiment: Math.random(), urban: Math.random(), global: Math.random()
+        energy: Math.random(),
+        sophistication: Math.random(),
+        groove: Math.random(),
+        structure: Math.random(),
+        experiment: Math.random(),
+        urban: Math.random(),
+        global: Math.random()
       };
     }
     function drawProfile(v) {
-      const el = document.getElementById("profileBars"); el.innerHTML = "";
-      const labels = { energy: "エネルギー", sophistication: "洗練", groove: "ノリ", structure: "構成力", experiment: "実験性", urban: "都会感", global: "グローバル感" };
+      const el = document.getElementById("profileBars");
+      el.innerHTML = "";
+      const labels = {
+        energy: "エネルギー",
+        sophistication: "洗練",
+        groove: "ノリ",
+        structure: "構成力",
+        experiment: "実験性",
+        urban: "都会感",
+        global: "グローバル感"
+      };
       for (const [k, val] of Object.entries(v)) {
         const pct = Math.round(val * 100);
-        el.innerHTML += `<div class="kpi"><div>${labels[k]}</div><div>${pct}%</div></div>
-                   <div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
+        const bar = document.createElement("div");
+        bar.className = "bar";
+        const fill = document.createElement("div");
+        fill.className = "fill";
+        fill.style.width = "0%";
+        bar.appendChild(fill);
+        el.innerHTML += `<div class="kpi"><div>${labels[k]}</div><div>${pct}%</div></div>`;
+        el.appendChild(bar);
+        setTimeout(() => { fill.style.width = pct + "%"; }, 200);
       }
     }
     function drawAbilities(v) {
-      const el = document.getElementById("abilities"); el.innerHTML = "";
+      const el = document.getElementById("abilities");
+      el.innerHTML = "";
       const factors = {
-        collaboration: (v.groove + v.urban) / 2, planning: (v.structure + v.sophistication) / 2,
-        creativity: (v.experiment + v.energy) / 2, empathy: (v.urban + v.global) / 2, leadership: (v.energy + v.structure) / 2
+        collaboration: (v.groove + v.urban) / 2,
+        planning: (v.structure + v.sophistication) / 2,
+        creativity: (v.experiment + v.energy) / 2,
+        empathy: (v.urban + v.global) / 2,
+        leadership: (v.energy + v.structure) / 2
       };
-      const labels = { collaboration: "協働力", planning: "計画力", creativity: "創造力", empathy: "共感力", leadership: "リーダーシップ" };
+      const labels = {
+        collaboration: "協働力",
+        planning: "計画力",
+        creativity: "創造力",
+        empathy: "共感力",
+        leadership: "リーダーシップ"
+      };
       for (const [k, val] of Object.entries(factors)) {
         const pct = Math.round(val * 100);
-        el.innerHTML += `<div class="kpi"><div>${labels[k]}</div><div>${pct}%</div></div>
-                   <div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
+        const bar = document.createElement("div");
+        bar.className = "bar";
+        const fill = document.createElement("div");
+        fill.className = "fill";
+        fill.style.width = "0%";
+        bar.appendChild(fill);
+        el.innerHTML += `<div class="kpi"><div>${labels[k]}</div><div>${pct}%</div></div>`;
+        el.appendChild(bar);
+        setTimeout(() => { fill.style.width = pct + "%"; }, 200);
       }
     }
 
-    // === Recommendations（試聴＋YouTubeリンク＋重複除外） ===
+    /* === Recommendations（試聴＋YouTubeリンク＋重複防止） === */
     async function fetchITunesPreview(n) {
       try {
         const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(n)}&entity=musicArtist&limit=1`);
-        const j = await r.json(); const a = j.results?.[0];
-        return a ? { name: a.artistName, art: a.artworkUrl100?.replace("100x100", "200x200"), preview: a.artistLinkUrl } : {};
-      } catch { return {} }
+        const j = await r.json();
+        const a = j.results?.[0];
+        return a ? {
+          name: a.artistName,
+          art: a.artworkUrl100?.replace("100x100", "200x200"),
+          preview: a.artistLinkUrl
+        } : {};
+      } catch { return {}; }
     }
     async function renderRecs() {
       const exclude = new Set(TOKENS.map(t => t.toLowerCase()));
@@ -487,30 +757,38 @@
         if (r.name && !exclude.has(r.name.toLowerCase())) recs.push(r);
       }
       const recEl = document.getElementById("recs");
+      if (!recs.length) {
+        recEl.innerHTML = "<p>Spotifyログイン後、または入力アーティストに関連するレコメンドが表示されます。</p>";
+        return;
+      }
       recEl.innerHTML = recs.map(a => `
-  <div style="display:flex;align-items:center;gap:10px;margin:8px 0">
-    <img src="${a.art}" style="width:50px;height:50px;border-radius:8px;object-fit:cover"/>
-    <div><strong>${a.name}</strong><br>
+  <div class="recs-item">
+    <img src="${a.art}" alt="${a.name}">
+    <div>
+      <strong>${a.name}</strong><br>
       <a href="${a.preview}" target="_blank" style="color:#ffe28a">Apple</a> /
-      <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(a.name + ' official')}"
-         target="_blank" style="color:#ff6">YouTube</a>
+      <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(a.name + ' official')}" target="_blank" style="color:#ff6">YouTube</a>
     </div>
   </div>`).join('');
     }
 
-    // === Analyze統合 ===
+    /* === Analyze 統合処理 === */
     async function analyze() {
       if (!TOKENS.length) return;
       runProgress(async () => {
         await renderMap();
         calcLove();
-        const v = randomVec(); drawProfile(v); drawAbilities(v);
+        const v = randomVec();
+        drawProfile(v);
+        drawAbilities(v);
         await renderRecs();
       });
     }
     document.getElementById("analyzeBtn").onclick = analyze;
   </script>
 </body>
+
+</html>
 <!doctype html>
 <html lang="ja">
 
@@ -521,8 +799,6 @@
   <style>
     body {
       margin: 0;
-      position: relative;
-      z-index: 100;
       background: radial-gradient(circle at center, #0a0a0e, #000);
       display: flex;
       flex-direction: column;
@@ -531,6 +807,7 @@
       height: 100vh;
       color: #ffd36b;
       font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+      z-index: 100;
     }
 
     .loader {
@@ -582,7 +859,7 @@
       localStorage.setItem("spotify_token", token);
       setTimeout(() => window.location.href = "https://mjmdjr-bit.github.io/MusicLens/", 2500);
     } else {
-      document.body.innerHTML = "<h2 style='color:#f77'>認証エラー。設定を確認してください。</h2>";
+      document.body.innerHTML = "<h2 style='color:#f77'>認証エラー。Spotify DeveloperのRedirect URIを確認してください。</h2>";
     }
   </script>
 </body>
