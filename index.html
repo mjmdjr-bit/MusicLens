@@ -724,6 +724,54 @@
           });
         }
         document.getElementById("analyzeBtn").onclick = analyze;
+        /* === 入力管理修正版 === */
+        document.addEventListener("DOMContentLoaded", () => {
+
+          let TOKENS = [];
+          const input = document.getElementById("inputBox");
+          const chips = document.getElementById("chips");
+          const addBtn = document.getElementById("addBtn");
+          const analyzeBtn = document.getElementById("analyzeBtn");
+
+          function renderChips() {
+            chips.innerHTML = TOKENS.map((t, i) =>
+              `<span class="chip">${t}<a onclick="remove(${i})">✕</a></span>`
+            ).join("");
+          }
+
+          function addArtists() {
+            if (!input.value.trim()) return;
+            const raw = input.value.replace(/，/g, ",");
+            const items = raw.split(",").map(t => t.trim()).filter(Boolean);
+            TOKENS.push(...items);
+            input.value = "";
+            renderChips();
+            console.log("🎵 現在のTOKENS:", TOKENS);
+          }
+
+          window.remove = function (i) {
+            TOKENS.splice(i, 1);
+            renderChips();
+          };
+
+          addBtn.addEventListener("click", addArtists);
+          analyzeBtn.addEventListener("click", () => {
+            if (!TOKENS.length) {
+              alert("アーティストを追加してください。");
+              return;
+            }
+            runProgress(async () => {
+              await renderMap();
+              calcLove();
+              const v = randomVec();
+              drawProfile(v);
+              drawAbilities(v);
+              await renderRecs();
+              window.scrollTo(0, 0);
+            });
+          });
+        });
+
       </script>
 </body>
 
