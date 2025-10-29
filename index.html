@@ -59,13 +59,50 @@
     }
 
     .logo {
-      font-size: 48px;
+      font-size: 56px;
       font-weight: 900;
+      letter-spacing: .5px;
       background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
-      background-clip: text;
+      background-size: 300% 100%;
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
-      animation: float 6s ease-in-out infinite
+      animation: float 6s ease-in-out infinite, shine 5s linear infinite, glow 3s ease-in-out infinite;
+      text-shadow: 0 0 0 rgba(255, 255, 200, 0);
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-6px)
+      }
+    }
+
+    @keyframes shine {
+      0% {
+        background-position: 0% 50%
+      }
+
+      100% {
+        background-position: 300% 50%
+      }
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 0 rgba(255, 220, 120, .0))
+      }
+
+      50% {
+        filter: drop-shadow(0 0 16px rgba(255, 220, 120, .75))
+      }
     }
 
     .cta {
@@ -85,19 +122,7 @@
       color: #ccc
     }
 
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0)
-      }
-
-      50% {
-        transform: translateY(-6px)
-      }
-    }
-
-    /* === APP === */
+    /* === APP 共通 === */
     #app {
       display: none;
       opacity: 0;
@@ -126,8 +151,8 @@
       font-weight: 900;
       font-size: 20px;
       background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
-      background-clip: text;
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent
     }
 
@@ -138,7 +163,7 @@
       font-size: 14px
     }
 
-    /* === Panel === */
+    /* Panels */
     .panel {
       background: rgba(255, 255, 255, .08);
       border: 1px solid rgba(255, 255, 255, .2);
@@ -196,7 +221,7 @@
       padding: 6px 10px
     }
 
-    /* === Progress === */
+    /* Progress */
     #progressWrap {
       margin-top: 10px;
       display: none
@@ -222,7 +247,7 @@
       text-align: right
     }
 
-    /* === Listening Map === */
+    /* Listening Map */
     .genreGroup {
       display: flex;
       flex-wrap: wrap;
@@ -236,7 +261,9 @@
       font-weight: 800;
       font-size: 16px;
       color: #ffd36b;
-      margin: 10px 0
+      margin: 10px 0;
+      text-transform: uppercase;
+      letter-spacing: .4px
     }
 
     .bubble {
@@ -246,17 +273,19 @@
       align-items: flex-end;
       justify-content: center;
       color: #fff;
-      font-weight: 700;
       text-align: center;
       cursor: pointer;
-      box-shadow: 0 0 25px rgba(255, 255, 255, .3);
       overflow: hidden;
+      width: 120px;
+      height: 120px;
+      border: 2px solid currentColor;
+      box-shadow: 0 0 20px currentColor;
       animation: floaty 6s ease-in-out infinite alternate;
-      transition: transform .4s ease;
+      transition: transform .25s ease;
     }
 
     .bubble:hover {
-      transform: scale(1.15);
+      transform: scale(1.08)
     }
 
     .bubble::after {
@@ -265,17 +294,22 @@
       inset: 0;
       border-radius: 50%;
       background: radial-gradient(circle, rgba(255, 255, 255, .3) 0%, transparent 70%);
-      z-index: 0;
+      z-index: 0
     }
 
     .bubble span {
       position: absolute;
       bottom: 6px;
+      left: 6px;
+      right: 6px;
       font-size: 11px;
+      font-weight: 700;
       z-index: 1;
-      background: rgba(0, 0, 0, .3);
+      background: rgba(0, 0, 0, .35);
       border-radius: 8px;
       padding: 2px 4px;
+      text-transform: uppercase;
+      letter-spacing: .5px
     }
 
     .bubble img {
@@ -296,7 +330,7 @@
       }
     }
 
-    /* === Music Love === */
+    /* Music Love：ピンクすりガラス＋金色アウトライン＋液面 */
     #loveSvg {
       width: 220px;
       height: 220px;
@@ -306,8 +340,8 @@
 
     #heartGlass {
       fill: rgba(255, 182, 193, 0.2);
-      stroke: rgba(255, 220, 240, 0.9);
-      stroke-width: 2.5;
+      stroke: rgba(255, 215, 0, 0.95);
+      stroke-width: 2.2;
       backdrop-filter: blur(12px);
     }
 
@@ -329,7 +363,7 @@
       }
     }
 
-    /* === Bars === */
+    /* Bars */
     .kpi {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -384,7 +418,7 @@
       <!-- Today's Feeling -->
       <section class="panel">
         <div class="section-title">Today's Feeling（いま聴きたいアーティストを入力）</div>
-        <input id="inputBox" type="text" placeholder="例：Daft Punk, BLACKPINK, FKJ…" maxlength="50">
+        <input id="inputBox" type="text" placeholder='例：Daft Punk, Disclosure, 7co,…（カンマ区切りOK）' maxlength="300">
         <div style="margin-top:8px">
           <button id="addBtn" class="btn btn-ghost">Add</button>
           <button id="analyzeBtn" class="btn btn-primary">Analyze</button>
@@ -418,6 +452,7 @@
               <stop offset="100%" stop-color="#fff3b0" />
             </linearGradient>
           </defs>
+          <use href="#heartGlass" />
           <g clip-path="url(#heartClip)">
             <rect id="liquid" x="20" y="150" width="160" height="60" fill="url(#liquidGrad)" />
           </g>
@@ -440,13 +475,48 @@
         <div id="abilitiesInsight" class="insight" style="display:none"></div>
       </section>
 
-      <!-- Recommendation -->
+      <!-- Recommendations -->
       <section class="panel">
         <div class="section-title">Music Recommendations</div>
         <div id="recs" class="small">Analyze後に表示されます。</div>
       </section>
     </main>
   </section>
+
+  <!-- Popup（アーティスト詳細） -->
+  <div id="popup"
+    style="display:none;position:fixed;inset:0;z-index:50;align-items:center;justify-content:center;background:rgba(0,0,0,.6)">
+    <div id="popBox"
+      style="max-width:360px;width:92%;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.3);border-radius:14px;padding:16px;text-align:center">
+      <img id="popImg" src="" alt="" style="width:110px;height:110px;border-radius:50%;object-fit:cover" />
+      <div id="popName" style="font-weight:800;margin:8px 0 4px"></div>
+      <div id="popDesc" style="font-size:13px;margin-bottom:10px;line-height:1.5"></div>
+      <div style="display:flex;gap:12px;justify-content:center;align-items:center">
+        <!-- Apple Music ロゴ -->
+        <a id="popApple" target="_blank" aria-label="Apple Music" title="Apple Music">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#ff2d55">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M16 7l-6 1.2V15a2 2 0 11-1-1.732V7.8L16 6v6a2 2 0 11-1-1.732V7z" fill="#fff" />
+          </svg>
+        </a>
+        <!-- YouTube ロゴ -->
+        <a id="popYT" target="_blank" aria-label="YouTube" title="YouTube">
+          <svg width="30" height="30" viewBox="0 0 24 24">
+            <path fill="#FF0000"
+              d="M23.5 6.2s-.2-1.6-.8-2.3c-.8-.8-1.7-.8-2.1-.9C17.2 2.6 12 2.6 12 2.6h0s-5.2 0-8.6.4c-.4 0-1.3.1-2.1.9C.7 4.6.5 6.2.5 6.2S.3 8.1.3 10v1.9c0 1.9.2 3.8.2 3.8s.2 1.6.8 2.3c.8.8 1.9.8 2.3.9 1.7.2 7.4.4 7.4.4s5.2 0 8.6-.4c.4-.1 1.3-.1 2.1-.9.6-.7.8-2.3.8-2.3s.2-1.9.2-3.8V10c0-1.9-.2-3.8-.2-3.8z" />
+            <path fill="#fff" d="M9.8 8.5l6 3.5-6 3.5z" />
+          </svg>
+        </a>
+        <!-- Wikipedia ロゴ -->
+        <a id="popWiki" target="_blank" aria-label="Wikipedia" title="Wikipedia">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff">
+            <path d="M4 5h3l4 11 4-11h3l-5 14h-3z" />
+          </svg>
+        </a>
+      </div>
+      <button id="popClose" class="btn btn-ghost" style="margin-top:10px">閉じる</button>
+    </div>
+  </div>
   <script>
     /* === ページ遷移 === */
     document.addEventListener("DOMContentLoaded", () => {
@@ -460,162 +530,176 @@
       const cvs = document.getElementById('fx'), ctx = cvs.getContext('2d', { alpha: true });
       let W = 0, H = 0, stars = [];
       function size() { W = cvs.width = innerWidth; H = cvs.height = innerHeight; }
-      function make() { stars = Array.from({ length: 150 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25, r: 1 + Math.random() * 2, a: .2 + .2 * Math.random() })); }
-      function draw() {
-        ctx.clearRect(0, 0, W, H);
-        for (const s of stars) {
-          s.x += s.vx; s.y += s.vy;
-          if (s.x < 0 || s.x > W) s.vx *= -1;
-          if (s.y < 0 || s.y > H) s.vy *= -1;
-          const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 8);
-          g.addColorStop(0, `rgba(255,255,200,${s.a})`);
-          g.addColorStop(1, 'transparent');
-          ctx.fillStyle = g;
-          ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 8, 0, 6.283); ctx.fill();
-        }
-        requestAnimationFrame(draw);
-      }
-      addEventListener('resize', () => { size(); make(); });
-      size(); make(); draw();
+      function make() { stars = Array.from({ length: 160 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25, r: 1 + Math.random() * 2, a: .2 + .2 * Math.random() })); }
+      function draw() { ctx.clearRect(0, 0, W, H); for (const s of stars) { s.x += s.vx; s.y += s.vy; if (s.x < 0 || s.x > W) s.vx *= -1; if (s.y < 0 || s.y > H) s.vy *= -1; const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 8); g.addColorStop(0, `rgba(255,255,200,${s.a})`); g.addColorStop(1, 'transparent'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 8, 0, 6.283); ctx.fill(); } requestAnimationFrame(draw); } addEventListener('resize', () => { size(); make(); }); size(); make(); draw();
     })();
 
-    /* === 入力 === */
-    let TOKENS = [];
-    const input = document.getElementById('inputBox'), chips = document.getElementById('chips');
+    /* === 入力（CSV対応：カンマ区切り） === */
+    let TOKENS = []; const input = document.getElementById('inputBox'), chips = document.getElementById('chips');
     function renderChips() { chips.innerHTML = TOKENS.map((t, i) => `<span class="chip">${t}<a onclick="remove(${i})">✕</a></span>`).join(''); }
-    function add() { if (!input.value.trim()) return; if (TOKENS.length >= 20) return; TOKENS.push(input.value.trim()); input.value = ''; renderChips(); }
+    function addFromText(text) { const parts = (text || '').split(',').map(s => s.trim()).filter(Boolean); for (const p of parts) { if (TOKENS.length >= 20) break; if (!TOKENS.includes(p)) TOKENS.push(p); } renderChips(); }
+    function add() { if (!input.value.trim()) return; addFromText(input.value); input.value = ''; }
     function remove(i) { TOKENS.splice(i, 1); renderChips(); }
     document.getElementById('addBtn').onclick = add;
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } });
 
     /* === 進捗バー === */
     const progressWrap = document.getElementById('progressWrap'), progressFill = document.getElementById('progfill'), progressText = document.getElementById('progtext');
-    function runProgress(cb) {
-      progressWrap.style.display = 'block';
-      let p = 0;
-      const id = setInterval(() => {
-        p += 4 + Math.random() * 5;
-        if (p >= 100) {
-          clearInterval(id);
-          p = 100;
-          progressFill.style.width = '100%';
-          progressText.textContent = '100%';
-          setTimeout(() => { progressWrap.style.display = 'none'; cb(); }, 300);
-        } else {
-          progressFill.style.width = p + '%';
-          progressText.textContent = Math.floor(p) + '%';
-        }
-      }, 80);
-    }
+    function runProgress(cb) { progressWrap.style.display = 'block'; let p = 0; const id = setInterval(() => { p += 4 + Math.random() * 5; if (p >= 100) { clearInterval(id); p = 100; progressFill.style.width = '100%'; progressText.textContent = '100%'; setTimeout(() => { progressWrap.style.display = 'none'; cb(); }, 300); } else { progressFill.style.width = p + '%'; progressText.textContent = Math.floor(p) + '%'; } }, 80); }
 
-    /* === ジャンル === */
+    /* === ジャンル関数 === */
     const genreColors = { Pop: '#ff66cc', Jazz: '#66ccff', Rock: '#ff6666', Electronic: '#aa88ff', World: '#77ff88', Other: '#ffd966' };
-    function genreOf(n) {
-      n = n.toLowerCase();
-      if (/jazz/.test(n)) return 'Jazz';
-      if (/rock|metal/.test(n)) return 'Rock';
-      if (/pop/.test(n)) return 'Pop';
-      if (/elect|techno|edm/.test(n)) return 'Electronic';
-      if (/world|latin|afro/.test(n)) return 'World';
-      return 'Other';
+    function genreOf(n) { n = (n || '').toLowerCase(); if (/jazz/.test(n)) return 'Jazz'; if (/rock|metal/.test(n)) return 'Rock'; if (/pop/.test(n)) return 'Pop'; if (/elect|techno|edm/.test(n)) return 'Electronic'; if (/world|latin|afro/.test(n)) return 'World'; return 'Other'; }
+
+    /* === Popup制御 === */
+    const popup = document.getElementById('popup'), popImg = document.getElementById('popImg'), popName = document.getElementById('popName'),
+      popDesc = document.getElementById('popDesc'), popApple = document.getElementById('popApple'),
+      popYT = document.getElementById('popYT'), popWiki = document.getElementById('popWiki'),
+      popClose = document.getElementById('popClose'); popClose.onclick = () => popup.style.display = 'none';
+
+    /* === Spotify 接続（Bearerを入れてね） === */
+    const SPOTIFY_TOKEN = "YOUR_SPOTIFY_BEARER_TOKEN";  // ← ここに Bearer トークン
+    const SP_BASE = "https://api.spotify.com/v1";
+
+    async function spFetch(path) {
+      if (!SPOTIFY_TOKEN) throw new Error("No Spotify token");
+      const r = await fetch(SP_BASE + path, { headers: { Authorization: `Bearer ${SPOTIFY_TOKEN}` } });
+      if (!r.ok) throw new Error("Spotify API error"); return r.json();
+    }
+    async function spSearchArtistByName(name) {
+      try {
+        const j = await spFetch(`/search?type=artist&limit=1&q=${encodeURIComponent(name)}`);
+        const a = j.artists.items[0]; if (!a) return null;
+        const img = a.images?.[0]?.url || ""; return { id: a.id, name: a.name, genres: a.genres || [], image: img, followers: a.followers?.total || 0 };
+      }
+      catch (e) { return null }
+    }
+    async function spRelatedArtists(id) {
+      try { const j = await spFetch(`/artists/${id}/related-artists`); return (j.artists || []).map(a => ({ id: a.id, name: a.name, genres: a.genres || [], image: a.images?.[0]?.url || "" })) }
+      catch (e) { return [] }
+    }
+    async function spArtistTopTracksFeatures(id) {
+      try {
+        const top = await spFetch(`/artists/${id}/top-tracks?market=US`);
+        const ids = (top.tracks || []).slice(0, 5).map(t => t.id);
+        if (!ids.length) return null;
+        const feats = await spFetch(`/audio-features?ids=${ids.join(',')}`);
+        const arr = (feats.audio_features || []).filter(Boolean);
+        if (!arr.length) return null;
+        // 平均化
+        const avg = k => arr.reduce((s, x) => s + (x[k] || 0), 0) / arr.length;
+        return {
+          energy: avg('energy'),
+          danceability: avg('danceability'),
+          valence: avg('valence'),
+          acousticness: avg('acousticness'),
+          instrumentalness: avg('instrumentalness'),
+          tempo: avg('tempo'),
+          liveness: avg('liveness'),
+          speechiness: avg('speechiness')
+        };
+      } catch (e) { return null }
     }
 
-    /* === Map === */
+    /* === Wikipedia / iTunes フォールバック === */
+    async function fetchWikiSummary(n) { try { const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(n)}`); const j = await r.json(); return { image: j.thumbnail?.source || "", desc: j.extract?.slice(0, 140) + "…" || "情報なし" } } catch { return { image: "", desc: "情報取得失敗" } } }
+    async function fetchITunesPreview(n) { try { const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(n)}&entity=musicTrack&limit=1`); const j = await r.json(); const t = j.results?.[0]; return { preview: t?.previewUrl || "", art: t?.artworkUrl100?.replace('100x100', '200x200') || "" } } catch { return { preview: "", art: "" } } }
+
+    /* === Map（ジャンル別分散・写真＋名前・ポップアップ） === */
     const mapArea = document.getElementById('mapArea');
-    async function fetchArtistData(n) {
-      try {
-        const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(n)}`);
-        const j = await r.json();
-        return {
-          img: j.thumbnail?.source || `https://picsum.photos/seed/${encodeURIComponent(n)}/120/120`,
-          desc: j.extract?.slice(0, 100) + "…" || "情報なし"
-        };
-      } catch {
-        return { img: `https://picsum.photos/seed/${encodeURIComponent(n)}/120/120`, desc: "情報取得失敗" };
-      }
+    async function fetchArtistCard(name) {
+      // 1) Spotify優先
+      const sp = await spSearchArtistByName(name);
+      let img = "", desc = ""; let id = null; let genres = [];
+      if (sp) { img = sp.image; id = sp.id; genres = sp.genres; }
+      // 2) Wiki補完
+      if (!img) { const w = await fetchWikiSummary(name); img = w.image || img; desc = w.desc; }
+      if (!desc) { const w = await fetchWikiSummary(name); desc = w.desc; }
+      return { name, img: img || `https://picsum.photos/seed/${encodeURIComponent(name)}/160/160`, desc, id, genres };
     }
     async function renderMap() {
       mapArea.innerHTML = "";
-      const groups = {};
-      const data = await Promise.all(TOKENS.map(async n => {
-        const g = genreOf(n); const d = await fetchArtistData(n);
-        return { name: n, genre: g, img: d.img, desc: d.desc };
-      }));
-      data.forEach(a => {
-        if (!groups[a.genre]) groups[a.genre] = [];
-        groups[a.genre].push(a);
+      const cards = await Promise.all(TOKENS.map(n => fetchArtistCard(n)));
+      const byGenre = {};
+      cards.forEach(a => {
+        const g = a.genres?.[0] ? genreOf(a.genres[0]) : genreOf(a.name);
+        (byGenre[g] ??= []).push(a);
       });
-      for (const [genre, arr] of Object.entries(groups)) {
-        const gEl = document.createElement('div');
-        gEl.className = 'genreGroup';
-        const title = document.createElement('div');
-        title.className = 'genreTitle';
-        title.textContent = genre;
-        gEl.appendChild(title);
+      for (const [g, arr] of Object.entries(byGenre)) {
+        const gEl = document.createElement('div'); gEl.className = 'genreGroup';
+        const title = document.createElement('div'); title.className = 'genreTitle'; title.textContent = g; gEl.appendChild(title);
         arr.forEach(a => {
-          const b = document.createElement('div');
           const size = 80 + Math.random() * 60;
-          b.className = 'bubble';
-          b.style.width = b.style.height = size + 'px';
-          b.style.background = genreColors[genre];
+          const b = document.createElement('div');
+          b.className = 'bubble'; b.style.width = b.style.height = size + 'px';
+          b.style.color = genreColors[g];
           b.innerHTML = `<img src="${a.img}"><span>${a.name}</span>`;
-          b.onclick = () => window.open(`https://music.apple.com/us/search?term=${encodeURIComponent(a.name)}`, '_blank');
+          b.onclick = () => {
+            popImg.src = a.img; popName.textContent = a.name; popDesc.textContent = a.desc || "";
+            popApple.href = `https://music.apple.com/us/search?term=${encodeURIComponent(a.name)}`;
+            popYT.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(a.name + ' official')}`;
+            popWiki.href = `https://en.wikipedia.org/wiki/${encodeURIComponent(a.name)}`;
+            popup.style.display = 'flex';
+          };
           gEl.appendChild(b);
         });
         mapArea.appendChild(gEl);
       }
     }
 
-    /* === Music Love === */
+    /* === Music Love（ピンクすりガラス＋金色枠、液面で充填） === */
     function calcLove() {
       const n = TOKENS.length;
       const g = [...new Set(TOKENS.map(t => genreOf(t)))].length;
       const score = Math.min(100, Math.round(n * 5 + g * 10));
       document.getElementById('lovePercent').textContent = score + '%';
-      document.getElementById('liquid').setAttribute('y', 180 - score * 1.3);
+      const y = 180 - score * 1.3; document.getElementById('liquid').setAttribute('y', Math.max(20, Math.min(180, y)));
       const c = document.getElementById('loveComment');
       if (score < 40) c.textContent = "まだまだ音楽の旅は始まったばかり。";
       else if (score < 70) c.textContent = "音楽を通じて、あなたの世界が広がっています。";
       else c.textContent = "音楽はあなたの人生そのもの。最高のシンフォニーを。";
     }
 
-    /* === Vector・Work・Recommendations === */
-    function randomVec() {
+    /* === Vector / Work：Spotify Audio Features から算出 === */
+    function computeVectorFromFeatures(f) {
+      // f: {energy,danceability,valence,acousticness,instrumentalness,tempo,liveness,speechiness}
+      if (!f) return null;
+      const tempoNorm = Math.min(1, Math.max(0, (f.tempo - 60) / 120)); // 60-180 BPM → 0-1
       return {
-        energy: Math.random(), sophistication: Math.random(), groove: Math.random(),
-        structure: Math.random(), experiment: Math.random(), urban: Math.random(), global: Math.random()
+        energy: f.energy,
+        sophistication: (f.instrumentalness + f.acousticness) / 2,
+        groove: f.danceability,
+        structure: (1 - Math.abs(0.5 - f.danceability)) * 0.4 + tempoNorm * 0.6, // 簡易
+        experiment: (f.liveness + f.speechiness) / 2,
+        urban: (f.valence + f.danceability) / 2,
+        global: 0.5 // 簡易（将来：多言語・多ジャンル量で補正）
       };
     }
-
+    function avgVector(vs) {
+      const keys = ["energy", "sophistication", "groove", "structure", "experiment", "urban", "global"];
+      const out = {}; keys.forEach(k => out[k] = 0);
+      vs.forEach(v => keys.forEach(k => out[k] += v[k] || 0));
+      keys.forEach(k => out[k] /= vs.length || 1); return out;
+    }
     function drawProfile(v) {
-      const el = document.getElementById('profileBars');
-      el.innerHTML = '';
-      const labels = {
-        energy: "エネルギー", sophistication: "洗練", groove: "ノリ",
-        structure: "構成力", experiment: "実験性", urban: "都会感", global: "グローバル感"
-      };
-      for (const [k, val] of Object.entries(v)) {
-        const pct = Math.round(val * 100);
-        el.innerHTML += `
-        <div class="kpi">
-          <div>${labels[k]}</div><div class="badge">${pct}%</div>
-        </div>
-        <div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
-      }
+      const el = document.getElementById('profileBars'); el.innerHTML = '';
+      const labels = { energy: "エネルギー", sophistication: "洗練", groove: "ノリ", structure: "構成力", experiment: "実験性", urban: "都会感", global: "グローバル感" };
+      Object.entries(v).forEach(([k, val]) => {
+        const pct = Math.round((val || 0) * 100);
+        el.innerHTML += `<div class="kpi"><div>${labels[k]}</div><div class="badge">${pct}%</div></div><div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
+      });
       const msgs = [
-        "今日は自分の感性を信じて動ける日。",
-        "穏やかに流れながらも、芯の強さが光ります。",
-        "ひらめきが冴えるタイミング。新しい発想に挑戦して。",
-        "音のリズムのように自然体で過ごすと運気アップ。",
+        "今日は自分の感性を信じて動ける日。", "穏やかに流れながらも、芯の強さが光ります。",
+        "ひらめきが冴えるタイミング。新しい発想に挑戦して。", "音のリズムのように自然体で過ごすと運気アップ。",
         "周囲と調和しながらも、独自の世界観が輝く日。"
       ];
-      const insight = document.getElementById('vectorInsight');
-      insight.style.display = 'block';
+      const insight = document.getElementById('vectorInsight'); insight.style.display = 'block';
       insight.textContent = msgs[Math.floor(Math.random() * msgs.length)];
     }
 
+    /* Work Strengths：Vectorをマップ */
     function drawAbilities(v) {
-      const el = document.getElementById('abilities');
-      el.innerHTML = '';
+      const el = document.getElementById('abilities'); el.innerHTML = '';
       const factors = {
         collaboration: (v.groove + v.urban) / 2,
         planning: (v.structure + v.sophistication) / 2,
@@ -623,69 +707,87 @@
         empathy: (v.urban + v.global) / 2,
         leadership: (v.energy + v.structure) / 2
       };
-      const labels = {
-        collaboration: "協働力", planning: "計画力", creativity: "創造力",
-        empathy: "共感力", leadership: "リーダーシップ"
-      };
-      for (const [k, val] of Object.entries(factors)) {
-        const pct = Math.round(val * 100);
-        el.innerHTML += `
-        <div class="kpi">
-          <div>${labels[k]}</div><div class="badge">${pct}%</div>
-        </div>
-        <div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
-      }
+      const labels = { collaboration: "協働力", planning: "計画力", creativity: "創造力", empathy: "共感力", leadership: "リーダーシップ" };
+      Object.entries(factors).forEach(([k, val]) => {
+        const pct = Math.round((val || 0) * 100);
+        el.innerHTML += `<div class="kpi"><div>${labels[k]}</div><div class="badge">${pct}%</div></div><div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
+      });
       const hints = [
-        "協力しながら進めると良い成果が出やすい日です。",
-        "計画的に進めることで安心感が生まれます。",
-        "創造性が高まっています。新しい企画に挑戦を。",
-        "共感力が高まり、人との絆が深まりやすい日です。",
+        "協力しながら進めると良い成果が出やすい日です。", "計画的に進めることで安心感が生まれます。",
+        "創造性が高まっています。新しい企画に挑戦を。", "共感力が高まり、人との絆が深まりやすい日です。",
         "リーダーシップを発揮してチームを導けるタイミング。"
       ];
-      const insight = document.getElementById('abilitiesInsight');
-      insight.style.display = 'block';
+      const insight = document.getElementById('abilitiesInsight'); insight.style.display = 'block';
       insight.textContent = hints[Math.floor(Math.random() * hints.length)];
     }
 
-    function buildRecs(tokens) {
-      const pool = [
-        "FKJ", "Thundercat", "SZA", "Robert Glasper", "Disclosure",
-        "Khruangbin", "Bonobo", "Yaeji", "Tom Misch", "Cimafunk",
-        "Peggy Gou", "Vulfpeck", "Rosalía", "Kaytranada", "Toro y Moi"
-      ];
-      const used = new Set(tokens.map(t => t.toLowerCase()));
-      return pool.filter(n => !used.has(n.toLowerCase())).sort(() => .5 - Math.random()).slice(0, 6);
+    /* === Recommendations（Spotify related＋同ジャンル・別アーティスト） === */
+    async function buildRecsFromSpotify() {
+      const out = [];
+      for (const name of TOKENS) {
+        const a = await spSearchArtistByName(name); if (!a) continue;
+        const baseG = (a.genres?.[0] || "").toString();
+        const rel = await spRelatedArtists(a.id);
+        const picks = rel.filter(x => (x.genres || []).some(g => baseG && g.includes(baseG)) && x.name.toLowerCase() !== a.name.toLowerCase())
+          .slice(0, 2);
+        for (const p of picks) {
+          const it = await fetchITunesPreview(p.name); // 試聴URL/iTunes画像
+          out.push({ name: p.name, image: p.image || it.art, preview: it.preview });
+        }
+      }
+      return out.length ? out : null;
     }
-
-    function renderRecs() {
-      const recs = document.getElementById('recs');
-      const list = buildRecs(TOKENS);
-      recs.innerHTML = list.map(p => `
-      <div style="display:flex;align-items:center;margin:6px 0">
-        <img src="https://picsum.photos/seed/${encodeURIComponent(p)}/60/60" style="border-radius:50%;margin-right:8px"/>
-        <div>
-          <strong>${p}</strong><br>
-          <a href="https://music.apple.com/us/search?term=${encodeURIComponent(p)}"
-             target="_blank" style="color:#ffe28a">Apple</a> ／
-          <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(p + ' official')}"
-             target="_blank" style="color:#ffe28a">YouTube</a>
+    async function renderRecs() {
+      const recEl = document.getElementById('recs'); recEl.innerHTML = '';
+      let list = null;
+      try { list = await buildRecsFromSpotify(); } catch { list = null; }
+      if (!list) { /* フォールバック：ジャンル候補から */
+        const alt = ["RAYE", "Bonobo", "Four Tet", "Bicep", "Tom Misch", "Yussef Dayes", "Khruangbin", "Parcels"];
+        list = await Promise.all(alt.slice(0, 6).map(async n => { const it = await fetchITunesPreview(n); return { name: n, image: it.art, preview: it.preview } }));
+      }
+      list.forEach(item => {
+        const row = document.createElement('div');
+        row.style.cssText = "display:flex;align-items:center;gap:8px;margin:8px 0";
+        row.innerHTML = `
+        <img src="${item.image || `https://picsum.photos/seed/${encodeURIComponent(item.name)}/100/100`}"
+             style="width:48px;height:48px;border-radius:10px;object-fit:cover"/>
+        <div style="flex:1">
+          <strong>${item.name}</strong><br>
+          <a href="https://music.apple.com/us/search?term=${encodeURIComponent(item.name)}" target="_blank" style="color:#ffe28a;margin-right:6px">Apple</a>
+          <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(item.name + ' official')}" target="_blank" style="color:#ffe28a">YouTube</a>
         </div>
-      </div>`).join('');
-    }
-
-    /* === Analyze === */
-    async function analyze() {
-      if (!TOKENS.length) return;
-      runProgress(async () => {
-        await renderMap();
-        calcLove();
-        const v = randomVec();
-        drawProfile(v);
-        drawAbilities(v);
-        renderRecs();
+        ${item.preview ? `<audio controls src="${item.preview}" style="height:28px"></audio>` : ""}
+      `;
+        recEl.appendChild(row);
       });
     }
 
+    /* === Analyze（Spotify特徴量→Vector/Work、Map、Love、Recs） === */
+    async function analyze() {
+      if (!TOKENS.length) return;
+      runProgress(async () => {
+        // SpotifyからAudio Features集約（失敗時はランダム補完）
+        const vecs = [];
+        for (const name of TOKENS) {
+          const a = await spSearchArtistByName(name);
+          let v = null;
+          if (a) {
+            const f = await spArtistTopTracksFeatures(a.id);
+            v = computeVectorFromFeatures(f || { energy: .6, danceability: .6, valence: .5, acousticness: .4, instrumentalness: .3, tempo: 110, liveness: .2, speechiness: .2 });
+          } else {
+            v = computeVectorFromFeatures({ energy: .6, danceability: .6, valence: .5, acousticness: .4, instrumentalness: .3, tempo: 110, liveness: .2, speechiness: .2 });
+          }
+          vecs.push(v);
+        }
+        const vAll = avgVector(vecs);
+        await renderMap();
+        calcLove();
+        drawProfile(vAll);
+        drawAbilities(vAll);
+        await renderRecs(); // 同ジャンル・別アーティスト＋試聴
+        // 入力は保持（クリアしない）
+      });
+    }
     document.getElementById('analyzeBtn').onclick = analyze;
   </script>
 </body>
