@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MusicLens — Living Music Edition v4.3.1</title>
+  <title>MusicLens — Music AI Pro v5.0+ Final</title>
   <style>
     :root {
       --gold: #ffcc33;
@@ -12,6 +12,8 @@
       --ink: #0a0a0e;
       --ink2: #151722;
       --txt: #f9f9f9;
+      --panel: rgba(255, 255, 255, .08);
+      --stroke: rgba(255, 255, 255, .2);
     }
 
     * {
@@ -21,7 +23,7 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", Roboto, sans-serif;
       background: linear-gradient(180deg, var(--ink), var(--ink2));
       color: var(--txt);
       overflow-x: hidden;
@@ -34,7 +36,28 @@
       width: 100%;
       height: 100%;
       z-index: 0;
-      pointer-events: none;
+      pointer-events: none
+    }
+
+    /* TOP */
+    #title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      /* ← 扉より前面 */
+    }
+
+    .hero {
+      padding: 40px;
+      border: 1px solid var(--stroke);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, .08);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 0 25px rgba(255, 255, 255, .1);
     }
 
     .logo {
@@ -67,26 +90,8 @@
       }
 
       50% {
-        filter: drop-shadow(0 0 16px rgba(255, 220, 120, .75))
+        filter: drop-shadow(0 0 18px rgba(255, 220, 120, .85))
       }
-    }
-
-    #title {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-      z-index: 10;
-    }
-
-    .hero {
-      padding: 40px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
     }
 
     .cta {
@@ -103,30 +108,31 @@
 
     .cta:hover {
       transform: scale(1.05);
-      filter: brightness(1.2);
+      filter: brightness(1.2)
     }
 
     .hero small {
       display: block;
       margin-top: 14px;
-      color: #ccc;
+      color: #ccc
     }
 
+    /* Doors（背面） */
     #doorContainer {
       position: fixed;
       inset: 0;
       display: flex;
-      z-index: 5;
+      z-index: 1;
       overflow: hidden;
-      pointer-events: none;
+      pointer-events: none
     }
 
     .door {
       flex: 1;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, .08);
+      backdrop-filter: blur(20px)saturate(150%);
       transform: translateX(0);
-      transition: transform 3s cubic-bezier(.25, .8, .25, 1);
+      transition: transform 3s cubic-bezier(.25, .8, .25, 1)
     }
 
     body.doors-open .door.left {
@@ -137,37 +143,59 @@
       transform: translateX(100%)
     }
 
+    /* App */
     #app {
       display: none;
       opacity: 0;
       transform: translateY(40px);
-      transition: opacity 1.8s ease, transform 1.8s ease;
+      transition: opacity 1.8s ease, transform 1.8s ease
     }
 
     #app.show {
       display: block;
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0)
     }
 
     .container {
-      max-width: 900px;
+      max-width: 980px;
       margin: 0 auto;
       padding: 20px;
-      z-index: 10;
+      position: relative;
+      z-index: 10
     }
 
     .header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 20px
     }
 
     #backTop {
       color: #ffd36b;
       cursor: pointer;
-      margin-top: 6px;
+      margin-top: 6px
     }
 
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 14px
+    }
+
+    .section-title {
+      font-weight: 800;
+      color: #ffd36b;
+      margin-bottom: 8px;
+      font-size: 14px
+    }
+
+    .center {
+      text-align: center
+    }
+
+    /* Inputs & Buttons */
     input[type=text] {
       width: 100%;
       padding: 12px 16px;
@@ -177,7 +205,7 @@
       color: #fff;
       font-size: 16px;
       outline: none;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px)
     }
 
     .btn {
@@ -186,53 +214,250 @@
       font-weight: 700;
       border: none;
       cursor: pointer;
-      transition: .3s;
+      transition: .3s
     }
 
     .btn-primary {
-      background: linear-gradient(90deg, #ffcc33, #ff8800);
-      color: #111;
+      background: linear-gradient(90deg, var(--gold), var(--gold2));
+      color: #111
     }
 
     .btn-ghost {
       background: rgba(255, 255, 255, .1);
       border: 1px solid rgba(255, 255, 255, .25);
-      color: #fff;
+      color: #fff
     }
 
-    .panel {
-      background: rgba(255, 255, 255, .05);
-      border-radius: 14px;
-      padding: 16px;
-      margin-top: 14px;
+    .btns {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px
     }
 
-    .section-title {
-      font-weight: 800;
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px
+    }
+
+    .chipPill {
+      display: inline-block;
+      margin: 4px;
+      padding: 4px 10px;
+      border: 1px solid rgba(255, 255, 255, .3);
+      border-radius: 20px;
+      color: #fff
+    }
+
+    .chipPill a {
+      margin-left: 6px;
+      cursor: pointer;
       color: #ffd36b;
-      margin-bottom: 8px;
-      font-size: 14px;
+      text-decoration: none
     }
 
+    /* Map */
     #mapArea {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
       gap: 24px;
-      /* ← バブル余白最適化 */
+      justify-content: center
     }
 
-    #loveSvg {
-      width: 220px;
-      height: 220px;
-      margin: auto;
-      display: block;
+    .bubble {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(255, 255, 180, .4);
+      transition: .35s
     }
 
-    #heartOutline {
-      stroke: #FFD700;
-      stroke-width: 3;
-      fill: rgba(255, 255, 255, 0.05);
+    .bubble:hover {
+      transform: scale(1.06)
+    }
+
+    /* Bars */
+    .kpi {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      margin: 6px 0
+    }
+
+    .bar {
+      height: 10px;
+      background: rgba(255, 255, 255, .12);
+      border-radius: 999px;
+      overflow: hidden
+    }
+
+    .fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold2));
+      width: 0%;
+      transition: width 1.2s ease
+    }
+
+    .kpiValue {
+      font-size: 18px;
+      margin-top: 6px
+    }
+
+    .muted {
+      opacity: .85
+    }
+
+    /* Emotion Map */
+    #emotion {
+      width: 100%;
+      height: 360px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .05);
+      position: relative
+    }
+
+    #legend {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 12px;
+      color: #fff;
+      opacity: .8;
+      text-align: right;
+      line-height: 1.4
+    }
+
+    #legend span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-left: 6px;
+      margin-right: 2px
+    }
+
+    /* Popup（保険パッチ） */
+    .popupMask {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, .65);
+      z-index: 9999;
+      backdrop-filter: blur(6px)
+    }
+
+    .popupCard {
+      max-width: 340px;
+      width: 90%;
+      background: rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .25);
+      border-radius: 16px;
+      padding: 22px;
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(255, 215, 100, .25)
+    }
+
+    .popupImg {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 25px rgba(255, 255, 180, .5);
+      margin-bottom: 10px
+    }
+
+    .popupLinks a {
+      color: #ffcc33;
+      margin: 0 10px
+    }
+
+    /* AI Dock */
+    #aiDock {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 9999
+    }
+
+    #aiBtn {
+      background: linear-gradient(90deg, #a18cff, #68d0ff);
+      border: none;
+      border-radius: 999px;
+      color: #111;
+      padding: 10px 16px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .25)
+    }
+
+    #aiPanel {
+      position: fixed;
+      right: 18px;
+      bottom: 70px;
+      width: 340px;
+      max-width: 88vw;
+      background: rgba(0, 0, 0, .65);
+      border: 1px solid rgba(255, 255, 255, .2);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 12px;
+      color: #fff;
+      display: none
+    }
+
+    #aiPanel header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px
+    }
+
+    #chatLog {
+      height: 260px;
+      overflow: auto;
+      padding: 8px;
+      background: rgba(255, 255, 255, .06);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      scroll-behavior: smooth
+    }
+
+    #chatLog .me {
+      text-align: right;
+      color: #ffd36b;
+      margin: 4px 0
+    }
+
+    #chatLog .ai {
+      text-align: left;
+      color: #fff;
+      margin: 4px 0
+    }
+
+    #chatInput {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      background: rgba(255, 255, 255, .08);
+      color: #fff
+    }
+
+    #chatSend {
+      margin-top: 8px;
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(90deg, #ffcc33, #ff8800);
+      color: #111;
+      font-weight: 900;
+      cursor: pointer
     }
 
     @media(max-width:768px) {
@@ -250,20 +475,23 @@
 <body>
   <canvas id="fx"></canvas>
 
+  <!-- TOP -->
   <section id="title">
     <div class="hero">
       <div class="logo">MusicLens</div>
-      <p>あなたの音楽嗜好を分析して、音の旅へ。</p>
+      <p>あなたの音楽嗜好を分析して、音と感情とAIの旅へ。</p>
       <button id="startBtn" class="cta">SOUND JOURNEY ▶︎</button>
       <small>Produced by Daijiro Majima</small>
     </div>
   </section>
 
+  <!-- Doors（背面） -->
   <div id="doorContainer">
     <div class="door left"></div>
     <div class="door right"></div>
   </div>
 
+  <!-- APP -->
   <section id="app">
     <main class="container">
       <header class="header">
@@ -273,27 +501,37 @@
 
       <section class="panel">
         <div class="section-title">Today's Feeling（アーティストを入力）</div>
-        <input id="inputBox" type="text" placeholder="例：Daft Punk, FKJ, Disclosure …（カンマ区切りOK）">
-        <div style="margin-top:8px">
-          <button id="addBtn" class="btn btn-ghost">Add</button>
-          <button id="analyzeBtn" class="btn btn-primary">Analyze</button>
-        </div>
-        <div id="chips" style="margin-top:8px"></div>
+        <input id="inputBox" type="text" placeholder="例：Daft Punk, FKJ, Disclosure …（カンマ区切りOK）" />
+        <div class="btns"><button id="addBtn" class="btn btn-ghost">Add</button><button id="analyzeBtn"
+            class="btn btn-primary">Analyze</button></div>
+        <div id="chips" class="chips"></div>
       </section>
 
       <section class="panel">
-        <div class="section-title">Listening Map（アーティスト一覧）</div>
+        <div class="section-title">Listening Map（アーティストバブル）</div>
         <div id="mapArea"></div>
       </section>
 
-      <section class="panel" style="text-align:center">
+      <section class="panel" style="position:relative;">
+        <div class="section-title">Emotion Map（Valence × Arousal）</div>
+        <canvas id="emotion" width="900" height="360"></canvas>
+        <div id="legend">
+          <div><span style="background:#ff77aa"></span>Pop</div>
+          <div><span style="background:#ff6666"></span>Rock</div>
+          <div><span style="background:#66ccff"></span>Jazz</div>
+          <div><span style="background:#aa88ff"></span>Electronic</div>
+          <div><span style="background:#77ff88"></span>World</div>
+          <div><span style="background:#ffd966"></span>Other</div>
+        </div>
+      </section>
+
+      <section class="panel center">
         <div class="section-title">Music Love（音楽愛）</div>
         <svg id="loveSvg" viewBox="0 0 200 200">
           <clipPath id="heartClip">
-            <path id="heartOutline" d="M100 175c-3 0-6-.9-8.2-2.9C75 160 30 123 30 85
-          30 60 50 40 73 40c12 0 24 6 31 15 7-9 19-15 31-15
-          23 0 43 20 43 45 0 38-45 75-61.8 87.1-2.2 2-5.2 2.9-8.2 2.9z" stroke="#FFD700" stroke-width="3"
-              fill="rgba(255,255,255,0.05)" />
+            <path id="heartOutline" d="M100 175c-3 0-6-.9-8.2-2.9C75 160 30 123 30 85 30 60 50 40 73 40
+           c12 0 24 6 31 15 7-9 19-15 31-15 23 0 43 20 43 45 0 38-45 75-61.8 87.1-2.2 2-5.2 2.9-8.2 2.9z"
+              stroke="#FFD700" stroke-width="3" fill="rgba(255,255,255,0.05)" />
           </clipPath>
           <linearGradient id="liquidGrad" x1="0" y1="1" x2="0" y2="0">
             <stop offset="0%" stop-color="#ff9f1c" />
@@ -305,67 +543,76 @@
             </rect>
           </g>
         </svg>
-        <div id="lovePercent" style="font-size:18px;margin-top:6px">—%</div>
-        <div id="loveComment" style="margin-top:4px"></div>
+        <div id="lovePercent" class="kpiValue">—%</div>
+        <div id="loveComment" class="muted"></div>
       </section>
+
       <section class="panel">
         <div class="section-title">Your Music Vector</div>
         <div id="profileBars"></div>
       </section>
-
       <section class="panel">
         <div class="section-title">Work Strengths</div>
         <div id="abilities"></div>
       </section>
-
       <section class="panel">
         <div class="section-title">Music Recommendations</div>
-        <div id="recs" class="small">Analyze後に表示されます。</div>
+        <div id="recs">Analyze後に表示されます。</div>
       </section>
 
-      <div id="bgmTitle" style="text-align:center;margin:20px;color:#ffd36b;">🎧 BGM: FKJ – TUI</div>
-      <button id="bgmToggle" class="btn btn-primary" style="display:block;margin:10px auto;">🔇 停止</button>
-      <audio id="bgm" src="https://cdn.pixabay.com/download/audio/2023/03/07/audio_9bba87c1ee.mp3?filename=fkj-tui.mp3"
-        loop></audio>
+      <section class="panel center">
+        <div class="muted">🎧 BGM: FKJ – TUI</div>
+        <button id="bgmToggle" class="btn btn-primary" style="margin-top:8px;">🔇 停止</button>
+        <audio id="bgm"
+          src="https://cdn.pixabay.com/download/audio/2023/03/07/audio_9bba87c1ee.mp3?filename=fkj-tui.mp3"
+          loop></audio>
+      </section>
     </main>
   </section>
 
+  <!-- AI Dock -->
+  <div id="aiDock">
+    <button id="aiBtn">💬 Chat with Sora AI</button>
+    <div id="aiPanel">
+      <header><strong>MusicLens AI Guide</strong><button id="aiClose" class="btn btn-ghost sm">×</button></header>
+      <div id="chatLog"></div>
+      <input id="chatInput" placeholder="例：今の傾向に合う新しいアーティストは？" />
+      <button id="chatSend">Send</button>
+      <div class="muted sm" style="margin-top:6px">⚙️ <a id="openSettings" href="javascript:void(0)"
+          class="link">API設定</a></div>
+    </div>
+  </div>
+
   <script>
-    // === 背景パーティクル ===
+    /* Particles */
     (function () {
       const cvs = document.getElementById('fx'), ctx = cvs.getContext('2d', { alpha: true });
       let W = 0, H = 0, stars = [];
       function size() { W = cvs.width = innerWidth; H = cvs.height = innerHeight; }
-      function make() {
-        stars = Array.from({ length: 120 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25, r: 1 + Math.random() * 2, a: .2 + .2 * Math.random() }));
-      }
+      function make() { stars = Array.from({ length: 140 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25, r: 1 + Math.random() * 2, a: .2 + .25 * Math.random() })); }
       function draw() {
         ctx.clearRect(0, 0, W, H);
         for (const s of stars) {
-          s.x += s.vx; s.y += s.vy;
-          if (s.x < 0 || s.x > W) s.vx *= -1; if (s.y < 0 || s.y > H) s.vy *= -1;
-          const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 8);
-          g.addColorStop(0, `rgba(255,255,200,${s.a})`);
-          g.addColorStop(1, 'transparent');
-          ctx.fillStyle = g; ctx.beginPath();
-          ctx.arc(s.x, s.y, s.r * 8, 0, 6.283); ctx.fill();
+          s.x += s.vx; s.y += s.vy; if (s.x < 0 || s.x > W) s.vx *= -1; if (s.y < 0 || s.y > H) s.vy *= -1;
+          const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 8); g.addColorStop(0, `rgba(255,255,200,${s.a})`); g.addColorStop(1, 'transparent');
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 8, 0, 6.283); ctx.fill();
         }
-        requestAnimationFrame(draw);
+        requestAnimationFrame(draw)
       }
-      addEventListener('resize', () => { size(); make(); });
-      size(); make(); draw();
+      addEventListener('resize', () => { size(); make() }); size(); make(); draw();
     })();
 
-    // === 扉アニメーション + Safari用BGM起動 ===
+    /* Doors + autoplay trigger */
     document.getElementById("startBtn").onclick = () => {
       const bgm = document.getElementById("bgm");
-      bgm.play().catch(() => { }); // ← Safari対応：ユーザー操作でトリガー
+      bgm.volume = 0; bgm.play().catch(() => { }); // Safari対策 + 初期音量0
+      // フェードイン
+      let v = 0; const target = 0.4; const step = target / 20;
+      const id = setInterval(() => { v += step; bgm.volume = v; if (v >= target) clearInterval(id) }, 50);
+
       window.scrollTo(0, 0);
       document.body.classList.add("doors-open");
-      setTimeout(() => {
-        document.getElementById("title").style.display = "none";
-        document.getElementById("app").classList.add("show");
-      }, 3000);
+      setTimeout(() => { document.getElementById("title").style.display = "none"; document.getElementById("app").classList.add("show") }, 3200);
     };
     document.getElementById("backTop").onclick = () => {
       document.getElementById("app").classList.remove("show");
@@ -373,177 +620,194 @@
       document.body.classList.remove("doors-open");
     };
 
-    // === 入力管理 ===
-    let TOKENS = [];
+    /* Inputs（TOKENS公開・同期） */
+    let TOKENS = []; window.TOKENS = TOKENS;
     const input = document.getElementById("inputBox");
     const chips = document.getElementById("chips");
     document.getElementById("addBtn").onclick = () => {
       if (!input.value.trim()) return;
-      const raw = input.value.replace(/，/g, ",");
-      const items = raw.split(",").map(t => t.trim()).filter(Boolean);
-      TOKENS.push(...items); input.value = "";
-      chips.innerHTML = TOKENS.map((t, i) =>
-        `<span style='margin:4px;padding:4px 10px;border:1px solid rgba(255,255,255,.3);
-          border-radius:20px;display:inline-block;'>${t}
-          <a onclick='TOKENS.splice(${i},1);chips.innerHTML=\"\"' style='margin-left:6px;cursor:pointer;'>✕</a></span>`).join("");
+      const items = input.value.replace(/，/g, ",").split(",").map(t => t.trim()).filter(Boolean);
+      TOKENS.push(...items); window.TOKENS = TOKENS;
+      input.value = "";
+      chips.innerHTML = TOKENS.map((t, i) => `<span class="chipPill">${t}<a onclick="TOKENS.splice(${i},1);window.TOKENS=TOKENS;this.parentNode.remove()">✕</a></span>`).join("");
     };
 
-    // === Progressバー ===
-    const progressWrap = document.getElementById("progressWrap"),
-      progressFill = document.getElementById("progfill"),
-      progressText = document.getElementById("progtext");
-    function runProgress(cb) {
-      progressWrap.style.display = 'block';
-      let p = 0;
-      const id = setInterval(() => {
-        p += 5 + Math.random() * 4;
-        if (p >= 100) {
-          clearInterval(id); p = 100;
-          progressFill.style.width = '100%';
-          progressText.textContent = '100%';
-          setTimeout(() => { progressWrap.style.display = 'none'; cb(); }, 400);
-        } else {
-          progressFill.style.width = p + '%';
-          progressText.textContent = Math.floor(p) + '%';
-        }
-      }, 80);
+    /* Emotion Map helpers */
+    const genreCenter = { Pop: [0.7, 0.6], Rock: [0.6, 0.8], Jazz: [0.5, 0.4], Electronic: [0.8, 0.7], World: [0.6, 0.5], Other: [0.55, 0.55] };
+    function genreOf(n) { n = n.toLowerCase(); if (/pop/.test(n)) return "Pop"; if (/rock|metal/.test(n)) return "Rock"; if (/jazz/.test(n)) return "Jazz"; if (/elect|techno|edm/.test(n)) return "Electronic"; if (/world|latin|afro/.test(n)) return "World"; return "Other" }
+    function plotEmotion(points) {
+      const cv = document.getElementById("emotion"); if (!cv) return;
+      const ctx = cv.getContext("2d"); ctx.clearRect(0, 0, cv.width, cv.height);
+      ctx.fillStyle = "rgba(255,255,255,.05)"; ctx.fillRect(0, 0, cv.width, cv.height);
+      ctx.strokeStyle = "rgba(255,255,255,.2)"; ctx.strokeRect(0, 0, cv.width, cv.height);
+      points.forEach(p => {
+        const x = Math.round(p[0] * cv.width), y = Math.round((1 - p[1]) * cv.height);
+        const g = ctx.createRadialGradient(x, y, 0, x, y, 22);
+        g.addColorStop(0, "rgba(255,215,120,.9)"); g.addColorStop(1, "rgba(255,215,120,0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill();
+      });
     }
-    /* === Music Love === */
+
+    /* Listening Map */
+    async function renderMap() {
+      const map = document.getElementById("mapArea"); map.innerHTML = "";
+      const pts = [];
+      const data = await Promise.all(TOKENS.map(async n => {
+        const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(n)}&entity=musicArtist&limit=1`);
+        const j = await r.json(); const a = j.results?.[0]; const g = genreOf(a?.primaryGenreName || n);
+        const c = genreCenter[g] || [.55, .55]; pts.push([c[0] + (Math.random() - .5) * .1, c[1] + (Math.random() - .5) * .1]);
+        return { name: n, img: a?.artworkUrl100?.replace("100x100", "300x300") || `https://picsum.photos/seed/${encodeURIComponent(n)}/300/300` };
+      }));
+      plotEmotion(pts);
+      data.forEach(a => {
+        const b = document.createElement("div"); b.className = "bubble";
+        b.innerHTML = `<img src="${a.img}" style="width:100%;height:100%;border-radius:50%;object-fit:cover"/>`;
+        b.onclick = () => showPopup(a.name, a.img); map.appendChild(b);
+      });
+    }
+
+    /* Popup（Esc閉じ可） */
+    function showPopup(name, img) {
+      const p = document.createElement('div'); p.className = 'popupMask';
+      p.innerHTML = `<div class="popupCard">
+    <img src="${img}" class="popupImg"/><h3>${name}</h3>
+    <div class="popupLinks">
+      <a target="_blank" href="https://music.apple.com/us/search?term=${encodeURIComponent(name)}">Apple Music</a> /
+      <a target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(name)}+official">YouTube</a>
+    </div>
+    <button class="btn btn-ghost sm closeBtn">閉じる</button>
+  </div>`;
+      p.onclick = e => { if (e.target === p) p.remove() }; p.querySelector('.closeBtn').onclick = () => p.remove();
+      document.body.appendChild(p);
+    }
+    document.addEventListener("keydown", e => { if (e.key === "Escape") { document.querySelectorAll(".popupMask").forEach(p => p.remove()); } });
+
+    /* Music Love */
     function calcLove() {
       const n = TOKENS.length; if (!n) return;
       const score = Math.min(100, Math.round(n * 10 + Math.random() * 30));
       document.getElementById("lovePercent").textContent = score + "%";
-      const c = document.getElementById("loveComment");
-      if (score < 40) c.textContent = "音楽の鼓動が静かに始まっています。";
-      else if (score < 70) c.textContent = "音楽が心のリズムに寄り添いはじめました。";
-      else c.textContent = "音楽とあなたの鼓動が完全に共鳴しています。";
+      document.getElementById("loveComment").textContent =
+        score < 40 ? "音楽の鼓動が静かに始まっています。" :
+          score < 70 ? "音楽が心のリズムに寄り添いはじめました。" : "音楽とあなたの鼓動が完全に共鳴しています。";
     }
 
-    /* === Vector & Work Strengths === */
+    /* Vector & Work（棒グラフ300ms遅延） */
     function randomVec() {
       return {
-        energy: Math.random(), sophistication: Math.random(),
-        groove: Math.random(), structure: Math.random(),
-        experiment: Math.random(), urban: Math.random(), global: Math.random()
-      };
+        energy: Math.random(), sophistication: Math.random(), groove: Math.random(),
+        structure: Math.random(), experiment: Math.random(), urban: Math.random(), global: Math.random()
+      }
     }
-
     function drawProfile(v) {
-      const el = document.getElementById("profileBars");
-      el.innerHTML = "";
-      const labels = {
-        energy: "エネルギー", sophistication: "洗練", groove: "ノリ",
-        structure: "構成力", experiment: "実験性", urban: "都会感", global: "グローバル感"
-      };
+      const el = document.getElementById("profileBars"); el.innerHTML = "";
+      const labels = { energy: "エネルギー", sophistication: "洗練", groove: "ノリ", structure: "構成力", experiment: "実験性", urban: "都会感", global: "グローバル感" };
       for (const [k, val] of Object.entries(v)) {
         const pct = Math.round(val * 100);
         const wrap = document.createElement("div");
-        wrap.innerHTML = `
-      <div class="kpi"><div>${labels[k]}</div><div>${pct}%</div></div>
-      <div class="bar"><div class="fill" style="width:0%;transition:width 1s;"></div></div>`;
+        wrap.innerHTML = `<div class="kpi"><div>${labels[k]}</div><div>${pct}%</div></div>
+      <div class="bar"><div class="fill" style="width:0%"></div></div>`;
         el.appendChild(wrap);
-        setTimeout(() => wrap.querySelector(".fill").style.width = pct + "%", 300); // ← delayを300msに
+        setTimeout(() => wrap.querySelector(".fill").style.width = pct + "%", 300);
       }
     }
-
     function drawAbilities(v) {
-      const el = document.getElementById("abilities");
-      el.innerHTML = "";
-      const factors = {
+      const el = document.getElementById("abilities"); el.innerHTML = "";
+      const f = {
         collaboration: (v.groove + v.urban) / 2, planning: (v.structure + v.sophistication) / 2,
         creativity: (v.experiment + v.energy) / 2, empathy: (v.urban + v.global) / 2, leadership: (v.energy + v.structure) / 2
       };
-      const labels = {
-        collaboration: "協働力", planning: "計画力", creativity: "創造力",
-        empathy: "共感力", leadership: "リーダーシップ"
-      };
-      for (const [k, val] of Object.entries(factors)) {
+      const labels = { collaboration: "協働力", planning: "計画力", creativity: "創造力", empathy: "共感力", leadership: "リーダーシップ" };
+      for (const [k, val] of Object.entries(f)) {
         const pct = Math.round(val * 100);
         const wrap = document.createElement("div");
-        wrap.innerHTML = `
-      <div class="kpi"><div>${labels[k]}</div><div>${pct}%</div></div>
-      <div class="bar"><div class="fill" style="width:0%;transition:width 1s;"></div></div>`;
+        wrap.innerHTML = `<div class="kpi"><div>${labels[k]}</div><div>${pct}%</div></div>
+      <div class="bar"><div class="fill" style="width:0%"></div></div>`;
         el.appendChild(wrap);
-        setTimeout(() => wrap.querySelector(".fill").style.width = pct + "%", 300); // ← delayを300msに
+        setTimeout(() => wrap.querySelector(".fill").style.width = pct + "%", 300);
       }
     }
 
-    /* === Recommendations === */
+    /* Recs */
     async function fetchITunesPreview(n) {
       try {
         const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(n)}&entity=musicArtist&limit=3`);
         const j = await r.json(); return j.results.map(a => ({
-          name: a.artistName,
-          art: a.artworkUrl100?.replace("100x100", "200x200"),
+          name: a.artistName, art: a.artworkUrl100?.replace("100x100", "200x200"),
           link: `https://music.apple.com/us/search?term=${encodeURIComponent(a.artistName)}`
         }));
       } catch { return []; }
     }
-
     async function renderRecs() {
-      const recEl = document.getElementById("recs");
-      recEl.innerHTML = "<p>音楽を分析中...</p>";
-      const all = [];
-      for (const n of TOKENS) { const rs = await fetchITunesPreview(n); all.push(...rs); }
+      const recEl = document.getElementById("recs"); recEl.innerHTML = "<p>音楽を分析中...</p>";
+      const all = []; for (const n of TOKENS) { const rs = await fetchITunesPreview(n); all.push(...rs); }
       const unique = Array.from(new Map(all.map(a => [a.name, a])).values()).slice(0, 6);
-      recEl.innerHTML = unique.map(a => `
-    <div style="display:flex;align-items:center;gap:10px;margin:8px 0;">
-      <img src="${a.art}" style="width:50px;height:50px;border-radius:8px;object-fit:cover;"/>
-      <div>
-        <strong>${a.name}</strong><br>
-        <a href="${a.link}" target="_blank" style="color:#ffe28a">Apple Music</a> /
-        <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(a.name + ' official')}"
-           target="_blank" style="color:#ff6666">YouTube</a>
-      </div>
-    </div>`).join('');
+      recEl.innerHTML = unique.map(a => `<div style="display:flex;align-items:center;gap:10px;margin:8px 0;">
+    <img src="${a.art}" style="width:50px;height:50px;border-radius:8px;object-fit:cover"/>
+    <div><strong>${a.name}</strong><br>
+      <a target="_blank" href="${a.link}" style="color:#ffe28a">Apple Music</a> /
+      <a target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(a.name + ' official')}" style="color:#ff6666">YouTube</a>
+    </div></div>`).join('');
     }
 
-    /* === Analyze === */
+    /* Analyze */
     async function analyze() {
       if (!TOKENS.length) return;
-      runProgress(async () => {
-        await renderMap();
-        calcLove();
-        const v = randomVec();
-        drawProfile(v);
-        drawAbilities(v);
-        await renderRecs();
-        window.scrollTo(0, 0);
-      });
+      await renderMap(); calcLove();
+      const v = randomVec(); drawProfile(v); drawAbilities(v);
+      await renderRecs(); window.scrollTo(0, 0);
     }
     document.getElementById("analyzeBtn").onclick = analyze;
 
-    /* === BGM & Glow/Heart同期 === */
-    const bgm = document.getElementById("bgm");
-    const btn = document.getElementById("bgmToggle");
-    let playing = true; bgm.volume = 0.4;
-    btn.onclick = () => {
-      if (playing) { bgm.pause(); btn.textContent = "▶️ 再生"; }
-      else { bgm.play(); btn.textContent = "🔇 停止"; } playing = !playing;
-    };
+    /* BGM & Glow/Heart同期（WebAudio） */
+    const bgm = document.getElementById("bgm"), btn = document.getElementById("bgmToggle");
+    let playing = true;
+    document.addEventListener("click", () => bgm.play().catch(() => { }), { once: true }); // 予備トリガ
+    btn.onclick = () => { if (playing) { bgm.pause(); btn.textContent = "▶️ 再生" } else { bgm.play(); btn.textContent = "🔇 停止" } playing = !playing }
     const AudioContext = window.AudioContext || window.webkitAudioContext;
-    const ctx = new AudioContext();
-    const src = ctx.createMediaElementSource(bgm);
-    const analyser = ctx.createAnalyser();
-    src.connect(analyser); analyser.connect(ctx.destination);
-    analyser.fftSize = 256; const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
+    const ctx = new AudioContext(); const src = ctx.createMediaElementSource(bgm); const analyser = ctx.createAnalyser();
+    src.connect(analyser); analyser.connect(ctx.destination); analyser.fftSize = 256; const dataArray = new Uint8Array(analyser.frequencyBinCount);
     function animateBeat() {
       requestAnimationFrame(animateBeat);
       analyser.getByteFrequencyData(dataArray);
-      const avg = dataArray.reduce((a, b) => a + b, 0) / bufferLength;
-      const scale = 1 + avg / 300;
-      const glow = Math.min(1, avg / 200);
-      const liquid = document.getElementById("liquid");
-      if (liquid) liquid.setAttribute("transform", `scale(${scale})`);
+      const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+      const scale = 1 + avg / 300; const glow = Math.min(1, avg / 200);
+      const liquid = document.getElementById("liquid"); if (liquid) liquid.setAttribute("transform", `scale(${scale})`);
       document.querySelectorAll(".bubble").forEach(b => {
         b.style.filter = `brightness(${1 + glow}) drop-shadow(0 0 ${20 + avg / 8}px rgba(255,255,180,${0.3 + glow / 2}))`;
       });
     }
-    bgm.onplay = async () => { if (ctx.state === "suspended") await ctx.resume(); animateBeat(); };
+    bgm.onplay = async () => { if (ctx.state === "suspended") await ctx.resume(); animateBeat() }
+
+    /* AI Dock（フォールバック付き） */
+    const aiBtn = document.getElementById('aiBtn'), aiPanel = document.getElementById('aiPanel'),
+      aiClose = document.getElementById('aiClose'), chatLog = document.getElementById('chatLog'),
+      chatInput = document.getElementById('chatInput'), chatSend = document.getElementById('chatSend'),
+      openSettings = document.getElementById('openSettings');
+    aiBtn.onclick = () => aiPanel.style.display = aiPanel.style.display === 'block' ? 'none' : 'block';
+    aiClose.onclick = () => aiPanel.style.display = 'none';
+    openSettings.onclick = () => { const key = prompt("OpenAI API Key（sk-...）を入力。保存はブラウザのみ。", ""); if (key) { localStorage.setItem("OPENAI_API_KEY", key); alert("保存しました。") } };
+    chatInput.addEventListener("keydown", e => { if (e.key === "Enter") chatSend.click() });
+    chatSend.onclick = async () => {
+      const q = chatInput.value.trim(); if (!q) return; chatLog.innerHTML += `<div class="me">🧑‍💻 ${q}</div>`; chatInput.value = ""; chatLog.scrollTop = chatLog.scrollHeight;
+      const key = localStorage.getItem("OPENAI_API_KEY");
+      if (!key) { chatLog.innerHTML += `<div class="ai">🎧 いい選曲！今は Lofi / Nu-Disco / Downtempo を軽く流すのが合いそう。</div>`; chatLog.scrollTop = chatLog.scrollHeight; return; }
+      try {
+        const r = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
+          body: JSON.stringify({
+            model: "gpt-4o-mini", messages: [
+              { role: "system", content: "You are a friendly music guide for MusicLens. Short, practical, inspirational." },
+              { role: "user", content: `User tokens: ${(window.TOKENS || []).join(", ")}. Question: ${q}` }
+            ]
+          })
+        });
+        const j = await r.json(); const a = j?.choices?.[0]?.message?.content || "（応答が取得できませんでした）";
+        chatLog.innerHTML += `<div class="ai">🎵 ${a}</div>`; chatLog.scrollTop = chatLog.scrollHeight;
+      } catch (e) { chatLog.innerHTML += `<div class="ai">⚠️ ネットワークエラー。API設定を確認してください。</div>` }
+    };
   </script>
-  </main>
-  </section>
 </body>
 
 </html>
