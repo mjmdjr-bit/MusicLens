@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MusicLens — Music AI Pro v5.1 Universal</title>
+  <title>MusicLens — Music AI Pro v5.1.2 Universal</title>
   <style>
     :root {
       --gold: #ffcc33;
@@ -634,15 +634,17 @@
 
       <section class="panel">
         <div class="section-title">Your Music Vector</div>
-        <div id="profileBars"></div><canvas id="vectorRadar" width="480" height="300"
-          style="width:100%;height:300px;margin-top:10px;"></canvas>
+        <div id="profileBars"></div>
+        <canvas id="vectorRadar" width="480" height="300" style="width:100%;height:300px;margin-top:10px;"></canvas>
         <div id="vectorNote" class="muted" style="margin-top:8px"></div>
       </section>
+
       <section class="panel">
         <div class="section-title">Work Strengths</div>
         <div id="abilities"></div>
         <div id="workNote" class="muted" style="margin-top:8px"></div>
       </section>
+
       <section class="panel">
         <div class="section-title">Music Recommendations</div>
         <div id="recs">Analyze後に表示されます。</div>
@@ -690,12 +692,19 @@
       addEventListener('resize', () => { size(); make() }); size(); make(); draw();
     })();
 
-    /* ========= 扉＋BGMフェードイン ========= */
+    /* ========= BGM + 扉 ========= */
     const bgm = document.getElementById("bgm"), btn = document.getElementById("bgmToggle");
     let playing = true; bgm.volume = 0;
-    document.addEventListener("click", () => bgm.play().catch(() => { }), { once: true }); // 予備トリガ
+    document.addEventListener("click", () => bgm.play().catch(() => { }), { once: true }); // 保険
+    /* WebAudio解析 */
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioContext(); const src = ctx.createMediaElementSource(bgm); const analyser = ctx.createAnalyser();
+    src.connect(analyser); analyser.connect(ctx.destination); analyser.fftSize = 256; const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
     document.getElementById("startBtn").onclick = () => {
-      bgm.play().catch(() => { });
+      if (ctx.state === "suspended") ctx.resume().catch(() => { });
+      bgm.play().catch(() => { });                // iOS対策
+      // フェードイン
       let v = 0, target = 0.4, step = target / 20; const id = setInterval(() => { v += step; bgm.volume = v; if (v >= target) clearInterval(id) }, 50);
       window.scrollTo(0, 0);
       document.body.classList.add("doors-open");
@@ -706,43 +715,49 @@
       document.getElementById("title").style.display = "flex";
       document.body.classList.remove("doors-open");
     };
-    btn.onclick = () => { if (playing) { bgm.pause(); btn.textContent = "▶️ 再生" } else { bgm.play().catch(() => { }); btn.textContent = "🔇 停止" } playing = !playing };
+    btn.onclick = () => { if (playing) { bgm.pause(); btn.textContent = "▶️ 再生"; } else { bgm.play().catch(() => { }); btn.textContent = "🔇 停止"; } playing = !playing; };
 
-    /* ========= 入力（保存/復元） ========= */
+    function animateBeat() {
+      requestAnimationFrame(animateBeat);
+      analyser.getByteFrequencyData(dataArray);
+      const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+      const scale = 1 + avg / 300, glow = Math.min(1, avg / 200);
+      const liquid = document.getElementById("liquid"); if (liquid) liquid.setAttribute("transform", `scale(${scale})`);
+      document.querySelectorAll(".bubble").forEach(b => {
+        b.style.filter = `brightness(${1 + glow}) drop-shadow(0 0 ${20 + avg / 8}px rgba(255,255,180,${0.3 + glow / 2}))`;
+      });
+    }
+    bgm.onplay = async () => { if (ctx.state === "suspended") await ctx.resume(); animateBeat(); };
+
+    /* ========= 入力：カンマ区切り・重複除外・保存/復元・Enter対応 ========= */
     let TOKENS = []; window.TOKENS = TOKENS;
-    const input = document.getElementById("inputBox"), chips = document.getElementById("chips");
-    try {
-      const saved = JSON.parse(localStorage.getItem('musiclens_tokens') || '[]');
-      if (Array.isArray(saved) && saved.length) {
-        TOKENS.push(...saved); window.TOKENS = TOKENS;
-        chips.innerHTML = TOKENS.map((t, i) => `<span class="chipPill">${t}<a onclick="TOKENS.splice(${i},1);window.TOKENS=TOKENS;this.parentNode.remove()">✕</a></span>`).join("");
-      }
-    } catch { }
-    document.getElementById("addBtn").onclick = () => {
-      if (!input.value.trim()) return;
-      const items = input.value.replace(/，/g, ",").split(",").map(t => t.trim()).filter(Boolean);
-      TOKENS.push(...items); window.TOKENS = TOKENS;
-      input.value = "";
-      chips.innerHTML = TOKENS.map((t, i) => `<span class="chipPill">${t}<a onclick="TOKENS.splice(${i},1);window.TOKENS=TOKENS;this.parentNode.remove()">✕</a></span>`).join("");
-      localStorage.setItem('musiclens_tokens', JSON.stringify(TOKENS));
-    };
+    const input = document.getElementById("inputBox"), chips = document.getElementById("chips"), addBtn = document.getElementById("addBtn");
+    function parseArtists(str) { return (str || "").split(/[,\uFF0C\u3001]/g).map(s => s.trim()).filter(s => s.length > 0); }
+    function renderChips() { chips.innerHTML = TOKENS.map((t, i) => `<span class="chipPill" data-i="${i}">${t}<a class="chipDel">✕</a></span>`).join(""); }
+    function addArtists(str) {
+      const incoming = parseArtists(str); if (!incoming.length) return;
+      const seen = new Set(TOKENS.map(s => s.toLowerCase()));
+      for (const name of incoming) { const k = name.toLowerCase(); if (!seen.has(k)) { TOKENS.push(name); seen.add(k); } }
+      window.TOKENS = TOKENS; localStorage.setItem('musiclens_tokens', JSON.stringify(TOKENS)); renderChips();
+    }
+    try { const saved = JSON.parse(localStorage.getItem('musiclens_tokens') || '[]'); if (Array.isArray(saved) && saved.length) { TOKENS = saved; window.TOKENS = TOKENS; renderChips(); } } catch { }
+    addBtn.onclick = () => { if (!input.value.trim()) return; addArtists(input.value); input.value = ""; };
+    input.addEventListener('keydown', (e) => { if (e.isComposing) return; if (e.key === 'Enter') { e.preventDefault(); if (input.value.trim()) { addArtists(input.value); input.value = ""; } } });
+    chips.addEventListener('click', (e) => { if (!e.target.classList.contains('chipDel')) return; const pill = e.target.closest('.chipPill'); const i = Number(pill?.dataset?.i ?? -1); if (i >= 0) { TOKENS.splice(i, 1); window.TOKENS = TOKENS; localStorage.setItem('musiclens_tokens', JSON.stringify(TOKENS)); renderChips(); } });
 
     /* ========= 汎用 ========= */
     const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
     function genreOf(n) { n = n.toLowerCase(); if (/pop/.test(n)) return "Pop"; if (/rock|metal/.test(n)) return "Rock"; if (/jazz/.test(n)) return "Jazz"; if (/elect|techno|edm/.test(n)) return "Electronic"; if (/world|latin|afro/.test(n)) return "World"; return "Other" }
     const genreCenter = { Pop: [0.7, 0.6], Rock: [0.6, 0.8], Jazz: [0.5, 0.4], Electronic: [0.8, 0.7], World: [0.6, 0.5], Other: [0.55, 0.55] };
+    const genreColor = { Pop: "#ff77aa", Rock: "#ff6666", Jazz: "#66ccff", Electronic: "#aa88ff", World: "#77ff88", Other: "#ffd966" };
 
-    /* Apple Musicリンク（固有URL） */
+    /* Apple Musicアーティスト固有リンク */
     async function bestAppleArtistLink(name) {
       try {
         const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=musicArtist&limit=1`);
         const j = await r.json(); const a = j.results?.[0];
         if (a?.artistLinkUrl) return a.artistLinkUrl + (a.artistLinkUrl.includes('?') ? '&app=music' : '?app=music');
-        if (a?.artistId) {
-          const cc = (a?.country || 'US').toLowerCase();
-          const slug = (a?.artistName || name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-          return `https://music.apple.com/${cc}/artist/${slug}/${a.artistId}?app=music`;
-        }
+        if (a?.artistId) { const cc = (a?.country || 'US').toLowerCase(); const slug = (a?.artistName || name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); return `https://music.apple.com/${cc}/artist/${slug}/${a.artistId}?app=music`; }
       } catch (e) { }
       const cc = (navigator.language?.split('-')[1] || 'US').toLowerCase();
       return `https://music.apple.com/${cc}/search?term=${encodeURIComponent(name)}&app=music`;
@@ -757,7 +772,7 @@
       return `https://picsum.photos/seed/${encodeURIComponent(name)}/300/300`;
     }
 
-    /* ========= Emotion Map（高DPR + 流動点） ========= */
+    /* ========= Emotion Map（高DPR + ジャンル色 + 流動点） ========= */
     let _emoTrails = [];
     function plotEmotion(points) {
       const cv = document.getElementById("emotion"); if (!cv) return;
@@ -768,15 +783,17 @@
       ctx.clearRect(0, 0, cssW, cssH);
       ctx.fillStyle = "rgba(255,255,255,.05)"; ctx.fillRect(0, 0, cssW, cssH);
       ctx.strokeStyle = "rgba(255,255,255,.2)"; ctx.strokeRect(0, 0, cssW, cssH);
-      // 静止点（初期）
+
       points.forEach(p => {
-        const x = Math.round(p[0] * cssW), y = Math.round((1 - p[1]) * cssH);
-        const g = ctx.createRadialGradient(x, y, 0, x, y, 22);
-        g.addColorStop(0, "rgba(255,215,120,.9)"); g.addColorStop(1, "rgba(255,215,120,0)");
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill();
+        const c = genreColor[p.genre] || '#ffd966';
+        const x = Math.round(p.x * cssW), y = Math.round((1 - p.y) * cssH);
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, 22);
+        grad.addColorStop(0, c + "CC"); grad.addColorStop(1, c + "00");
+        ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill();
       });
-      // トレイルの更新
-      _emoTrails = points.map(p => ({ x: p[0], y: p[1], dx: (Math.random() - .5) * .002, dy: (Math.random() - .5) * .002 }));
+
+      // トレイル（緩やかに漂う）
+      _emoTrails = points.map(p => ({ x: p.x, y: p.y, dx: (Math.random() - .5) * .002, dy: (Math.random() - .5) * .002, genre: p.genre }));
       if (!plotEmotion._anim) {
         plotEmotion._anim = true;
         (function loop() {
@@ -787,8 +804,9 @@
           _emoTrails.forEach(t => {
             t.x += t.dx; t.y += t.dy; if (t.x < .05 || t.x > .95) t.dx *= -1; if (t.y < .05 || t.y > .95) t.dy *= -1;
             const x = Math.round(t.x * cssW), y = Math.round((1 - t.y) * cssH);
+            const col = genreColor[t.genre] || '#ffd966';
             const g = ctx.createRadialGradient(x, y, 0, x, y, 20);
-            g.addColorStop(0, "rgba(255,215,120,.7)"); g.addColorStop(1, "rgba(255,215,120,0)");
+            g.addColorStop(0, col + "B3"); g.addColorStop(1, col + "00");
             ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI * 2); ctx.fill();
           });
           requestAnimationFrame(loop);
@@ -796,17 +814,16 @@
       }
     }
 
-    /* ========= Listening Map ========= */
+    /* ========= Listening Map（画像＋名前） ========= */
     async function renderMap() {
       const map = document.getElementById("mapArea"); map.innerHTML = "";
       const pts = [];
       for (const n of TOKENS) {
         const img = await fetchBestImage(n);
         const g = genreOf(n), c = genreCenter[g] || [.55, .55];
-        pts.push([c[0] + (Math.random() - .5) * .1, c[1] + (Math.random() - .5) * .1]);
+        pts.push({ x: c[0] + (Math.random() - .5) * .1, y: c[1] + (Math.random() - .5) * .1, genre: g });
         const b = document.createElement("div"); b.className = "bubble";
-        b.innerHTML = `<img src="${img}" alt="${n}" style="width:100%;height:100%;border-radius:50%;object-fit:cover"/>
-                 <span class="bubbleName">${n}</span>`;
+        b.innerHTML = `<img src="${img}" alt="${n}" style="width:100%;height:100%;border-radius:50%;object-fit:cover"/><span class="bubbleName">${n}</span>`;
         b.onclick = () => showPopup(n, img);
         map.appendChild(b);
       }
@@ -830,14 +847,14 @@
     }
     document.addEventListener("keydown", e => { if (e.key === "Escape") { document.querySelectorAll(".popupMask").forEach(p => p.remove()); } });
 
-    /* ========= Music Love ========= */
+    /* ========= Music Love（%と液体整合＆金縁保証） ========= */
     function calcLove() {
       const n = TOKENS.length; if (!n) return;
       const unique = new Set(TOKENS.map(t => genreOf(t))).size;
       const score = Math.max(0, Math.min(100, Math.round(n * 8 + unique * 6))); // 0-100
       const y = 160 - (score / 100) * 120; // 0%→160, 100%→40
       const liquid = document.getElementById('liquid'); liquid.setAttribute('y', y);
-      const outline = document.getElementById('heartOutline'); if (outline) { outline.setAttribute('stroke', '#FFD700'); outline.setAttribute('stroke-width', '3') }
+      const outline = document.getElementById('heartOutline'); if (outline) { outline.setAttribute('stroke', '#FFD700'); outline.setAttribute('stroke-width', '3'); outline.setAttribute('fill', 'rgba(255,255,255,0.05)'); }
       document.getElementById('lovePercent').textContent = score + '%';
       document.getElementById('loveComment').textContent =
         score < 40 ? '静かに整うムード。音のディテールを楽しんで。' :
@@ -860,7 +877,10 @@
     }
     function drawAbilities(v) {
       const el = document.getElementById("abilities"); el.innerHTML = "";
-      const f = { 協働力: (v.groove + v.urban) / 2, 計画力: (v.structure + v.sophistication) / 2, 創造力: (v.experiment + v.energy) / 2, 共感力: (v.urban + v.global) / 2, リーダーシップ: (v.energy + v.structure) / 2 };
+      const f = {
+        協働力: (v.groove + v.urban) / 2, 計画力: (v.structure + v.sophistication) / 2,
+        創造力: (v.experiment + v.energy) / 2, 共感力: (v.urban + v.global) / 2, リーダーシップ: (v.energy + v.structure) / 2
+      };
       for (const [k, val] of Object.entries(f)) {
         const pct = Math.round(val * 100);
         const wrap = document.createElement("div");
@@ -883,10 +903,9 @@
       ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.font = '12px system-ui';
       const LJ = { energy: "エネルギー", sophistication: "洗練", groove: "ノリ", structure: "構成力", experiment: "実験性", urban: "都会感", global: "グローバル感" };
       labels.forEach((k, i) => { const a = i / N * 2 * Math.PI - Math.PI / 2; const x = cx + (R + 12) * Math.cos(a), y = cy + (R + 12) * Math.sin(a); ctx.textAlign = (x > cx) ? 'left' : (x < cx) ? 'right' : 'center'; ctx.fillText(LJ[k], x, y); });
-      ctx.beginPath(); labels.forEach((k, i) => { const val = (v[k] || 0); const a = i / N * 2 * Math.PI - Math.PI / 2; const x = cx + R * val * Math.cos(a), y = cy + R * val * Math.sin(a); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.closePath();
-      ctx.fillStyle = 'rgba(255,204,51,.25)'; ctx.fill(); ctx.strokeStyle = 'rgba(255,204,51,.9)'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.beginPath(); labels.forEach((k, i) => { const val = (v[k] || 0); const a = i / N * 2 * Math.PI - Math.PI / 2; const x = cx + R * val * Math.cos(a); const y = cy + R * val * Math.sin(a); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.closePath(); ctx.fillStyle = 'rgba(255,204,51,.25)'; ctx.fill(); ctx.strokeStyle = 'rgba(255,204,51,.9)'; ctx.lineWidth = 2; ctx.stroke();
     }
-
     /* 提言エンジン */
     const LABEL_JA = { energy: "エネルギー", sophistication: "洗練", groove: "ノリ", structure: "構成力", experiment: "実験性", urban: "都会感", global: "グローバル感" };
     const rnd = a => a[Math.floor(Math.random() * a.length)];
@@ -908,6 +927,7 @@
       const closings = { 協働力: ["まず相手の一打を聴く", "役割を小分けにして早めの合奏", "短い言葉で合意形成"], 計画力: ["ゴール→マイル→タスクで刻む", "締め切りから逆算", "TODOは3つに絞る"], 創造力: ["アイデアを10個スケッチ", "ラフでも形にする", "試作→共有→改善の小ループ"], 共感力: ["背景を一言で言語化", "“なぜ？”を一回だけ深く", "声を半音落として聴く"], リーダーシップ: ["始まりの合図を出す", "決める→伝える→支えるを速く", "背中で流れを作る"] };
       el.innerHTML = `${rnd(openings)} ${rnd(closings[top])}。`;
     }
+    /* レーダー描画 */
     function drawVectorRadar(v) {
       const cv = document.getElementById('vectorRadar'); if (!cv) return; const ctx = cv.getContext('2d');
       const dpr = Math.max(1, window.devicePixelRatio || 1), cssW = cv.clientWidth || cv.width, cssH = cv.clientHeight || cv.height;
@@ -963,6 +983,7 @@
         ${a.preview ? `<audio class="recAudio" controls preload="none" src="${a.preview}"></audio>` : `<div class="muted" style="font-size:12px">※試聴音源が見つかりませんでした</div>`}
       </div>
     </div>`).join('');
+      // 再生時に他プレーヤー停止・音量50%
       document.querySelectorAll(".recAudio").forEach(aud => {
         aud.volume = 0.5;
         aud.addEventListener("play", () => { document.querySelectorAll(".recAudio").forEach(o => { if (o !== aud) o.pause() }) });
@@ -972,31 +993,19 @@
     /* ========= Analyze ========= */
     async function analyze() {
       if (!TOKENS.length) return;
-      await renderMap();            // Map + Emotion
-      calcLove();                   // Love
+      // 1. Map（Emotion含む）
+      await renderMap();
+      // 2. Love
+      calcLove();
+      // 3. Vector / Work（バー＋レーダー＋提言）
       const v = randomVec();
-      drawProfile(v); renderVectorRadar(v); renderVectorNote(v);
+      drawProfile(v); drawVectorRadar(v); renderVectorNote(v);
       drawAbilities(v); renderWorkNote(v);
+      // 4. Recs
       await renderRecs();
       window.scrollTo(0, 0);
     }
     document.getElementById("analyzeBtn").onclick = analyze;
-
-    /* ========= WebAudioで Heart/Glow 同期 ========= */
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    const ctx = new AudioContext(); const src = ctx.createMediaElementSource(bgm); const analyser = ctx.createAnalyser();
-    src.connect(analyser); analyser.connect(ctx.destination); analyser.fftSize = 256; const dataArray = new Uint8Array(analyser.frequencyBinCount);
-    function animateBeat() {
-      requestAnimationFrame(animateBeat);
-      analyser.getByteFrequencyData(dataArray);
-      const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
-      const scale = 1 + avg / 300, glow = Math.min(1, avg / 200);
-      const liquid = document.getElementById("liquid"); if (liquid) liquid.setAttribute("transform", `scale(${scale})`);
-      document.querySelectorAll(".bubble").forEach(b => {
-        b.style.filter = `brightness(${1 + glow}) drop-shadow(0 0 ${20 + avg / 8}px rgba(255,255,180,${0.3 + glow / 2}))`;
-      });
-    }
-    bgm.onplay = async () => { if (ctx.state === "suspended") await ctx.resume(); animateBeat() }
 
     /* ========= AI Dock（Appleリンク埋込・Enter送信） ========= */
     const aiBtn = document.getElementById('aiBtn'), aiPanel = document.getElementById('aiPanel'),
@@ -1006,12 +1015,12 @@
     aiBtn.onclick = () => aiPanel.style.display = aiPanel.style.display === 'block' ? 'none' : 'block';
     aiClose.onclick = () => aiPanel.style.display = 'none';
     openSettings.onclick = () => { const key = prompt("OpenAI API Key（sk-...）を入力。保存はブラウザのみ。", ""); if (key) { localStorage.setItem("OPENAI_API_KEY", key); alert("保存しました。") } };
-    chatInput.addEventListener("keydown", e => { if (e.key === "Enter") chatSend.click() });
+    chatInput.addEventListener("keydown", e => { if (e.isComposing) return; if (e.key === "Enter") chatSend.click(); });
     chatSend.onclick = async () => {
       const q = chatInput.value.trim(); if (!q) return;
       chatLog.innerHTML += `<div class="me">🧑‍💻 ${q}</div>`; chatInput.value = ""; chatLog.scrollTop = chatLog.scrollHeight;
       const key = localStorage.getItem("OPENAI_API_KEY");
-      const context = `User tokens: ${(window.TOKENS || []).join(", ")}. Please recommend 3–5 similar artists NOT in tokens, with short reasons. Wrap artist names in [artist:Name].`;
+      const context = `User tokens: ${(window.TOKENS || []).join(", ")}. Recommend 3–5 similar artists NOT in tokens, short reasons. Wrap names in [artist:Name].`;
       if (!key) {
         const seed = (window.TOKENS || [])[0] || 'lofi';
         const pool = /fkj|daft|elect/i.test(seed) ? ['Tom Misch', 'Kaytranada', 'Bonobo', 'Soulwax', 'Justice'] : ['Vaundy', 'iri', 'SIRUP', 'Luna Li', 'Phum Viphurit'];
@@ -1036,9 +1045,7 @@
           msg = msg.replace(new RegExp(`\\[artist:${name.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&')}\\]`, 'g'), tag);
         }
         chatLog.innerHTML += `<div class="ai">🎵 ${msg}</div>`; chatLog.scrollTop = chatLog.scrollHeight;
-      } catch (e) {
-        chatLog.innerHTML += `<div class="ai">⚠️ ネットワークエラー。API設定を確認してください。</div>`;
-      }
+      } catch (e) { chatLog.innerHTML += `<div class="ai">⚠️ ネットワークエラー。API設定を確認してください。</div>`; }
     };
   </script>
 </body>
