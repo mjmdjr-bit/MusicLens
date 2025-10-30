@@ -3,8 +3,8 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>MusicLens — Apple & YouTube Edition v3.3</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MusicLens — Final v3.3</title>
   <style>
     :root {
       --gold: #ffcc33;
@@ -63,10 +63,9 @@
       font-weight: 900;
       letter-spacing: 1px;
       background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
-      background-size: 300% 100%;
       -webkit-background-clip: text;
       color: transparent;
-      animation: float 6s ease-in-out infinite, shine 5s linear infinite, glow 3s ease-in-out infinite;
+      animation: float 6s ease-in-out infinite, glow 3s ease-in-out infinite;
     }
 
     .hero p {
@@ -75,25 +74,16 @@
       opacity: 0.9;
     }
 
-    .hero button {
-      margin-top: 20px;
-    }
-
-    .hero small {
-      display: block;
-      margin-top: 18px;
-      opacity: 0.7;
-    }
-
     .cta {
+      margin-top: 20px;
       padding: 12px 26px;
+      border: none;
+      border-radius: 8px;
       background: linear-gradient(90deg, var(--gold), var(--gold2));
       color: #111;
-      border-radius: 8px;
       font-weight: 900;
       cursor: pointer;
-      border: none;
-      transition: all 0.4s ease;
+      transition: transform .3s, filter .3s;
     }
 
     .cta:hover {
@@ -119,10 +109,6 @@
       transition: transform 3s cubic-bezier(.25, .8, .25, 1);
     }
 
-    body.doors-active #doorContainer {
-      pointer-events: auto;
-    }
-
     body.doors-open .door.left {
       transform: translateX(-100%);
     }
@@ -131,7 +117,7 @@
       transform: translateX(100%);
     }
 
-    /* === 遷移後 === */
+    /* === メイン === */
     #app {
       display: none;
       opacity: 0;
@@ -145,36 +131,8 @@
       transform: translateY(0);
     }
 
-    /* === レスポンシブ対応 === */
-    @media (max-width: 768px) {
-      .logo {
-        font-size: 42px;
-      }
-
-      .hero {
-        padding: 24px;
-      }
-
-      .cta {
-        width: 100%;
-      }
-
-      .panel {
-        padding: 12px;
-      }
-
-      .section-title {
-        font-size: 13px;
-      }
-
-      input[type=text] {
-        font-size: 14px;
-      }
-    }
-
-    /* === コンテナ === */
     .container {
-      max-width: 1000px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 20px;
       position: relative;
@@ -192,6 +150,7 @@
       margin-top: 6px;
     }
 
+    /* === パネル === */
     .panel {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.2);
@@ -216,10 +175,6 @@
       color: #fff;
     }
 
-    input::placeholder {
-      color: rgba(255, 255, 255, 0.6);
-    }
-
     .btn {
       border: none;
       border-radius: 10px;
@@ -237,20 +192,6 @@
       background: rgba(255, 255, 255, .1);
       color: #fff;
       border: 1px solid rgba(255, 255, 255, .3);
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .chip {
-      background: rgba(255, 255, 255, .12);
-      border: 1px solid rgba(255, 255, 255, .22);
-      border-radius: 999px;
-      padding: 6px 10px;
     }
 
     /* === Progress Bar === */
@@ -280,52 +221,48 @@
       color: #fff;
     }
 
-    /* === 背景アニメーション（パーティクル） === */
-    @keyframes floaty {
-      0% {
-        transform: translateY(0);
-      }
-
-      100% {
-        transform: translateY(-10px);
-      }
-    }
-
-    /* === BGMボタン === */
-    #bgmBtn {
-      margin-top: 10px;
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #fff;
-      border-radius: 8px;
-      padding: 8px 16px;
+    /* === Listening Map === */
+    .bubble {
+      position: relative;
+      border-radius: 50%;
+      overflow: hidden;
+      width: 100px;
+      height: 100px;
+      margin: 8px;
+      display: inline-block;
+      box-shadow: 0 0 20px rgba(255, 215, 80, 0.5);
+      animation: floaty 6s ease-in-out infinite alternate, glow 3s ease-in-out infinite;
       cursor: pointer;
     }
 
-    #bgmBtn:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    /* === Graph Bars === */
-    .kpi {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 6px;
-      margin: 6px 0;
-    }
-
-    .bar {
-      height: 10px;
-      background: rgba(255, 255, 255, .12);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .fill {
+    .bubble img {
+      width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, #ffcc33, #ff8800);
-      width: 0%;
-      transition: width 1.2s ease;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(255, 215, 80, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 40px rgba(255, 215, 80, 0.9);
+      }
+    }
+
+    /* === レスポンシブ === */
+    @media(max-width:768px) {
+      .logo {
+        font-size: 42px;
+      }
+
+      .hero {
+        padding: 24px;
+      }
     }
   </style>
 </head>
@@ -333,7 +270,7 @@
 <body>
   <canvas id="fx"></canvas>
 
-  <!-- === TOP SCREEN === -->
+  <!-- === TOP === -->
   <section id="title">
     <div class="hero">
       <div class="logo">MusicLens</div>
@@ -343,7 +280,6 @@
     </div>
   </section>
 
-  <!-- === SLIDING DOORS === -->
   <div id="doorContainer">
     <div class="door left"></div>
     <div class="door right"></div>
@@ -360,12 +296,12 @@
       <!-- === Today's Feeling === -->
       <section class="panel">
         <div class="section-title">Today's Feeling（アーティストを入力）</div>
-        <input id="inputBox" type="text" placeholder="例：Daft Punk, Disclosure, FKJ, 7co …（カンマ区切りOK）">
+        <input id="inputBox" type="text" placeholder="例：Daft Punk, FKJ, Disclosure …（カンマ区切りOK）">
         <div style="margin-top:8px">
           <button id="addBtn" class="btn btn-ghost">Add</button>
           <button id="analyzeBtn" class="btn btn-primary">Analyze</button>
         </div>
-        <div id="chips" class="chips"></div>
+        <div id="chips" style="margin-top:8px"></div>
         <div id="progressWrap">
           <div id="progbar">
             <div id="progfill"></div>
@@ -373,406 +309,158 @@
           <div id="progtext">0%</div>
         </div>
       </section>
-      <script>
-        /* === 背景パーティクル === */
-        (function () {
-          const cvs = document.getElementById('fx'), ctx = cvs.getContext('2d', { alpha: true });
-          let W = 0, H = 0, stars = [];
-          function size() { W = cvs.width = innerWidth; H = cvs.height = innerHeight; }
-          function make() {
-            stars = Array.from({ length: 160 }, () => ({
-              x: Math.random() * W,
-              y: Math.random() * H,
-              vx: (Math.random() - .5) * .25,
-              vy: (Math.random() - .5) * .25,
-              r: 1 + Math.random() * 2,
-              a: .2 + .2 * Math.random()
-            }));
-          }
-          function draw() {
-            ctx.clearRect(0, 0, W, H);
-            for (const s of stars) {
-              s.x += s.vx; s.y += s.vy;
-              if (s.x < 0 || s.x > W) s.vx *= -1;
-              if (s.y < 0 || s.y > H) s.vy *= -1;
-              const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 8);
-              g.addColorStop(0, `rgba(255,255,200,${s.a})`);
-              g.addColorStop(1, 'transparent');
-              ctx.fillStyle = g;
-              ctx.beginPath();
-              ctx.arc(s.x, s.y, s.r * 8, 0, 6.283);
-              ctx.fill();
-            }
-            requestAnimationFrame(draw);
-          }
-          addEventListener('resize', () => { size(); make(); });
-          size(); make(); draw();
-        })();
 
-        /* === スライド扉アニメーション === */
-        document.getElementById("startBtn").onclick = () => {
+      <section class="panel">
+        <div class="section-title">Listening Map（音楽ジャンル別アーティスト）</div>
+        <div id="mapArea"></div>
+      </section>
+    </main>
+  </section>
+
+  <script>
+    /* === ページ遷移 === */
+    document.getElementById("startBtn").onclick = () => {
+      window.scrollTo(0, 0);
+      document.body.classList.add("doors-open");
+      setTimeout(() => {
+        document.getElementById("title").style.display = "none";
+        document.getElementById("app").classList.add("show");
+      }, 3000);
+    };
+    document.getElementById("backTop").onclick = () => {
+      document.getElementById("app").classList.remove("show");
+      document.getElementById("title").style.display = "flex";
+      document.body.classList.remove("doors-open");
+    };
+
+    /* === 背景パーティクル === */
+    (function () {
+      const cvs = document.getElementById('fx'), ctx = cvs.getContext('2d', { alpha: true });
+      let W = 0, H = 0, stars = [];
+      function size() { W = cvs.width = innerWidth; H = cvs.height = innerHeight; }
+      function make() { stars = Array.from({ length: 120 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25, r: 1 + Math.random() * 2, a: .2 + .2 * Math.random() })); }
+      function draw() { ctx.clearRect(0, 0, W, H); for (const s of stars) { s.x += s.vx; s.y += s.vy; if (s.x < 0 || s.x > W) s.vx *= -1; if (s.y < 0 || s.y > H) s.vy *= -1; const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 8); g.addColorStop(0, `rgba(255,255,200,${s.a})`); g.addColorStop(1, 'transparent'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 8, 0, 6.283); ctx.fill(); } requestAnimationFrame(draw); } addEventListener('resize', () => { size(); make(); }); size(); make(); draw();
+    })();
+
+    /* === Add / Analyze === */
+    document.addEventListener("DOMContentLoaded", () => {
+      let TOKENS = [];
+      const input = document.getElementById("inputBox");
+      const chips = document.getElementById("chips");
+      const addBtn = document.getElementById("addBtn");
+      const analyzeBtn = document.getElementById("analyzeBtn");
+
+      function renderChips() {
+        chips.innerHTML = TOKENS.map((t, i) => `<span style="margin:4px;padding:4px 10px;border:1px solid rgba(255,255,255,.3);border-radius:20px;display:inline-block;">${t}<a onclick="remove(${i})" style="margin-left:6px;cursor:pointer;">✕</a></span>`).join("");
+      }
+
+      window.remove = function (i) { TOKENS.splice(i, 1); renderChips(); }
+
+      addBtn.addEventListener("click", () => {
+        if (!input.value.trim()) return;
+        const raw = input.value.replace(/，/g, ",");
+        const items = raw.split(",").map(t => t.trim()).filter(Boolean);
+        TOKENS.push(...items); input.value = ""; renderChips();
+      });
+
+      analyzeBtn.addEventListener("click", () => {
+        if (!TOKENS.length) { alert("アーティストを追加してください。"); return; }
+        runProgress(async () => {
+          await renderMap();
           window.scrollTo(0, 0);
-          document.body.classList.add("doors-active");
-          setTimeout(() => document.body.classList.add("doors-open"), 50);
-          setTimeout(() => {
-            document.body.classList.remove("doors-active");
-            document.getElementById("title").style.display = "none";
-            const app = document.getElementById("app");
-            app.classList.add("show");
-            playBGM();
-            setTimeout(() => window.scrollTo(0, 0), 100);
-          }, 3000);
-        };
-        document.getElementById("backTop").onclick = () => {
-          const app = document.getElementById("app");
-          app.classList.remove("show");
-          document.getElementById("title").style.display = "flex";
-          document.body.classList.remove("doors-open");
-          window.scrollTo(0, 0);
-        };
+        });
+      });
 
-        /* === BGM === */
-        let bgm = null;
-        const bgmBtn = document.getElementById("bgmBtn");
-        async function playBGM() {
-          if (bgm) return;
-          try {
-            const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent("FKJ TUI")}&entity=musicTrack&limit=1`);
-            const j = await r.json();
-            const t = j.results?.[0];
-            bgm = new Audio(t?.previewUrl || "");
-            bgm.loop = true;
-            bgm.volume = 0.5;
-            await bgm.play();
-          } catch (e) { console.warn("BGM load failed", e); }
-        }
-        bgmBtn.onclick = () => { if (!bgm) return; if (bgm.paused) { bgm.play(); bgmBtn.textContent = "BGM: FKJ – TUI ■"; } else { bgm.pause(); bgmBtn.textContent = "BGM: FKJ – TUI ▶︎"; } };
+      const progressWrap = document.getElementById('progressWrap'),
+        progressFill = document.getElementById('progfill'),
+        progressText = document.getElementById('progtext');
 
-        /* === 入力管理 === */
-        let TOKENS = [];
-        const input = document.getElementById('inputBox');
-        const chips = document.getElementById('chips');
-        function renderChips() {
-          chips.innerHTML = TOKENS.map((t, i) => `<span class="chip">${t}<a onclick="remove(${i})">✕</a></span>`).join('');
-        }
-        function add() {
-          if (!input.value.trim()) return;
-          const items = input.value.split(",").map(t => t.trim()).filter(Boolean);
-          TOKENS.push(...items);
-          input.value = ''; renderChips();
-        }
-        function remove(i) { TOKENS.splice(i, 1); renderChips(); }
-        document.getElementById('addBtn').onclick = add;
-
-        /* === Progressバー === */
-        const progressWrap = document.getElementById('progressWrap'),
-          progressFill = document.getElementById('progfill'),
-          progressText = document.getElementById('progtext');
-        function runProgress(cb) {
-          progressWrap.style.display = 'block';
-          let p = 0;
-          const id = setInterval(() => {
-            p += 4 + Math.random() * 5;
-            if (p >= 100) {
-              clearInterval(id);
-              p = 100;
-              progressFill.style.width = '100%';
-              progressText.textContent = '100%';
-              setTimeout(() => { progressWrap.style.display = 'none'; cb(); }, 400);
-            } else {
-              progressFill.style.width = p + '%';
-              progressText.textContent = Math.floor(p) + '%';
-            }
-          }, 80);
-        }
-        /* === Listening Map === */
-        const mapArea = document.getElementById("mapArea");
-
-        /* バブル用の発光アニメーション */
-        const style = document.createElement("style");
-        style.innerHTML = `
-  .bubble {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(255,215,80,0.5);
-    animation: floaty 6s ease-in-out infinite alternate, glow 3s ease-in-out infinite;
-    cursor: pointer;
-    transition: transform 0.4s ease;
-  }
-  .bubble:hover { transform: scale(1.15); }
-  .bubble img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-  @keyframes glow {
-    0%,100% { box-shadow: 0 0 20px rgba(255,215,80,0.4); }
-    50% { box-shadow: 0 0 40px rgba(255,215,80,0.9); }
-  }
-`;
-        document.head.appendChild(style);
-
-        /* デモ用バブル生成（Apple Music / YouTubeリンク） */
-        async function renderMap() {
-          mapArea.innerHTML = "";
-          if (!TOKENS.length) {
-            mapArea.innerHTML = "<p style='opacity:.7'>アーティストを入力するとマップに表示されます。</p>";
-            return;
+      function runProgress(cb) {
+        progressWrap.style.display = 'block'; let p = 0;
+        const id = setInterval(() => {
+          p += 5 + Math.random() * 4;
+          if (p >= 100) {
+            clearInterval(id); p = 100;
+            progressFill.style.width = '100%'; progressText.textContent = '100%';
+            setTimeout(() => { progressWrap.style.display = 'none'; cb(); }, 400);
           }
-          const data = await Promise.all(TOKENS.map(t => fetchArtistData(t)));
-          data.forEach(a => {
-            const b = document.createElement("div");
-            b.className = "bubble";
-            b.innerHTML = `<img src="${a.img}" alt="${a.name}">`;
-            b.onclick = () => showPopup(a);
-            mapArea.appendChild(b);
-          });
-        }
+          else { progressFill.style.width = p + '%'; progressText.textContent = Math.floor(p) + '%'; }
+        }, 80);
+      }
 
-        /* ダミーデータ生成関数（Spotify削除済・Apple/YouTube中心） */
-        async function fetchArtistData(name) {
-          const itunes = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=musicArtist&limit=1`);
-          const j = await itunes.json();
-          const a = j.results?.[0];
-          return {
-            name: name,
-            img: a?.artworkUrl100?.replace("100x100", "200x200") || `https://picsum.photos/seed/${encodeURIComponent(name)}/200/200`,
-            desc: a?.artistName ? `${a.artistName} は世界中のファンに愛されるアーティストです。` : `${name} に関する情報が見つかりません。`,
-            apple: `https://music.apple.com/us/search?term=${encodeURIComponent(name)}`,
-            yt: `https://www.youtube.com/results?search_query=${encodeURIComponent(name + ' official')}`
-          };
-        }
-
-        /* === ポップアップ === */
-        const popup = document.createElement("div");
-        popup.id = "popup";
-        popup.style.cssText = `
-  display:none;position:fixed;inset:0;
-  justify-content:center;align-items:center;
-  background:rgba(0,0,0,0.6);
-  z-index:999;
+      async function renderMap() {
+        const map = document.getElementById("mapArea"); map.innerHTML = "";
+        TOKENS.forEach(a => {
+          const el = document.createElement("div");
+          el.className = "bubble";
+          el.innerHTML = `<img src="https://picsum.photos/seed/${encodeURIComponent(a)}/200/200" alt="${a}" title="${a}">`;
+          el.onclick = () => showPopup(a);
+          map.appendChild(el);
+        });
+      }
+      /* === ポップアップ生成 === */
+      const popup = document.createElement("div");
+      popup.id = "popup";
+      popup.style.cssText = `
+  display: none; position: fixed; inset: 0;
+  justify-content: center; align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
 `;
-        popup.innerHTML = `
-  <div id="popBox" style="
-    max-width:340px;width:92%;
-    background:rgba(255,255,255,0.08);
-    border:1px solid rgba(255,255,255,0.3);
-    border-radius:14px;
-    padding:18px;text-align:center;
-    backdrop-filter:blur(10px);color:#fff;">
-    <img id="popImg" src="" alt="" style="width:100px;height:100px;border-radius:50%;object-fit:cover;box-shadow:0 0 20px rgba(255,215,80,0.5)"/>
-    <h3 id="popName" style="margin:10px 0 6px;font-size:20px;color:#ffd36b;"></h3>
-    <p id="popDesc" style="font-size:14px;opacity:0.9;margin-bottom:10px;"></p>
-    <div>
-      <a id="popApple" target="_blank" style="margin-right:12px;color:#ffcc33;font-weight:bold;">Apple Music</a>
-      <a id="popYT" target="_blank" style="color:#ff6666;font-weight:bold;">YouTube</a>
+      popup.innerHTML = `
+  <div id="popupBox" style="
+    max-width: 360px; width: 90%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    padding: 20px;
+    color: #fff;
+    text-align: center;
+    backdrop-filter: blur(12px);
+  ">
+    <img id="popupImg" src="" alt="Artist" style="width:120px;height:120px;border-radius:50%;object-fit:cover;box-shadow:0 0 20px rgba(255,255,180,.4);">
+    <h2 id="popupName" style="margin-top:10px;color:#ffd36b;"></h2>
+    <p id="popupDesc" style="font-size:14px;opacity:0.9;margin-top:8px;"></p>
+    <div style="margin-top:10px;">
+      <a id="popupApple" target="_blank" style="margin-right:12px;color:#ffcc33;font-weight:bold;">Apple Music</a>
+      <a id="popupYT" target="_blank" style="color:#ff6666;font-weight:bold;">YouTube</a>
     </div>
-    <button id="popClose" class="btn btn-ghost" style="margin-top:12px">閉じる</button>
+    <button id="popupClose" style="
+      margin-top:14px;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      padding: 8px 16px;
+      cursor: pointer;">閉じる</button>
   </div>
 `;
-        document.body.appendChild(popup);
+      document.body.appendChild(popup);
 
-        /* ポップアップ表示制御 */
-        function showPopup(a) {
-          document.getElementById("popImg").src = a.img;
-          document.getElementById("popName").textContent = a.name;
-          document.getElementById("popDesc").textContent = a.desc;
-          document.getElementById("popApple").href = a.apple;
-          document.getElementById("popYT").href = a.yt;
+      /* === バブルクリックでポップアップ表示 === */
+      async function showPopup(artistName) {
+        try {
+          const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(artistName)}&entity=musicArtist&limit=1`);
+          const data = await res.json();
+          const info = data.results[0];
+          document.getElementById("popupImg").src = info?.artworkUrl100?.replace("100x100", "300x300") || `https://picsum.photos/seed/${encodeURIComponent(artistName)}/300/300`;
+          document.getElementById("popupName").textContent = info?.artistName || artistName;
+          document.getElementById("popupDesc").textContent = info?.primaryGenreName
+            ? `${info.artistName} は ${info.primaryGenreName} 系アーティストです。`
+            : `${artistName} に関する情報が見つかりません。`;
+          document.getElementById("popupApple").href = `https://music.apple.com/us/search?term=${encodeURIComponent(artistName)}`;
+          document.getElementById("popupYT").href = `https://www.youtube.com/results?search_query=${encodeURIComponent(artistName)}+official`;
           popup.style.display = "flex";
+        } catch (e) {
+          console.warn("Popup Error:", e);
         }
-        document.getElementById("popClose").onclick = () => popup.style.display = "none";
+      }
 
-        /* === Analyze 統合 === */
-        async function analyze() {
-          if (!TOKENS.length) return;
-          runProgress(async () => {
-            await renderMap();
-            calcLove();
-            const v = randomVec();
-            drawProfile(v);
-            drawAbilities(v);
-            await renderRecs();
-            window.scrollTo(0, 0);
-          });
-        }
-        document.getElementById("analyzeBtn").onclick = analyze;
+      document.getElementById("popupClose").onclick = () => popup.style.display = "none";
+      popup.onclick = (e) => { if (e.target === popup) popup.style.display = "none"; };
 
-        /* === Music Love（波がハートの中に収まる） === */
-        function calcLove() {
-          const n = TOKENS.length;
-          const score = Math.min(100, Math.round(n * 7));
-          document.getElementById("lovePercent").textContent = score + "%";
-          const c = document.getElementById("loveComment");
-          if (score < 40) c.textContent = "音楽との出会いを楽しむ第一歩。";
-          else if (score < 70) c.textContent = "感性が豊かに広がる音楽の旅の途中。";
-          else c.textContent = "あなたの中に、音楽が息づいています。";
-        }
-
-        /* === Vector / Work Strengths === */
-        function randomVec() {
-          return {
-            energy: Math.random(),
-            sophistication: Math.random(),
-            groove: Math.random(),
-            structure: Math.random(),
-            experiment: Math.random(),
-            urban: Math.random(),
-            global: Math.random()
-          };
-        }
-        function drawProfile(v) {
-          const el = document.getElementById("profileBars");
-          el.innerHTML = "";
-          const labels = {
-            energy: "エネルギー", sophistication: "洗練", groove: "ノリ",
-            structure: "構成力", experiment: "実験性", urban: "都会感", global: "グローバル感"
-          };
-          for (const [k, val] of Object.entries(v)) {
-            const pct = Math.round(val * 100);
-            const bar = document.createElement("div");
-            bar.className = "bar";
-            const fill = document.createElement("div");
-            fill.className = "fill";
-            fill.style.width = "0%";
-            bar.appendChild(fill);
-            el.innerHTML += `<div class="kpi"><div>${labels[k]}</div><div>${pct}%</div></div>`;
-            el.appendChild(bar);
-            setTimeout(() => { fill.style.width = pct + "%"; }, 200);
-          }
-        }
-        function drawAbilities(v) {
-          const el = document.getElementById("abilities");
-          el.innerHTML = "";
-          const factors = {
-            collaboration: (v.groove + v.urban) / 2,
-            planning: (v.structure + v.sophistication) / 2,
-            creativity: (v.experiment + v.energy) / 2,
-            empathy: (v.urban + v.global) / 2,
-            leadership: (v.energy + v.structure) / 2
-          };
-          const labels = {
-            collaboration: "協働力", planning: "計画力", creativity: "創造力",
-            empathy: "共感力", leadership: "リーダーシップ"
-          };
-          for (const [k, val] of Object.entries(factors)) {
-            const pct = Math.round(val * 100);
-            const bar = document.createElement("div");
-            bar.className = "bar";
-            const fill = document.createElement("div");
-            fill.className = "fill";
-            fill.style.width = "0%";
-            bar.appendChild(fill);
-            el.innerHTML += `<div class="kpi"><div>${labels[k]}</div><div>${pct}%</div></div>`;
-            el.appendChild(bar);
-            setTimeout(() => { fill.style.width = pct + "%"; }, 200);
-          }
-        }
-
-        /* === Recommendations（Apple Music / YouTubeリンク） === */
-        async function fetchITunesPreview(n) {
-          try {
-            const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(n)}&entity=musicArtist&limit=1`);
-            const j = await r.json();
-            const a = j.results?.[0];
-            return a ? {
-              name: a.artistName,
-              art: a.artworkUrl100?.replace("100x100", "200x200"),
-              link: `https://music.apple.com/us/search?term=${encodeURIComponent(a.artistName)}`
-            } : {};
-          } catch { return {}; }
-        }
-        async function renderRecs() {
-          const exclude = new Set(TOKENS.map(t => t.toLowerCase()));
-          const recs = [];
-          for (const name of TOKENS) {
-            const r = await fetchITunesPreview(name);
-            if (r.name && !exclude.has(r.name.toLowerCase())) recs.push(r);
-          }
-          const recEl = document.getElementById("recs");
-          if (!recs.length) {
-            recEl.innerHTML = "<p>アーティスト入力後、音楽の世界が広がります。</p>";
-            return;
-          }
-          recEl.innerHTML = recs.map(a => `
-  <div class="recs-item">
-    <img src="${a.art}" alt="${a.name}">
-    <div>
-      <strong>${a.name}</strong><br>
-      <a href="${a.link}" target="_blank" style="color:#ffe28a">Apple Music</a> /
-      <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(a.name + ' official')}"
-         target="_blank" style="color:#ff6666">YouTube</a>
-    </div>
-  </div>`).join('');
-        }
-
-        /* === Analyze 統合 === */
-        async function analyze() {
-          if (!TOKENS.length) return;
-          runProgress(async () => {
-            await renderMap();
-            calcLove();
-            const v = randomVec();
-            drawProfile(v);
-            drawAbilities(v);
-            await renderRecs();
-            window.scrollTo(0, 0);
-          });
-        }
-        document.getElementById("analyzeBtn").onclick = analyze;
-        /* === 入力管理修正版 === */
-        document.addEventListener("DOMContentLoaded", () => {
-
-          let TOKENS = [];
-          const input = document.getElementById("inputBox");
-          const chips = document.getElementById("chips");
-          const addBtn = document.getElementById("addBtn");
-          const analyzeBtn = document.getElementById("analyzeBtn");
-
-          function renderChips() {
-            chips.innerHTML = TOKENS.map((t, i) =>
-              `<span class="chip">${t}<a onclick="remove(${i})">✕</a></span>`
-            ).join("");
-          }
-
-          function addArtists() {
-            if (!input.value.trim()) return;
-            const raw = input.value.replace(/，/g, ",");
-            const items = raw.split(",").map(t => t.trim()).filter(Boolean);
-            TOKENS.push(...items);
-            input.value = "";
-            renderChips();
-            console.log("🎵 現在のTOKENS:", TOKENS);
-          }
-
-          window.remove = function (i) {
-            TOKENS.splice(i, 1);
-            renderChips();
-          };
-
-          addBtn.addEventListener("click", addArtists);
-          analyzeBtn.addEventListener("click", () => {
-            if (!TOKENS.length) {
-              alert("アーティストを追加してください。");
-              return;
-            }
-            runProgress(async () => {
-              await renderMap();
-              calcLove();
-              const v = randomVec();
-              drawProfile(v);
-              drawAbilities(v);
-              await renderRecs();
-              window.scrollTo(0, 0);
-            });
-          });
-        });
-
-      </script>
+    });
+  </script>
 </body>
 
 </html>
