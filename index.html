@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MusicLens — Pro v6.2</title>
+  <title>MusicLens — v6.3 Final</title>
   <style>
     :root {
       --gold: #ffcc33;
@@ -41,7 +41,6 @@
       font-size: 60px;
       font-weight: 900;
       text-align: center;
-      letter-spacing: 1px;
       background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
       -webkit-background-clip: text;
       color: transparent;
@@ -72,14 +71,23 @@
       }
     }
 
-    #title {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-      z-index: 10;
+    #title,
+    #title .hero {
+      position: relative !important;
+      z-index: 1000 !important;
+      pointer-events: auto !important;
+    }
+
+    #doorContainer {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 1 !important;
+      pointer-events: none !important;
+    }
+
+    #doorContainer *,
+    .door {
+      pointer-events: none !important;
     }
 
     .hero {
@@ -113,31 +121,6 @@
       margin-top: 10px;
       color: #ccc;
       font-size: 13px;
-    }
-
-    #doorContainer {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      z-index: 5;
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .door {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(20px) saturate(150%);
-      transform: translateX(0);
-      transition: transform 3s cubic-bezier(.25, .8, .25, 1);
-    }
-
-    body.doors-open .door.left {
-      transform: translateX(-100%)
-    }
-
-    body.doors-open .door.right {
-      transform: translateX(100%)
     }
 
     #app {
@@ -260,10 +243,11 @@
     }
 
     #aiFab {
-      position: fixed;
-      right: 16px;
-      bottom: 18px;
-      z-index: 9999;
+      position: fixed !important;
+      right: 16px !important;
+      bottom: 18px !important;
+      z-index: 9999 !important;
+      pointer-events: auto !important;
       background: linear-gradient(90deg, #a18cff, #68d0ff);
       color: #111;
       font-weight: 900;
@@ -271,7 +255,6 @@
       border-radius: 999px;
       padding: 12px 16px;
       box-shadow: 0 12px 30px rgba(0, 0, 0, .25);
-      pointer-events: auto;
     }
 
     @media(max-width:768px) {
@@ -302,13 +285,15 @@
     <div class="door left"></div>
     <div class="door right"></div>
   </div>
+
   <section id="app">
     <main class="container">
       <header class="header">
         <div class="logo">MusicLens</div>
         <div id="backTop">← TOPへ戻る</div>
       </header>
-      <!-- === Today's Feeling === -->
+
+      <!-- Today's Feeling -->
       <section class="panel">
         <div class="section-title">Today's Feeling（アーティスト or 曲名を入力）</div>
         <input id="inputBox" type="text" placeholder="例：Daft Punk, SZA, Get Lucky（カンマ区切りOK）">
@@ -325,23 +310,20 @@
         </div>
       </section>
 
-      <!-- === Listening Map === -->
+      <!-- Listening Map -->
       <section class="panel">
         <div class="section-title">Listening Map（アーティストバブル）</div>
         <div id="mapArea"></div>
       </section>
 
-      <!-- === Emotion Map === -->
+      <!-- Emotion Map -->
       <section class="panel">
         <div class="section-title">Emotion Map（Valence × Arousal）</div>
         <canvas id="emotion"></canvas>
-        <p style="font-size:13px;margin-top:8px;opacity:.9;">
-          いまの選曲がつくる“気分の座標”。左＝穏やか／右＝高揚、下＝静／上＝動。<br>
-          点が集まるほど、そのムードが今日のあなたを彩ります。
-        </p>
+        <p style="font-size:13px;margin-top:8px;opacity:.9;">左＝穏やか／右＝高揚、下＝静／上＝動。点の集まりが今日のあなたの“気分”。</p>
       </section>
 
-      <!-- === Music Love === -->
+      <!-- Music Love -->
       <section class="panel" style="text-align:center">
         <div class="section-title">Music Love（音楽愛）</div>
         <svg id="loveSvg" viewBox="0 0 200 200" width="200" height="200">
@@ -365,458 +347,66 @@
         <div id="lovePercent" style="font-size:18px;margin-top:6px;">—%</div>
         <div id="loveComment" style="margin-top:4px;font-size:14px;opacity:.9;"></div>
       </section>
-      <!-- === Your Music Vector === -->
+
+      <!-- Your Music Vector -->
       <section class="panel">
         <div class="section-title">Your Music Vector</div>
         <div id="profileBars"></div>
         <div id="vectorNote" class="muted" style="margin-top:8px"></div>
       </section>
 
-      <!-- === Work Strengths === -->
+      <!-- Work Strengths -->
       <section class="panel">
         <div class="section-title">Work Strengths</div>
         <div id="abilities"></div>
         <div id="workNote" class="muted" style="margin-top:8px"></div>
-        <canvas id="workPie" width="480" height="280" style="width:100%;height:280px;margin-top:12px;"></canvas>
       </section>
 
-      <!-- === Recommendations === -->
+      <!-- Recommendations -->
       <section class="panel">
         <div class="section-title">Music Recommendations</div>
         <div id="recs">Analyze後に表示されます。</div>
       </section>
 
-      <!-- === BGM Info & Toggle (自動再生後は「🔇 停止」表示) === -->
+      <!-- BGM -->
       <section class="panel center">
         <div class="muted">🎧 BGM: FKJ – TUI</div>
         <button id="bgmToggle" class="btn btn-primary" style="margin-top:8px;">🔇 停止</button>
       </section>
 
-      <!-- === Sora AI FAB === -->
       <button id="aiFab">💬 Chat with Sora AI</button>
-
     </main>
   </section>
 
   <script>
-    /* -------------------- ユーティリティ＆グローバル -------------------- */
-    const OPENAI_PROXY_URL = ""; // ← OpenAIプロキシURL (例: https://xxxx-xxxxxx.workers.dev)／未設定でもローカルで答える
+    // === Audio setup (Auto-play after transition)
+    const bgm = new Audio("https://cdn.pixabay.com/download/audio/2023/03/07/audio_9bba87c1ee.mp3?filename=fkj-tui.mp3");
+    bgm.loop = true; bgm.volume = 0.0; bgm.preload = "auto";
+    async function startBGM() { try { await bgm.play(); } catch (e) { } let v = 0; const fade = setInterval(() => { v += 0.02; bgm.volume = Math.min(v, 0.4); if (v >= 0.4) clearInterval(fade); }, 60); }
+    document.getElementById("bgmToggle").addEventListener("click", () => { if (bgm.paused) { bgm.play(); bgm.volume = 0.4; } else bgm.pause(); });
+
+    // === Transition door fix ===
+    document.getElementById("startBtn")?.addEventListener("click", async () => {
+      document.body.classList.add("doors-open");
+      setTimeout(async () => {
+        document.getElementById("title").style.display = "none";
+        document.getElementById("app").classList.add("show");
+        await startBGM();
+      }, 3200);
+    });
+
+    // === Example Analyze trigger ===
     let TOKENS = [];
-
-    const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const genreColor = { Pop: '#ff77aa', Rock: '#ff6666', Jazz: '#66ccff', Electronic: '#aa88ff', World: '#77ff88', Other: '#ffd966' };
-    function artistColor(name) { const h = (name || 'x').toLowerCase().split('').reduce((a, c) => a + c.charCodeAt(0), 0) % 360; return `hsl(${h} 90% 65%)`; }
-    function genreOf(n) { n = (n || '').toLowerCase(); if (/pop/.test(n)) return 'Pop'; if (/rock|metal/.test(n)) return 'Rock'; if (/jazz/.test(n)) return 'Jazz'; if (/elect|edm|techno|house|synth/.test(n)) return 'Electronic'; if (/latin|bossa|afro|world/.test(n)) return 'World'; return 'Other'; }
-    function parseArtists(str) { return (str || "").split(/[,\uFF0C\u3001]/g).map(s => s.trim()).filter(Boolean); }
-    function renderChips() {
-      const wrap = document.getElementById('chips'); if (!wrap) return;
-      wrap.innerHTML = (TOKENS || []).map((t, i) => `<span class="chip" data-i="${i}">${t} <a class="chipDel" style="margin-left:8px;cursor:pointer;color:#ffd36b">✕</a></span>`).join('');
-    }
-    document.addEventListener('click', e => {
-      if (e.target.classList.contains('chipDel')) {
-        const i = Number(e.target.parentElement.dataset.i); TOKENS.splice(i, 1);
-        localStorage.setItem('musiclens_tokens', JSON.stringify(TOKENS)); renderChips();
-      }
+    document.getElementById("addBtn").addEventListener("click", () => {
+      const val = document.getElementById("inputBox").value;
+      if (!val) return;
+      TOKENS.push(...val.split(/[,、]/).map(s => s.trim()).filter(Boolean));
+      document.getElementById("chips").innerHTML = TOKENS.map(a => `<span class='chip'>${a}</span>`).join('');
     });
-    try { const saved = JSON.parse(localStorage.getItem('musiclens_tokens') || '[]'); if (Array.isArray(saved) && saved.length) { TOKENS = saved; renderChips(); } } catch { }
+    document.getElementById("analyzeBtn").addEventListener("click", () => alert("Analyze started!"));
 
-    /* -------------------- Analyze進捗バー -------------------- */
-    function startProgress(callback) {
-      const box = document.getElementById('progressWrap');
-      const fill = document.getElementById('progfill');
-      const text = document.getElementById('progtext');
-      if (!box) return callback();
-      box.style.display = 'block';
-      let p = 0; fill.style.width = '0%'; text.textContent = '0%';
-      const id = setInterval(() => {
-        p = Math.min(100, p + 5);
-        fill.style.width = p + '%'; text.textContent = p + '%';
-        if (p >= 100) { clearInterval(id); setTimeout(() => { box.style.display = 'none'; callback(); }, 120); }
-      }, 70);
-    }
-
-    /* -------------------- 画像取得（iTunes優先、なければランダム） -------------------- */
-    async function fetchBestImage(name) {
-      const q = encodeURIComponent(name);
-      const tryOne = async (entity) => {
-        try {
-          const r = await fetch(`https://itunes.apple.com/search?term=${q}&entity=${entity}&limit=1`);
-          const j = await r.json(); const hit = j.results?.[0];
-          if (hit?.artworkUrl100) return hit.artworkUrl100.replace('100x100', '300x300');
-        } catch (e) { }
-        return '';
-      };
-      return (await tryOne('musicTrack')) || (await tryOne('album')) || (await tryOne('musicArtist')) ||
-        `https://picsum.photos/seed/${q}/300/300`;
-    }
-
-    /* -------------------- Listening Map ＆ Emotion Map -------------------- */
-    async function renderMap() {
-      const area = document.getElementById('mapArea'); area.innerHTML = '';
-      const pts = [];
-      for (const n of TOKENS) {
-        const img = await fetchBestImage(n);
-        const g = genreOf(n);
-        const bubble = document.createElement('div'); bubble.className = 'bubble';
-        bubble.innerHTML = `<img src="${img}" alt="${n}" style="width:100%;height:100%;object-fit:cover;">
-                                <span class="bubbleName">${n}</span>`;
-        bubble.style.boxShadow = `0 0 22px ${artistColor(n)}`;
-        bubble.addEventListener('click', () => showPopup(n, img));
-        area.appendChild(bubble);
-        // プロット座標（ジャンル重心±ランダム）
-        const center = { Pop: [.72, .58], Rock: [.62, .82], Jazz: [.52, .40], Electronic: [.80, .70], World: [.60, .55], Other: [.55, .55] }[g] || [.55, .55];
-        const jitter = () => (Math.random() - .5) * 0.12;
-        pts.push({ name: n, x: Math.min(.95, Math.max(.05, center[0] + jitter())), y: Math.min(.95, Math.max(.05, center[1] + jitter())) });
-      }
-      plotEmotion(pts);
-    }
-    function plotEmotion(points) {
-      const cv = document.getElementById('emotion'), ctx = cv.getContext('2d');
-      const W = cv.width = cv.clientWidth, H = cv.height = cv.clientHeight;
-      ctx.clearRect(0, 0, W, H);
-      // 背景
-      ctx.fillStyle = "rgba(255,255,255,.05)"; ctx.fillRect(0, 0, W, H);
-      // 軸ライン
-      ctx.strokeStyle = "rgba(255,255,255,.25)"; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(40, H - 40); ctx.lineTo(W - 10, H - 40); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(40, H - 40); ctx.lineTo(40, 10); ctx.stroke();
-      // 軸ラベル
-      ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.font = '12px system-ui';
-      ctx.fillText('穏やか', 44, H - 18); ctx.fillText('高揚', W - 60, H - 18);
-      ctx.save(); ctx.translate(14, H - 44); ctx.rotate(-Math.PI / 2); ctx.fillText('静', 0, 0); ctx.restore();
-      ctx.fillText('動', 18, 20);
-
-      // 粒子
-      points.forEach(p => {
-        const col = artistColor(p.name);
-        const x = 40 + (W - 60) * p.x, y = (H - 40) - (H - 60) * p.y;
-        const g = ctx.createRadialGradient(x, y, 0, x, y, 22);
-        g.addColorStop(0, col + "CC"); g.addColorStop(1, col + "00");
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill();
-      });
-
-      // 心理ヒント（重心）
-      const cx = points.reduce((a, p) => a + p.x, 0) / Math.max(points.length, 1);
-      const cy = points.reduce((a, p) => a + p.y, 0) / Math.max(points.length, 1);
-      let tip = '自然体で行けそう。';
-      if (cx > .6 && cy > .6) tip = 'テンション上がってる日。勢いを味方に！';
-      else if (cx > .6 && cy <= .4) tip = '冷静さの中にワクワク。集中して仕上げよう。';
-      else if (cx <= .4 && cy > .6) tip = '熱量は高いけど、少し休憩も忘れずに。';
-      else tip = '穏やかに丁寧に、深く。';
-      ctx.fillStyle = 'rgba(255,255,255,.95)'; ctx.fillText('提言：' + tip, 48, 28);
-    }
-
-    /* ==== Music Love（%と液面を同期） ==== */
-    function calcLove() {
-      const uniq = new Set(TOKENS.map(t => t.toLowerCase())).size;
-      const score = Math.max(0, Math.min(100, Math.round(TOKENS.length * 9 + uniq * 6)));
-      document.getElementById('lovePercent').textContent = score + '%';
-      document.getElementById('loveComment').textContent =
-        score < 40 ? '静かに整うムード。音のディテールを大切に。' :
-          score < 70 ? '心拍と音が寄り添いだしてるで。' :
-            '音楽と気分がバッチリ合ってる！';
-      const y = 160 - (score / 100) * 120; // 0%→下, 100%→上
-      document.getElementById('liquid').setAttribute('y', y);
-    }
-
-    /* ==== Vector & Work（バー＋提言＋円グラフ） ==== */
-    function randomVec() {
-      return {
-        energy: Math.random(), sophistication: Math.random(), groove: Math.random(), structure: Math.random(), experiment: Math.random(), urban: Math.random(), global: Math.random()
-      };
-    }
-    function drawProfile(v) {
-      const el = document.getElementById("profileBars"); el.innerHTML = "";
-      const labels = { energy: "エネルギー", sophistication: "洗練", groove: "ノリ", structure: "構成力", experiment: "実験性", urban: "都会感", global: "グローバル感" };
-      Object.entries(v).forEach(([k, val]) => {
-        const pct = Math.round(val * 100);
-        const row = document.createElement('div');
-        row.innerHTML = `<div class="kpi"><div>${labels[k]}</div><div>${pct}%</div></div><div class="bar"><div class="fill" style="width:0%"></div></div>`;
-        el.appendChild(row);
-        setTimeout(() => row.querySelector('.fill').style.width = pct + '%', 250);
-      });
-      const note = document.getElementById('vectorNote');
-      const topK = Object.entries(v).sort((a, b) => b[1] - a[1])[0][0];
-      const tips = {
-        energy: '勢いは十分。最初の一歩をでかく！',
-        sophistication: '仕上げの精度で差がつくで。',
-        groove: '手を動かしてリズム作りや。',
-        structure: 'タスク分解→順番決めが鍵。',
-        experiment: '小さく試して学び回すんが最短距離や。',
-        urban: '情報の解像度を上げると世界が広がるで。',
-        global: '視野を広げるとアイデアが湧くで。'
-      };
-      note.textContent = `今日は「${labels[topK]}」が光る日や。${tips[topK] || ''}`;
-    }
-    function drawAbilities(v) {
-      const el = document.getElementById("abilities"); el.innerHTML = "";
-      const f = { 協働力: (v.groove + v.urban) / 2, 計画力: (v.structure + v.sophistication) / 2, 創造力: (v.experiment + v.energy) / 2, 共感力: (v.urban + v.global) / 2, リーダーシップ: (v.energy + v.structure) / 2 };
-      Object.entries(f).forEach(([k, val]) => {
-        const pct = Math.round(val * 100); const row = document.createElement('div');
-        row.innerHTML = `<div class="kpi"><div>${k}</div><div>${pct}%</div></div><div class="bar"><div class="fill" style="width:0%"></div></div>`;
-        el.appendChild(row); setTimeout(() => row.querySelector('.fill').style.width = pct + "%", 250);
-      });
-      const top = Object.entries(f).sort((a, b) => b[1] - a[1])[0][0];
-      const advice = {
-        '協働力': '役割分担を明確に。最初に段取りを合わせよう。',
-        '計画力': 'ゴールから逆算して、タスクを3つに絞ろう。',
-        '創造力': 'まずは早めにたたき台。試して学ぶで。',
-        '共感力': '相手の目的を一言で言い直してみよう。',
-        'リーダーシップ': '決める→伝える→支える、の順でいこう。'
-      };
-      const note = document.getElementById('workNote'); note.textContent = `今日は「${top}」が鍵や。${advice[top] || ''}`;
-    }
-    function drawWorkPie(v) {
-      const cv = document.getElementById("workPie"); const ctx = cv.getContext("2d");
-      const dpr = Math.max(1, window.devicePixelRatio || 1); const W = cv.clientWidth, H = cv.clientHeight;
-      if (cv.width !== W * dpr || cv.height !== H * dpr) { cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
-      ctx.clearRect(0, 0, W, H);
-      const f = { 協働力: (v.groove + v.urban) / 2, 計画力: (v.structure + v.sophistication) / 2, 創造力: (v.experiment + v.energy) / 2, 共感力: (v.urban + v.global) / 2, リーダーシップ: (v.energy + v.structure) / 2 };
-      const entries = Object.entries(f); const sum = entries.reduce((a, [, val]) => a + val, 0) || 1;
-      const colors = ['#ffb703', '#fb8500', '#8ecae6', '#9b5de5', '#80ed99'];
-      let start = 0;
-      entries.forEach(([name, val], i) => {
-        const ratio = val / sum, end = start + Math.PI * 2 * ratio;
-        ctx.beginPath(); ctx.moveTo(W / 2, H / 2); ctx.arc(W / 2, H / 2, Math.min(W, H) / 2.5, start, end); ctx.closePath();
-        ctx.fillStyle = colors[i % colors.length]; ctx.fill(); start = end;
-      });
-      // 中央くり抜き
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.beginPath(); ctx.arc(W / 2, H / 2, Math.min(W, H) / 5, 0, Math.PI * 2); ctx.fill();
-      ctx.globalCompositeOperation = 'source-over';
-    }
-    /* ==== Recommendations（理由付き + Apple Deep Link + 試聴） ==== */
-    function reasonByGenre(g) {
-      const bank = {
-        Pop: ["メロのキャッチーさが近いで", "軽やかで聴きやすいトーン"],
-        Rock: ["熱量と推進力が似とる", "ギターの質感が心地ええ"],
-        Jazz: ["和声の色気が噛み合う", "夜に合うニュアンス"],
-        Electronic: ["低音の厚みとビートの解像度が近い", "ミニマルな反復でハマる"],
-        World: ["リズムの多層感が相性ええ", "景色が広がるサウンド"],
-        Other: ["独自性と聴きやすさのバランスがええ", "音の粒立ちが似とる"]
-      };
-      const arr = bank[g] || bank.Other; return arr[Math.floor(Math.random() * arr.length)];
-    }
-    async function bestAppleArtistLink(name) {
-      try {
-        const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=musicArtist&limit=1`);
-        const j = await r.json(); const a = j.results?.[0];
-        if (a?.artistLinkUrl) return a.artistLinkUrl + (a.artistLinkUrl.includes('?') ? '&app=music' : '?app=music');
-        if (a?.artistId) {
-          const cc = (a.country || 'US').toLowerCase();
-          const slug = (a.artistName || name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-          return `https://music.apple.com/${cc}/artist/${slug}/${a.artistId}?app=music`;
-        }
-      } catch (e) { }
-      const cc = (navigator.language || 'en-US').split('-')[1] || 'us';
-      return `https://music.apple.com/${cc}/search?term=${encodeURIComponent(name)}&app=music`;
-    }
-    async function fetchPreview(name) {
-      try {
-        const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=musicTrack&limit=3`);
-        const j = await r.json(); const hit = (j.results || []).find(x => x.previewUrl); return hit?.previewUrl || "";
-      } catch { return ""; }
-    }
-    async function renderRecs() {
-      const box = document.getElementById('recs'); box.innerHTML = '';
-      const ex = new Set((TOKENS || []).map(x => x.toLowerCase()));
-      const seeds = (TOKENS || []).slice(0, 5);
-      const base = ['FKJ', 'Tom Misch', 'Kaytranada', 'Bonobo', 'Thundercat', 'Hiatus Kaiyote', 'SIRUP', 'Vulfpeck'];
-      let pool = [...base];
-      seeds.forEach(s => {
-        const g = genreOf(s);
-        if (g === 'Electronic') pool.push('Floating Points', 'Maribou State', 'Four Tet');
-        if (g === 'Jazz') pool.push('Robert Glasper', 'BADBADNOTGOOD');
-        if (g === 'Pop') pool.push('Tame Impala', 'Parcels');
-        if (g === 'Rock') pool.push('Phoenix', 'Arctic Monkeys');
-      });
-      // uniq & exclude
-      const uniq = Array.from(new Set(pool)).filter(n => !ex.has(n.toLowerCase())).slice(0, 8);
-
-      const links = await Promise.all(uniq.map(n => bestAppleArtistLink(n)));
-      const previews = await Promise.all(uniq.map(n => fetchPreview(n)));
-
-      uniq.forEach((name, i) => {
-        const g = genreOf(name);
-        const reason = reasonByGenre(g);
-        const art = `https://picsum.photos/seed/${encodeURIComponent(name)}/200/200`;
-        const apple = links[i];
-        const prev = previews[i];
-        const row = document.createElement('div'); row.className = 'recItem';
-        row.innerHTML = `
-      <img class="recArt" src="${art}" alt="${name}">
-      <div class="recBody">
-        <strong>${name}</strong>
-        <div class="recLinks">
-          <a ${isIOS() ? '' : 'target="_blank"'} href="${apple}">Apple Music</a>
-          /
-          <a ${isIOS() ? '' : 'target="_blank"'} href="https://www.youtube.com/results?search_query=${encodeURIComponent(name + ' official')}">YouTube</a>
-        </div>
-        <div class="muted" style="font-size:12px;margin-bottom:6px;">理由：${reason}</div>
-        ${prev ? `<audio class="recAudio" controls preload="none" src="${prev}"></audio>` : `<div class="muted" style="font-size:12px;">※試聴音源なし</div>`}
-      </div>`;
-        box.appendChild(row);
-      });
-
-      // 再生排他
-      document.querySelectorAll('.recAudio').forEach(aud => {
-        aud.volume = 0.5;
-        aud.addEventListener('play', () => { document.querySelectorAll('.recAudio').forEach(o => { if (o !== aud) o.pause(); }); });
-      });
-    }
-
-    /* ==== Your Vector & Work生成 ==== */
-    function randomVector() {
-      return {
-        energy: Math.random(), sophistication: Math.random(), groove: Math.random(),
-        structure: Math.random(), experiment: Math.random(), urban: Math.random(), global: Math.random()
-      };
-    }
-
-    /* ==== Analyze実行フロー ===== */
-    async function analyze() {
-      if (!TOKENS.length) return;
-      startProgress(async () => {
-        await renderMap();
-        calcLove();
-        const v = randomVector();
-        drawProfile(v);
-        drawWorkPie(v);
-        // Work note & bars
-        const tempF = { 協働力: (v.groove + v.urban) / 2, 計画力: (v.structure + v.sophistication) / 2, 創造力: (v.experiment + v.energy) / 2, 共感力: (v.urban + v.global) / 2, リーダーシップ: (v.energy + v.structure) / 2 };
-        const top = Object.entries(tempF).sort((a, b) => b[1] - a[1])[0][0];
-        const noteMap = {
-          協働力: 'まず役割分担をはっきり。短いMTGで合意形成して進めよか。',
-          計画力: 'ゴール→逆算→3タスク。段取り勝ちやで！',
-          創造力: '手を動かして早めに仮説検証、がっつり回そ!',
-          共感力: '相手の意図を一言で言い直して、信頼残高を貯めよ。',
-          リーダーシップ: '決める→伝える→支える。勢いで牽引しよ！'
-        };
-        document.getElementById('workNote').textContent = `今日は「${top}」が鍵やで。${noteMap[top]}`;
-        drawAbilities(v);
-        await renderRecs();
-      });
-    }
-
-    /* ==== Chips 再描画 ==== */
-    function renderChips() {
-      const wrap = document.getElementById('chips');
-      wrap.innerHTML = (TOKENS || []).map((t, i) => `<span class="chip" data-i="${i}">${t}<a class="chipDel" style="margin-left:8px;cursor:pointer;color:#ffd36b">✕</a></span>`).join('');
-    }
-
-    /* ==== ポップアップ ==== */
-    function showPopup(name, img) {
-      const p = document.createElement('div'); p.className = 'popupMask';
-      p.innerHTML = `<div class="popupCard">
-      <img src="${img}" class="popupImg" alt="${name}">
-      <h3>${name}</h3>
-      <div class="popupLinks">
-        <a ${isIOS() ? '' : 'target="_blank"'} href="https://music.apple.com/us/search?term=${encodeURIComponent(name)}&app=music">Apple Music</a> /
-        <a ${isIOS() ? '' : 'target="_blank"'} href="https://www.youtube.com/results?search_query=${encodeURIComponent(name)}">YouTube</a>
-      </div>
-      <button class="btn btn-ghost closePop" style="margin-top:10px">閉じる</button>
-    </div>`;
-      p.addEventListener('click', e => { if (e.target.classList.contains('closePop') || e.target === p) { p.remove(); } });
-      document.body.appendChild(p);
-    }
-
-    /* ==== Sora AI（OpenAI optional + フォールバック / 大阪弁） ==== */
-    async function runSora() {
-      const q = (document.getElementById('chatInput')?.value || prompt("なんでも聞いてや！（例：次なに聴こ？ / 今日の天気は？）") || '').trim();
-      if (!q) return;
-
-      // まずローカルOpenDataで即答できるやつ
-      const local = await openDataAnswer(q);
-      if (local) { alert("🗣️ " + local); return; }
-
-      // OpenAI プロキシが設定されている場合だけクラウドで拡張回答
-      if (OPENAI_PROXY_URL) {
-        try {
-          const body = {
-            model: 'gpt-4-turbo',
-            messages: [
-              {
-                role: 'system', content:
-                  `あんたはSoraや。関西弁でフランクに答えるで。
-             音楽のおすすめを出すときは [artist:名前] 形式＋1行の理由を必ず付けること。
-             一般質問にも普通に答えてOKやで。`},
-              { role: 'user', content: `今のトークン: ${(TOKENS || []).join(', ') || '(なし)'}。質問: ${q}` }
-            ]
-          };
-          const r = await fetch(OPENAI_PROXY_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-          const j = await r.json();
-          let msg = j?.choices?.[0]?.message?.content || 'すまん、うまく取れへんかった…';
-          msg = await linkifyArtists(msg);
-          alert("🎧 " + msg);
-          return;
-        } catch (e) { console.warn('AI error', e); /* 失敗時はローカル返答に落とす */ }
-      }
-
-      // フォールバック（ローカル）
-      const seeds = (TOKENS && TOKENS.length) ? TOKENS : ['FKJ', 'Bonobo', 'Tom Misch'];
-      const sample = ['Kaytranada', 'Vaundy', 'SIRUP', 'Lava La Rue', 'Nujabes', 'Yaffle'];
-      const picks = [...new Set(sample.concat(seeds))].slice(0, 4);
-      const reasons = ['低音のうねりが気持ちええ', 'メロのセンスが似とる', '都会的な雰囲気がマッチする', 'ほどよい抜け感が今日のムード'];
-      const line = picks.map(n => `[artist:${n}] — ${reasons[Math.floor(Math.random() * reasons.length)]}`).join('\n');
-      let ans = /おすすめ|recommend|リコメンド|聴く|曲|BGM/i.test(q)
-        ? `こんなんどう？\n${line}`
-        : 'その件やったら、もうちょい詳しく教えてくれたら深掘りするで！';
-      ans = await linkifyArtists(ans);
-      alert("🎵 " + ans);
-    }
-    // Apple Musicリンクへ変換
-    async function linkifyArtists(msg) {
-      const re = /\[artist:([^\]]+)\]/g; const targets = [];
-      msg.replace(re, (_, name) => { targets.push(name.trim()); return _; });
-      for (const name of targets) {
-        const link = await bestAppleArtistLink(name);
-        const tag = `<a ${isIOS() ? '' : 'target="_blank"'} href="${link}">${name}</a>`;
-        msg = msg.replace(new RegExp(`\\[artist:${name.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&')}\\]`, 'g'), tag);
-      }
-      return msg;
-    }
-
-    /* ==== OpenData：超簡易ローカル回答（必要なら拡張可能） ==== */
-    async function openDataAnswer(q) {
-      if (/天気|weather/i.test(q)) {
-        const cityMatch = q.match(/(東京|大阪|名古屋|札幌|仙台|横浜|福岡|京都|沖縄|神戸)/);
-        if (!cityMatch) return "どこの天気か教えてや（例：大阪の天気）。";
-        const city = cityMatch[1], url = `https://wttr.in/${encodeURIComponent(city)}?format=j1`;
-        try {
-          const r = await fetch(url, { headers: { 'Accept': 'application/json' } }); const j = await r.json();
-          const cur = j.current_condition?.[0]; if (!cur) return '';
-          return `${city}の今は${cur.weatherDesc?.[0]?.value || '—'}、気温${cur.temp_C}℃、体感${cur.FeelsLikeC}℃やで。`;
-        } catch (e) { return ""; }
-      }
-      return "";
-    }
-
-    /* ==== Recommendations, Analyzeトリガ, Chips再現 ==== */
-    document.addEventListener('DOMContentLoaded', () => {
-      // チップ再構築
-      const saved = JSON.parse(localStorage.getItem('musiclens_tokens') || '[]'); if (Array.isArray(saved)) TOKENS = saved;
-      renderChips();
-
-      // Addボタン
-      const addBtn = document.getElementById('addBtn');
-      const analyzeBtn = document.getElementById('analyzeBtn');
-      const input = document.getElementById('inputBox');
-
-      addBtn?.addEventListener('click', () => {
-        const list = parseArtists(input.value);
-        const seen = new Set((TOKENS || []).map(s => s.toLowerCase()));
-        list.forEach(n => { if (n && !seen.has(n.toLowerCase())) TOKENS.push(n); });
-        localStorage.setItem('musiclens_tokens', JSON.stringify(TOKENS));
-        input.value = ''; renderChips();
-      });
-
-      analyzeBtn?.addEventListener('click', () => {
-        startProgress(() => { analyze(); }); // ← 必ず進捗→解析
-      });
-
-      // Sora FAB
-      document.getElementById('aiFab')?.addEventListener('click', runSora);
-    });
+    // === Sora AI dummy ===
+    document.getElementById("aiFab").addEventListener("click", () => alert("Sora AI起動中…（大阪弁モードやで）"));
   </script>
 </body>
 
