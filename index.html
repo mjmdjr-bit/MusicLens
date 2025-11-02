@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MusicLens — v9.8 Stable</title>
+    <title>MusicLens — v9.9 Stable</title>
     <style>
         :root {
             --gold: #ffcc33;
@@ -120,7 +120,7 @@
             color: #ccc
         }
 
-        /* Soraボタン（モバイル：タイトル下センター／PC：右上固定） */
+        /* Soraボタン（モバイル: タイトル下センター / PC: 右上固定） */
         #chatSoraBtn {
             position: fixed;
             top: 14px;
@@ -136,7 +136,7 @@
             z-index: 2000
         }
 
-        @media(max-width:560px) {
+        @media (max-width:560px) {
             #title #chatSoraBtn {
                 position: static;
                 display: inline-flex;
@@ -149,7 +149,7 @@
             }
         }
 
-        /* ===== 扉（Aurora） ===== */
+        /* 扉（クリックを邪魔しない） */
         #doorContainer {
             position: fixed;
             inset: 0;
@@ -166,7 +166,7 @@
                 linear-gradient(90deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02));
             backdrop-filter: blur(20px)saturate(150%);
             transform: translateX(0);
-            transition: transform 3.0s cubic-bezier(.25, .8, .25, 1)
+            transition: transform 3s cubic-bezier(.25, .8, .25, 1)
         }
 
         body.doors-open .door.left {
@@ -233,7 +233,7 @@
             color: #fff
         }
 
-        /* 入力欄（タップ/クリック確実化） */
+        /* 入力欄（確実にタップ可能） */
         #inputBox {
             width: 100%;
             padding: 10px 14px;
@@ -242,7 +242,7 @@
             background: rgba(255, 255, 255, .1);
             color: #fff;
             pointer-events: auto !important;
-            z-index: 20 !important
+            z-index: 3000 !important
         }
 
         #chips {
@@ -279,7 +279,7 @@
             border-radius: 12px;
             display: none;
             overflow: hidden;
-            z-index: 30
+            z-index: 3050
         }
 
         #suggestBox li {
@@ -353,7 +353,7 @@
             pointer-events: none
         }
 
-        /* Emotion Map */
+        /* Emotion */
         #emotion {
             width: 100%;
             height: 260px;
@@ -361,7 +361,7 @@
             background: rgba(255, 255, 255, .05)
         }
 
-        /* Love (ハート) */
+        /* Love */
         #loveSvg {
             width: 180px;
             height: 180px;
@@ -411,66 +411,21 @@
             }
         }
 
-        /* ===== Sora モーダル ===== */
-        .sora-card {
+        /* === ボタンを最前面&クリック可能に（確実対策）=== */
+        #startBtn,
+        #chatSoraBtn {
             position: relative;
-            width: min(720px, 92%);
-            max-height: 86vh;
-            overflow: auto;
-            border-radius: 24px;
-            padding: 18px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, .10));
-            border: 1px solid rgba(255, 255, 255, .25);
-            backdrop-filter: blur(20px)saturate(160%)
+            z-index: 3000;
+            pointer-events: auto !important
         }
 
-        .sora-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px
+        #doorContainer,
+        .door {
+            pointer-events: none !important
         }
 
-        .sora-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 16px
-        }
-
-        .sora-log {
-            height: 240px;
-            overflow: auto;
-            border-radius: 14px;
-            padding: 10px 12px;
-            background: rgba(255, 255, 255, .06);
-            border: 1px solid rgba(255, 255, 255, .18)
-        }
-
-        .sora-input {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px
-        }
-
-        .sora-text {
-            flex: 1;
-            padding: 12px 14px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, .22);
-            background: rgba(255, 255, 255, .08);
-            color: #fff
-        }
-
-        .sora-send {
-            border: none;
-            border-radius: 14px;
-            padding: 12px 20px;
-            cursor: pointer;
-            color: #111;
-            font-weight: 900;
-            background: linear-gradient(90deg, #ffd766, #ff9f1c);
-            box-shadow: 0 10px 24px rgba(255, 175, 80, .35)
+        #soraMask[style*="display: none"] {
+            pointer-events: none
         }
     </style>
 </head>
@@ -484,13 +439,12 @@
             <div class="logo">MusicLens</div>
             <p>好きなアーティスト/曲を入れるだけ。音の嗜好→今日のコンディションと仕事の強みまで見える、音楽の世界も広がる。さぁ、"SOUND JOURNEY"へ出かけよう！</p>
             <button id="startBtn" class="cta">SOUND JOURNEY ▶︎</button>
-            <!-- モバイル時はタイトル下にセンター／Appでは右上固定 -->
             <button id="chatSoraBtn">💬 Chat with Sora AI</button>
             <small>Produced by Daijiro Majima</small>
         </div>
     </section>
 
-    <!-- 扉アニメ -->
+    <!-- 扉 -->
     <div id="doorContainer">
         <div class="door left"></div>
         <div class="door right"></div>
@@ -505,7 +459,7 @@
                 <div id="backTop" style="color:#ffd36b;cursor:pointer;margin-top:4px">← TOPへ戻る</div>
             </header>
 
-            <!-- === Today's Feeling === -->
+            <!-- Today's Feeling -->
             <section class="panel" id="tfPanel">
                 <div class="section-title">Today's Feeling（アーティスト/曲名）</div>
                 <input id="inputBox" type="text" placeholder="例：Daft Punk, SZA, Get Lucky（カンマ区切りOK）">
@@ -523,13 +477,13 @@
                 </div>
             </section>
 
-            <!-- === Listening Map === -->
+            <!-- Listening Map -->
             <section class="panel">
                 <div class="section-title">Listening Map（アーティストバブル）</div>
                 <div id="mapArea"></div>
             </section>
 
-            <!-- === Emotion Map === -->
+            <!-- Emotion Map -->
             <section class="panel">
                 <div class="section-title">Emotion Map（Valence × Arousal）</div>
                 <canvas id="emotion" width="900" height="260"></canvas>
@@ -537,7 +491,7 @@
                 <div id="emotionTip" style="text-align:center;margin-top:6px;opacity:.95;color:#ffd36b"></div>
             </section>
 
-            <!-- === Love === -->
+            <!-- Love -->
             <section class="panel" style="text-align:center">
                 <div class="section-title">Music Love（音楽愛）</div>
                 <svg id="loveSvg" viewBox="0 0 200 200">
@@ -562,7 +516,7 @@
                 <div id="loveComment" style="font-size:13px;opacity:.9;margin-top:4px"></div>
             </section>
 
-            <!-- === Vector === -->
+            <!-- Vector -->
             <section class="panel">
                 <div class="section-title">Your Music Vector</div>
                 <div id="profileBars"></div>
@@ -570,7 +524,7 @@
                 <div id="vectorNote" class="muted" style="margin-top:8px"></div>
             </section>
 
-            <!-- === Work === -->
+            <!-- Work -->
             <section class="panel">
                 <div class="section-title">Work Strengths</div>
                 <div id="abilities"></div>
@@ -579,7 +533,7 @@
                 <div id="workLegend" class="hint" style="font-size:12px;text-align:center"></div>
             </section>
 
-            <!-- === Recommendations === -->
+            <!-- Recommendations -->
             <section class="panel">
                 <div class="section-title">Music Recommendations</div>
                 <div id="recs">Analyze後に表示されます。</div>
@@ -625,19 +579,44 @@
             addEventListener('resize', () => { size(); mk() }); size(); mk(); draw();
         })();
 
+        /* ===== クリック安全ハンドラ（iOS対策） ===== */
+        function onTap(el, fn) { if (!el) return; el.addEventListener('click', fn); el.addEventListener('pointerup', (e) => { e.preventDefault(); fn(e) }, { passive: false }); }
+
         /* ===== 扉アニメ（確実遷移） ===== */
-        document.getElementById('startBtn').addEventListener('click', () => {
+        onTap(document.getElementById('startBtn'), () => {
             document.body.classList.add("doors-open");
-            setTimeout(() => { document.getElementById("title").style.display = "none"; document.getElementById("app").classList.add("show") }, 3000);
+            setTimeout(() => { document.getElementById("title").style.display = "none"; document.getElementById("app").classList.add("show"); }, 3000);
         });
-        document.getElementById('backTop').addEventListener('click', () => {
+        onTap(document.getElementById('backTop'), () => {
             document.getElementById("app").classList.remove("show");
             document.getElementById("title").style.display = "flex";
             document.body.classList.remove("doors-open");
             window.scrollTo(0, 0);
         });
 
-        /* ===== サジェスト（任意） ===== */
+        /* ===== Sora モーダル ===== */
+        const soraMask = document.getElementById('soraMask'), soraLog = document.getElementById('soraLog'), soraIn = document.getElementById('soraIn');
+        onTap(document.getElementById('chatSoraBtn'), () => { soraMask.style.display = 'grid'; setTimeout(() => soraIn?.focus(), 50); });
+        onTap(document.getElementById('soraClose'), () => { soraMask.style.display = 'none'; });
+        function pushSora(who, text) {
+            const line = document.createElement('div'); line.className = 'sora-msg' + (who === '👤' ? ' you' : '');
+            line.innerHTML = `<div class='sora-bubble'><div style="opacity:.7;font-size:12px;margin-bottom:2px">${who}</div>${text}</div>`;
+            soraLog.appendChild(line); soraLog.scrollTop = soraLog.scrollHeight;
+        }
+        const Circuit = { fail: 0, open: false, resetAfter: 0, canRun() { return !this.open || Date.now() > this.resetAfter }, failOnce() { this.fail++; if (this.fail >= 2) { this.open = true; this.resetAfter = Date.now() + 15000 } }, success() { this.fail = 0; this.open = false; } };
+        async function callSoraAPI(message) {
+            if (!Circuit.canRun()) return '（Sora混雑中。少し待ってや）';
+            try {
+                const r = await fetch(SORA_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message }) });
+                if (!r.ok) { Circuit.failOnce(); return `（Sora応答がエラー:${r.status}）` }
+                Circuit.success(); const j = await r.json(); return j.reply || '（AIが少し考え中みたいや…）';
+            } catch (e) { Circuit.failOnce(); return '（ネットが不安定みたいや。もう一回頼むわ）' }
+        }
+        async function sendSora() { const q = (soraIn.value || '').trim(); if (!q) return; pushSora('👤', q); soraIn.value = ''; const reply = await callSoraAPI(q); pushSora('Sora', reply); }
+        onTap(document.getElementById('soraSend'), sendSora);
+        soraIn.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) sendSora(); });
+
+        /* ===== サジェスト ===== */
         const input = document.getElementById('inputBox'), suggestBox = document.getElementById('suggestBox');
         function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms) } }
         async function fetchSuggest(q) {
@@ -663,30 +642,23 @@
         }, 220));
         suggestBox.addEventListener('click', e => {
             const li = e.target.closest('li'); if (!li) return;
-            const name = li.dataset.name; if (!TOKENS.some(s => s.toLowerCase() === name.toLowerCase())) TOKENS.push(name);
+            const nm = li.dataset.name; if (!TOKENS.some(s => s.toLowerCase() === nm.toLowerCase())) TOKENS.push(nm);
             renderChips(); input.value = ''; suggestBox.style.display = 'none';
         });
-        document.addEventListener('pointerdown', (e) => {
-            if (suggestBox.style.display !== 'none' && !suggestBox.contains(e.target) && e.target !== input) suggestBox.style.display = 'none';
-        });
+        document.addEventListener('pointerdown', (e) => { if (suggestBox.style.display !== 'none' && !suggestBox.contains(e.target) && e.target !== input) suggestBox.style.display = 'none'; });
 
         /* ===== 入力/追加/削除 ===== */
-        function renderChips() {
-            document.getElementById('chips').innerHTML = TOKENS.map((t, i) => `<span class='chip'>${t}<span class='x' data-i='${i}'>✕</span></span>`).join('');
-        }
-        document.getElementById('addBtn').addEventListener('click', () => {
+        function renderChips() { document.getElementById('chips').innerHTML = TOKENS.map((t, i) => `<span class='chip'>${t}<span class='x' data-i='${i}'>✕</span></span>`).join(''); }
+        onTap(document.getElementById('addBtn'), () => {
             const val = input.value.trim(); if (!val) return;
             val.split(',').map(v => v.trim()).forEach(v => { if (v && !TOKENS.some(s => s.toLowerCase() === v.toLowerCase())) TOKENS.push(v) });
             renderChips(); input.value = '';
         });
-        document.addEventListener('click', e => {
-            if (e.target.classList.contains('x')) { TOKENS.splice(+e.target.dataset.i, 1); renderChips(); }
-        });
+        document.addEventListener('click', e => { if (e.target.classList.contains('x')) { TOKENS.splice(+e.target.dataset.i, 1); renderChips(); } });
 
-        /* ===== Listening Map：アルバムジャケット優先 + ポップアップ ===== */
-        async function fetchBestImage(name) {
+        /* ===== Listening Map：アルバム優先＋ポップアップ ===== */
+        async function bestImage(name) {
             const e = encodeURIComponent(name);
-            // 1) album（artistTerm）→ 2) track（artistTerm）→ 3) artist → 4) placeholder
             try {
                 let r = await fetch(`https://itunes.apple.com/search?term=${e}&entity=album&attribute=artistTerm&limit=1`);
                 let j = await r.json(); let a = j.results?.[0]; if (a?.artworkUrl100) return a.artworkUrl100.replace("100x100", "300x300");
@@ -697,262 +669,82 @@
             } catch { }
             return `https://picsum.photos/seed/${e}/300/300`;
         }
-        async function fetchArtistSummary(name) {
+        async function artistSummary(name) {
             try {
                 const e = encodeURIComponent(name);
-                const r = await fetch(`https://ja.wikipedia.org/api/rest_v1/page/summary/${e}`);
-                const j = await r.json(); return j.extract || '';
+                const j = await fetch(`https://ja.wikipedia.org/api/rest_v1/page/summary/${e}`).then(r => r.json());
+                return j.extract || '';
             } catch { return '' }
         }
-        const APPLE_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="#ffd36b"><path d="M16.365 1.43a5.32 5.32 0 0 1-1.128 3.81c-.77.962-2.03 1.76-3.29 1.645a4.565 4.565 0 0 1 1.185-3.667c.82-.922 2.22-1.65 3.233-1.788ZM20.75 17.661c-.274.618-.6 1.196-.976 1.737-.641.919-1.39 1.982-2.42 1.997-1.003.015-1.283-.644-2.392-.644-1.108 0-1.418.63-2.41.66-1.004.03-1.77-.992-2.413-1.911-1.315-1.88-2.318-5.302-1.02-7.613.708-1.231 1.963-2.021 3.396-2.042 1.015-.02 1.977.694 2.392.694.412 0 1.589-.857 2.676-.732.392.016 1.912.16 2.825 1.54-.073.048-1.681.98-1.663 2.948.022 2.35 2.047 3.133 2.07 3.164Z"/></svg>`;
-        const YT_SVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="#ff6666"><path d="M23.5 6.2s-.2-1.6-.8-2.3c-.7-.8-1.5-.8-1.9-.8C17.2 3 12 3 12 3h0s-5.2 0-8.8.1c-.4 0-1.2 0-1.9.8C.7 4.6.5 6.2.5 6.2S.3 8 .3 9.7v1.6C.3 13 0.5 14.8.5 14.8s.2 1.6.8 2.3c.7.8 1.7.8 2.1.9 1.5.1 8.6.1 8.6.1s5.2 0 8.8-.1c.4 0 1.2 0 1.9-.8.6-.7.8-2.3.8-2.3s.2-1.8.2-3.5V9.7c0-1.7-.2-3.5-.2-3.5ZM9.8 13.9V7.9l5.5 3-5.5 3Z"/></svg>`;
+        const ICON_APPLE = `<svg width="22" height="22" viewBox="0 0 24 24" fill="#ffd36b"><path d="M16.365 1.43a5.32 5.32 0 0 1-1.128 3.81c-.77.962-2.03 1.76-3.29 1.645a4.565 4.565 0 0 1 1.185-3.667c.82-.922 2.22-1.65 3.233-1.788ZM20.75 17.661c-.274.618-.6 1.196-.976 1.737-.641.919-1.39 1.982-2.42 1.997-1.003.015-1.283-.644-2.392-.644-1.108 0-1.418.63-2.41.66-1.004.03-1.77-.992-2.413-1.911-1.315-1.88-2.318-5.302-1.02-7.613.708-1.231 1.963-2.021 3.396-2.042 1.015-.02 1.977.694 2.392.694.412 0 1.589-.857 2.676-.732.392.016 1.912.16 2.825 1.54-.073.048-1.681.98-1.663 2.948.022 2.35 2.047 3.133 2.07 3.164Z"/></svg>`;
+        const ICON_YT = `<svg width="24" height="24" viewBox="0 0 24 24" fill="#ff6666"><path d="M23.5 6.2s-.2-1.6-.8-2.3c-.7-.8-1.5-.8-1.9-.8C17.2 3 12 3 12 3h0s-5.2 0-8.8.1c-.4 0-1.2 0-1.9.8C.7 4.6.5 6.2.5 6.2S.3 8 .3 9.7v1.6C.3 13 0.5 14.8.5 14.8s.2 1.6.8 2.3c.7.8 1.7.8 2.1.9 1.5.1 8.6.1 8.6.1s5.2 0 8.8-.1c.4 0 1.2 0 1.9-.8.6-.7.8-2.3.8-2.3s.2-1.8.2-3.5V9.7c0-1.7-.2-3.5-.2-3.5ZM9.8 13.9V7.9l5.5 3-5.5 3Z"/></svg>`;
         async function showPopup(name) {
-            const img = await fetchBestImage(name);
-            const summary = await fetchArtistSummary(name);
-            // Apple直リンク
-            let artistLink = `https://music.apple.com/us/search?term=${encodeURIComponent(name)}&app=music`;
+            const img = await bestImage(name);
+            const sum = await artistSummary(name);
+            let apple = `https://music.apple.com/us/search?term=${encodeURIComponent(name)}&app=music`;
             try {
                 const info = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=musicArtist&limit=1`).then(r => r.json());
-                if (info.results?.[0]?.artistLinkUrl) artistLink = info.results[0].artistLinkUrl;
+                if (info.results?.[0]?.artistLinkUrl) apple = info.results[0].artistLinkUrl;
             } catch { }
             const yt = `https://www.youtube.com/results?search_query=${encodeURIComponent(name + ' official')}`;
 
             const p = document.createElement('div');
             p.style.cssText = "position:fixed;inset:0;display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);z-index:4000";
             p.innerHTML = `
-    <div style="max-width:420px;width:92%;border-radius:18px;padding:16px;border:1px solid rgba(255,255,255,.25);
-                background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.08));box-shadow:0 10px 30px rgba(0,0,0,.25)">
+    <div style="max-width:440px;width:92%;border-radius:18px;padding:16px;border:1px solid rgba(255,255,255,.25);
+      background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.08));box-shadow:0 10px 30px rgba(0,0,0,.25)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <strong style="font-size:16px">🎵 ${name}</strong>
         <button id="popClose" class="btn-ghost" style="padding:6px 10px">×</button>
       </div>
-      <img src="${img}" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px;box-shadow:0 0 25px rgba(255,255,180,.5)">
-      <p style="margin-top:8px;font-size:13px;opacity:.95;line-height:1.6">${summary || '（概要情報が見つかりませんでした）'}</p>
-      <div style="display:flex;gap:12px;align-items:center;justify-content:center;margin-top:10px">
-        <a href="${artistLink}" target="_blank" title="Apple Music">${APPLE_SVG}</a>
-        <a href="${yt}" target="_blank" title="YouTube">${YT_SVG}</a>
+      <img src="${img}" style="width:100%;max-height:240px;object-fit:cover;border-radius:12px;box-shadow:0 0 25px rgba(255,255,180,.5)">
+      <p style="margin-top:8px;font-size:13px;opacity:.95;line-height:1.6">${sum || '（概要情報が見つかりませんでした）'}</p>
+      <div style="display:flex;gap:16px;align-items:center;justify-content:center;margin-top:10px">
+        <a href="${apple}" target="_blank" title="Apple Music">${ICON_APPLE}</a>
+        <a href="${yt}" target="_blank" title="YouTube">${ICON_YT}</a>
       </div>
     </div>`;
             p.addEventListener('click', e => { if (e.target.id === 'popClose' || e.target === p) p.remove(); });
             document.body.appendChild(p);
         }
-
-        /* Map描画 */
         async function renderMap() {
             const area = document.getElementById('mapArea'); area.innerHTML = '';
             for (const n of TOKENS) {
-                const img = await fetchBestImage(n);
-                const color = artistColor(n);
+                const img = await bestImage(n);
+                const color = `hsl(${[...n].reduce((a, c) => a + c.charCodeAt(0), 0) % 360} 90% 65%)`;
                 const b = document.createElement('div'); b.className = 'bubble'; b.style.boxShadow = `0 0 22px ${color}`;
                 b.innerHTML = `<img src="${img}" alt="${n}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
-                 <span class="bubbleName">${n}</span>`;
+      <span class="bubbleName">${n}</span>`;
                 b.onclick = () => showPopup(n);
                 area.appendChild(b);
             }
         }
 
-        /* Emotion/Love/Vector/Work（シンプル安定版） */
-        function drawEmotion(points) {
-            const cv = document.getElementById('emotion'), ctx = cv.getContext('2d');
-            const W = cv.width = cv.clientWidth, H = cv.height = cv.clientHeight;
-            ctx.clearRect(0, 0, W, H); ctx.fillStyle = "rgba(255,255,255,.05)"; ctx.fillRect(0, 0, W, H);
-            ctx.strokeStyle = "rgba(255,255,255,.25)"; ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.moveTo(40, H - 40); ctx.lineTo(W - 10, H - 40); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(40, H - 40); ctx.lineTo(40, 10); ctx.stroke();
-            ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.font = '12px system-ui';
-            ctx.fillText('穏やか', 44, H - 18); ctx.fillText('高揚', W - 60, H - 18);
-            ctx.save(); ctx.translate(14, H - 44); ctx.rotate(-Math.PI / 2); ctx.fillText('静', 0, 0); ctx.restore(); ctx.fillText('動', 18, 20);
-            // 入力の数に応じて軽くランダムプロット
-            const count = Math.max(1, TOKENS.length);
-            for (let i = 0; i < count; i++) {
-                const x = 40 + (W - 60) * (0.2 + 0.6 * Math.random());
-                const y = (H - 40) - (H - 60) * (0.2 + 0.6 * Math.random());
-                const g = ctx.createRadialGradient(x, y, 0, x, y, 22);
-                g.addColorStop(0, 'rgba(255,200,120,.8)'); g.addColorStop(1, 'transparent');
-                ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill();
-            }
-            document.getElementById('emotionTip').textContent = '自然体で行けるバランス。';
-        }
+        /* ===== Love / Vector / Work（簡潔に稼働） ===== */
         function calcLove() {
-            const uniq = new Set(TOKENS.map(t => t.toLowerCase())).size;
-            const s = Math.min(100, Math.round(TOKENS.length * 9 + uniq * 6));
-            document.getElementById('lovePercent').textContent = s + '%';
-            const rect = document.getElementById('liquid');
-            const h = (120 * s / 100), y = 160 - h; rect.setAttribute('y', y); rect.setAttribute('height', Math.max(0, h));
+            const u = new Set(TOKENS.map(t => t.toLowerCase())).size; const s = Math.min(100, Math.round(TOKENS.length * 9 + u * 6));
+            document.getElementById('lovePercent').textContent = s + '%'; const h = (120 * s / 100), y = 160 - h;
+            const rect = document.getElementById('liquid'); rect.setAttribute('y', y); rect.setAttribute('height', Math.max(0, h));
             document.getElementById('loveComment').textContent = s < 40 ? '静かに整うムード。音のディテールを。' : s < 70 ? '心拍と音が寄り添い出してる。' : '音楽と気分がシンクロ！';
         }
-        const VEC_COLORS = [{ key: 'energy', label: 'エネルギー', color: '#ffcc33' }, { key: 'sophistication', label: '洗練', color: '#ff9933' }, { key: 'groove', label: 'ノリ', color: '#ffaa66' }, { key: 'structure', label: '構成力', color: '#66ccff' }, { key: 'experiment', label: '実験性', color: '#aa88ff' }, { key: 'urban', label: '都会感', color: '#77ff88' }, { key: 'global', label: 'グローバル感', color: '#ffd966' }];
+        const VEC_COLORS = [{ key: 'energy', label: 'エネルギー', color: '#ffcc33' }, { key: 'sophistication', label: '洗練', color: '#ff9933' }, { key: 'groove', label: 'ノリ', color: '#ffaa66' }, { key: 'structure', label: '構成力', color: '#66ccff' }, { key: 'experiment', label: '実験性', color: '#aa88ff' }, { key: 'urban', label: '都会感', color: '#77ff88' }, { key: 'global', label: '#ffd966', color: '#ffd966' }];
         const WORK_PAL = ['#ffcc33', '#ff8a33', '#66ccff', '#77ff88', '#aa88ff'];
         function randomVec() { return { energy: Math.random(), sophistication: Math.random(), groove: Math.random(), structure: Math.random(), experiment: Math.random(), urban: Math.random(), global: Math.random() } }
-        function drawVector() {
-            const v = randomVec(); const bars = document.getElementById('profileBars'); bars.innerHTML = '';
-            VEC_COLORS.forEach(({ key, label }) => {
-                const pct = Math.round(v[key] * 100);
-                const row = document.createElement('div');
-                row.innerHTML = `<div class="kpi"><div>${label}</div><div>${pct}%</div></div><div class="bar"><div class="fill" style="width:0%"></div></div>`;
-                bars.appendChild(row); setTimeout(() => row.querySelector('.fill').style.width = pct + '%', 250);
-            });
-            drawDonut('vectorPie', VEC_COLORS.map(o => v[o.key]), VEC_COLORS.map(o => o.color), 0.05, true);
-            document.getElementById('vectorNote').textContent = 'あなたの音楽傾向の強みが現れています。';
-        }
-        function drawAbilities(obj) {
-            const el = document.getElementById('abilities'); el.innerHTML = '';
-            Object.entries(obj).forEach(([k, val]) => {
-                const pct = Math.round(val * 100);
-                const row = document.createElement('div');
-                row.innerHTML = `<div class="kpi"><div>${k}</div><div>${pct}%</div></div><div class="bar"><div class="fill" style="width:0%"></div></div>`;
-                el.appendChild(row); setTimeout(() => row.querySelector('.fill').style.width = pct + '%', 250);
-            });
-        }
-        function drawDonut(id, vals, colors, step = 0.05, legend = false) {
-            const cv = document.getElementById(id); if (!cv) return; const ctx = cv.getContext('2d');
-            const W = cv.width, H = cv.height, cx = W / 2, cy = H / 2, R = Math.min(W, H) * .42, r = Math.min(W, H) * .22;
-            const total = vals.reduce((a, b) => a + b, 0) || 1; let prog = 0;
-            (function frame() {
-                ctx.clearRect(0, 0, W, H);
-                let st = -Math.PI / 2;
-                vals.forEach((v, i) => {
-                    const full = (v / total) * Math.PI * 2, arc = full * Math.min(1, prog);
-                    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, st, st + arc); ctx.closePath();
-                    ctx.fillStyle = colors[i % colors.length]; ctx.fill(); st += full;
-                });
-                ctx.globalCompositeOperation = 'destination-out'; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
-                ctx.globalCompositeOperation = 'source-over';
-                if (legend) {
-                    ctx.font = '12px system-ui'; ctx.fillStyle = 'rgba(255,255,255,.9)'; let y = H - 10;
-                    VEC_COLORS.forEach((o, i) => {
-                        ctx.fillStyle = colors[i]; ctx.fillRect(8, y - 10, 10, 10);
-                        ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillText(' ' + o.label, 20, y); y -= 14;
-                    });
-                }
-                prog += step; if (prog < 1) requestAnimationFrame(frame);
-            })();
-        }
-        function drawWork(v) {
-            const scores = { 協働力: (v.groove + v.urban) / 2, 計画力: (v.structure + v.sophistication) / 2, 創造力: (v.experiment + v.energy) / 2, 共感力: (v.urban + v.global) / 2, リーダーシップ: (v.energy + v.structure) / 2 };
-            drawAbilities(scores); drawDonut('workPie', Object.values(scores), WORK_PAL, 0.06, false);
-            document.getElementById('workNote').textContent = '今日は「計画力」と「創造力」のバランスが鍵。逆算で段取りを。';
-            document.getElementById('workLegend').textContent = '■ 協働力 ■ 計画力 ■ 創造力 ■ 共感力 ■ リーダーシップ';
-        }
+        function drawDonut(id, vals, colors, step = 0.05, legend = false) { const cv = document.getElementById(id); if (!cv) return; const ctx = cv.getContext('2d'); const W = cv.width, H = cv.height, cx = W / 2, cy = H / 2, R = Math.min(W, H) * .42, r = Math.min(W, H) * .22; const total = vals.reduce((a, b) => a + b, 0) || 1; let prog = 0; (function frame() { ctx.clearRect(0, 0, W, H); let st = -Math.PI / 2; vals.forEach((v, i) => { const full = (v / total) * Math.PI * 2, arc = full * Math.min(1, prog); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, st, st + arc); ctx.closePath(); ctx.fillStyle = colors[i % colors.length]; ctx.fill(); st += full }); ctx.globalCompositeOperation = 'destination-out'; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill(); ctx.globalCompositeOperation = 'source-over'; if (legend) { ctx.font = '12px system-ui'; ctx.fillStyle = 'rgba(255,255,255,.9)'; let y = H - 10; VEC_COLORS.forEach((o, i) => { ctx.fillStyle = colors[i]; ctx.fillRect(8, y - 10, 10, 10); ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillText(' ' + o.label, 20, y); y -= 14 }) } prog += step; if (prog < 1) requestAnimationFrame(frame) })() }
+        function drawVector() { const v = randomVec(); const bars = document.getElementById('profileBars'); bars.innerHTML = ''; VEC_COLORS.forEach(({ key, label }) => { const pct = Math.round(v[key] * 100); const row = document.createElement('div'); row.innerHTML = `<div class="kpi"><div>${label}</div><div>${pct}%</div></div><div class="bar"><div class="fill" style="width:0%"></div></div>`; bars.appendChild(row); setTimeout(() => row.querySelector('.fill').style.width = pct + '%', 250) }); drawDonut('vectorPie', VEC_COLORS.map(o => v[o.key]), VEC_COLORS.map(o => o.color), 0.05, true); document.getElementById('vectorNote').textContent = 'あなたの音楽傾向の強みが現れています。' }
+        function drawAbilities(v) { const el = document.getElementById('abilities'); el.innerHTML = ''; const s = { 協働力: (v.groove + v.urban) / 2, 計画力: (v.structure + v.sophistication) / 2, 創造力: (v.experiment + v.energy) / 2, 共感力: (v.urban + v.global) / 2, リーダーシップ: (v.energy + v.structure) / 2 }; Object.entries(s).forEach(([k, val]) => { const pct = Math.round(val * 100); const row = document.createElement('div'); row.innerHTML = `<div class="kpi"><div>${k}</div><div>${pct}%</div></div><div class="bar"><div class="fill" style="width:0%"></div></div>`; el.appendChild(row); setTimeout(() => row.querySelector('.fill').style.width = pct + '%', 250) }); document.getElementById('workNote').textContent = '今日は「計画力」と「創造力」のバランスが鍵。逆算で段取りを。'; document.getElementById('workLegend').textContent = '■ 協働力 ■ 計画力 ■ 創造力 ■ 共感力 ■ リーダーシップ'; }
+        function drawEmotion(points) { const cv = document.getElementById('emotion'), ctx = cv.getContext('2d'); const W = cv.width = cv.clientWidth, H = cv.height = cv.clientHeight; ctx.clearRect(0, 0, W, H); ctx.fillStyle = "rgba(255,255,255,.05)"; ctx.fillRect(0, 0, W, H); ctx.strokeStyle = "rgba(255,255,255,.25)"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(40, H - 40); ctx.lineTo(W - 10, H - 40); ctx.stroke(); ctx.beginPath(); ctx.moveTo(40, H - 40); ctx.lineTo(40, 10); ctx.stroke(); ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.font = '12px system-ui'; ctx.fillText('穏やか', 44, H - 18); ctx.fillText('高揚', W - 60, H - 18); ctx.save(); ctx.translate(14, H - 44); ctx.rotate(-Math.PI / 2); ctx.fillText('静', 0, 0); ctx.restore(); ctx.fillText('動', 18, 20); const count = Math.max(1, TOKENS.length); for (let i = 0; i < count; i++) { const x = 40 + (W - 60) * (0.2 + 0.6 * Math.random()); const y = (H - 40) - (H - 60) * (0.2 + 0.6 * Math.random()); const g = ctx.createRadialGradient(x, y, 0, x, y, 22); g.addColorStop(0, 'rgba(255,200,120,.8)'); g.addColorStop(1, 'transparent'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill() } document.getElementById('emotionTip').textContent = '自然体で行けるバランス。'; }
 
         /* ===== Recommendations（Apple直リンク＋試聴＋被りなし） ===== */
-        async function getArtistInfo(name) {
-            const e = encodeURIComponent(name);
-            try {
-                const r = await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicArtist&limit=1`);
-                const j = await r.json(); const a = j.results?.[0]; if (!a) return null;
-                return {
-                    id: a.artistId, name: a.artistName, genre: a.primaryGenreName || "Other",
-                    link: a.artistLinkUrl || `https://music.apple.com/us/search?term=${e}&app=music`,
-                    img: a.artworkUrl100 ? a.artworkUrl100.replace('100x100', '300x300') : `https://picsum.photos/seed/${e}/300/300`
-                };
-            } catch { return null }
-        }
-        async function getPreviewUrl(artistName) {
-            const e = encodeURIComponent(artistName);
-            try {
-                const r = await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicTrack&attribute=artistTerm&limit=1`);
-                const j = await r.json(); return j.results?.[0]?.previewUrl || "";
-            } catch { return "" }
-        }
-        async function getSimilarArtists(tokens, max = 8) {
-            const exclude = new Set(tokens.map(s => s.toLowerCase()));
-            const genres = new Set();
-            for (const n of tokens) { const info = await getArtistInfo(n); if (info?.genre) genres.add(info.genre) }
-            const pool = [];
-            for (const g of genres) {
-                const e = encodeURIComponent(g);
-                try {
-                    const r = await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicArtist&limit=30`);
-                    const j = await r.json();
-                    (j.results || []).forEach(a => {
-                        if (!a.artistName) return;
-                        const nm = a.artistName.trim(); if (exclude.has(nm.toLowerCase())) return;
-                        pool.push({
-                            id: a.artistId, name: nm,
-                            link: a.artistLinkUrl || `https://music.apple.com/us/search?term=${encodeURIComponent(nm)}&app=music`,
-                            img: a.artworkUrl100 ? a.artworkUrl100.replace('100x100', '300x300') : `https://picsum.photos/seed/${encodeURIComponent(nm)}/300/300`
-                        });
-                    });
-                } catch { }
-            }
-            const seen = new Set(), out = [];
-            for (const a of pool) { const k = (a.name + ':' + a.id).toLowerCase(); if (seen.has(k)) continue; seen.add(k); out.push(a); }
-            return out.slice(0, max);
-        }
-        const APPLE_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="#ffd36b"><path d="M16.365 1.43a5.32 5.32 0 0 1-1.128 3.81c-.77.962-2.03 1.76-3.29 1.645a4.565 4.565 0 0 1 1.185-3.667c.82-.922 2.22-1.65 3.233-1.788ZM20.75 17.661c-.274.618-.6 1.196-.976 1.737-.641.919-1.39 1.982-2.42 1.997-1.003.015-1.283-.644-2.392-.644-1.108 0-1.418.63-2.41.66-1.004.03-1.77-.992-2.413-1.911-1.315-1.88-2.318-5.302-1.02-7.613.708-1.231 1.963-2.021 3.396-2.042 1.015-.02 1.977.694 2.392.694.412 0 1.589-.857 2.676-.732.392.016 1.912.16 2.825 1.54-.073.048-1.681.98-1.663 2.948.022 2.35 2.047 3.133 2.07 3.164Z"/></svg>`;
-        const YT_SVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="#ff6666"><path d="M23.5 6.2s-.2-1.6-.8-2.3c-.7-.8-1.5-.8-1.9-.8C17.2 3 12 3 12 3h0s-5.2 0-8.8.1c-.4 0-1.2 0-1.9.8C.7 4.6.5 6.2.5 6.2S.3 8 .3 9.7v1.6C.3 13 0.5 14.8.5 14.8s.2 1.6.8 2.3c.7.8 1.7.8 2.1.9 1.5.1 8.6.1 8.6.1s5.2 0 8.8-.1c.4 0 1.2 0 1.9-.8.6-.7.8-2.3.8-2.3s.2-1.8.2-3.5V9.7c0-1.7-.2-3.5-.2-3.5ZM9.8 13.9V7.9l5.5 3-5.5 3Z"/></svg>`;
-        async function renderRecommendations() {
-            const box = document.getElementById('recs');
-            box.innerHTML = '<div style="opacity:.7">類似アーティストを探索中…</div>';
-            if (!TOKENS.length) { box.innerHTML = '<div style="opacity:.7">アーティストを入力してAnalyzeを押してください。</div>'; return; }
-            const recs = await getSimilarArtists(TOKENS, 6);
-            if (!recs.length) { box.innerHTML = '<div style="opacity:.7">おすすめが見つかりませんでした。</div>'; return; }
-            const rows = await Promise.all(recs.map(async a => {
-                const preview = await getPreviewUrl(a.name);
-                const yt = `https://www.youtube.com/results?search_query=${encodeURIComponent(a.name + ' official')}`;
-                return `
-      <div style="display:flex;align-items:center;gap:12px;margin:10px 0">
-        <img src="${a.img}" alt="${a.name}" style="width:56px;height:56px;border-radius:10px;object-fit:cover">
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:800">${a.name}</div>
-          <div style="display:flex;gap:12px;align-items:center;margin-top:6px">
-            <a href="${a.link}" target="_blank" title="Apple Music">${APPLE_SVG}</a>
-            <a href="${yt}" target="_blank" title="YouTube">${YT_SVG}</a>
-          </div>
-          ${preview ? `<audio controls preload="none" style="margin-top:6px;width:100%;max-width:340px"><source src="${preview}"></audio>` : `<div style="margin-top:6px;opacity:.6">（プレビューなし）</div>`}
-        </div>
-      </div>
-    `;
-            }));
-            box.innerHTML = rows.join('');
-        }
+        async function getArtistInfo(name) { const e = encodeURIComponent(name); try { const r = await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicArtist&limit=1`); const j = await r.json(); const a = j.results?.[0]; if (!a) return null; return { id: a.artistId, name: a.artistName, genre: a.primaryGenreName || "Other", link: a.artistLinkUrl || `https://music.apple.com/us/search?term=${e}&app=music`, img: a.artworkUrl100 ? a.artworkUrl100.replace('100x100', '300x300') : `https://picsum.photos/seed/${e}/300/300` } } catch { return null } }
+        async function getPreviewUrl(artistName) { const e = encodeURIComponent(artistName); try { const r = await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicTrack&attribute=artistTerm&limit=1`); const j = await r.json(); return j.results?.[0]?.previewUrl || "" } catch { return "" } }
+        async function getSimilarArtists(tokens, max = 8) { const exclude = new Set(tokens.map(s => s.toLowerCase())); const genres = new Set(); for (const n of tokens) { const info = await getArtistInfo(n); if (info?.genre) genres.add(info.genre) } const pool = []; for (const g of genres) { const e = encodeURIComponent(g); try { const r = await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicArtist&limit=30`); const j = await r.json(); (j.results || []).forEach(a => { if (!a.artistName) return; const nm = a.artistName.trim(); if (exclude.has(nm.toLowerCase())) return; pool.push({ id: a.artistId, name: nm, link: a.artistLinkUrl || `https://music.apple.com/us/search?term=${encodeURIComponent(nm)}&app=music`, img: a.artworkUrl100 ? a.artworkUrl100.replace('100x100', '300x300') : `https://picsum.photos/seed/${encodeURIComponent(nm)}/300/300` }) }) } catch { } } const seen = new Set(), out = []; for (const a of pool) { const k = (a.name + ':' + a.id).toLowerCase(); if (seen.has(k)) continue; seen.add(k); out.push(a) } return out.slice(0, max) }
+        async function renderRecommendations() { const box = document.getElementById('recs'); box.innerHTML = '<div style="opacity:.7">類似アーティストを探索中…</div>'; if (!TOKENS.length) { box.innerHTML = '<div style="opacity:.7">アーティストを入力してAnalyzeを押してください。</div>'; return } const recs = await getSimilarArtists(TOKENS, 6); if (!recs.length) { box.innerHTML = '<div style="opacity:.7">おすすめが見つかりませんでした。</div>'; return } const rows = await Promise.all(recs.map(async a => { const preview = await getPreviewUrl(a.name); const yt = `https://www.youtube.com/results?search_query=${encodeURIComponent(a.name + ' official')}`; return `<div style="display:flex;align-items:center;gap:12px;margin:10px 0"><img src="${a.img}" alt="${a.name}" style="width:56px;height:56px;border-radius:10px;object-fit:cover"><div style="flex:1;min-width:0"><div style="font-weight:800">${a.name}</div><div style="display:flex;gap:12px;align-items:center;margin-top:6px"><a href="${a.link}" target="_blank" title="Apple Music" style="display:inline-flex;align-items:center">${ICON_APPLE}</a><a href="${yt}" target="_blank" title="YouTube" style="display:inline-flex;align-items:center">${ICON_YT}</a></div>${preview ? `<audio controls preload="none" style="margin-top:6px;width:100%;max-width:340px"><source src="${preview}"></audio>` : `<div style="margin-top:6px;opacity:.6">（プレビューなし）</div>`}</div></div>` })); box.innerHTML = rows.join('') }
 
         /* ===== Analyze（進捗ラップ） ===== */
-        function startProgress(cb) {
-            const wrap = document.getElementById('progressWrap'), fill = document.getElementById('progfill'), txt = document.getElementById('progtext');
-            wrap.style.display = 'block'; fill.style.width = '0%'; txt.textContent = '0%';
-            let p = 0; const id = setInterval(() => { p = Math.min(100, p + 6); fill.style.width = p + '%'; txt.textContent = p + '%'; }, 70);
-            cb().finally(() => { clearInterval(id); setTimeout(() => wrap.style.display = 'none', 120); });
-        }
+        function startProgress(cb) { const wrap = document.getElementById('progressWrap'), fill = document.getElementById('progfill'), txt = document.getElementById('progtext'); wrap.style.display = 'block'; fill.style.width = '0%'; txt.textContent = '0%'; let p = 0; const id = setInterval(() => { p = Math.min(100, p + 6); fill.style.width = p + '%'; txt.textContent = p + '%'; }, 70); cb().finally(() => { clearInterval(id); setTimeout(() => wrap.style.display = 'none', 120) }) }
         document.getElementById('analyzeBtn').addEventListener('click', () => startProgress(analyze));
-        async function analyze() {
-            if (!TOKENS.length) { alert('アーティスト/曲を入れてください'); return; }
-            await renderMap().catch(() => { });
-            await drawEmotion([]).catch(() => { });
-            await calcLove().catch(() => { });
-            const v = randomVec(); await drawVector().catch(() => { }); await drawWork(v).catch(() => { });
-            await renderRecommendations().catch(() => { });
-        }
-
-        /* ===== Sora（一般Q&A対応） ===== */
-        const soraMask = document.getElementById('soraMask'), soraLog = document.getElementById('soraLog'), soraIn = document.getElementById('soraIn');
-        document.getElementById('chatSoraBtn').addEventListener('click', () => { soraMask.style.display = 'grid'; soraIn.focus() });
-        document.getElementById('soraClose').addEventListener('click', () => { soraMask.style.display = 'none' });
-
-        const Circuit = { fail: 0, open: false, resetAfter: 0, canRun() { return !this.open || Date.now() > this.resetAfter }, failOnce() { this.fail++; if (this.fail >= 2) { this.open = true; this.resetAfter = Date.now() + 15000 } }, success() { this.fail = 0; this.open = false; } };
-        function pushSora(who, text) {
-            const line = document.createElement('div'); line.className = 'sora-msg' + (who === '👤' ? ' you' : '');
-            line.innerHTML = `<div class='sora-bubble'><div style="opacity:.7;font-size:12px;margin-bottom:2px">${who}</div>${text}</div>`;
-            soraLog.appendChild(line); soraLog.scrollTop = soraLog.scrollHeight;
-        }
-        async function callSoraAPI(message) {
-            if (!Circuit.canRun()) return '（Sora混雑中。少し待ってや）';
-            try {
-                const r = await fetch(SORA_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message }) });
-                if (!r.ok) { Circuit.failOnce(); return `（Sora応答がエラー:${r.status}）` }
-                Circuit.success(); const j = await r.json(); return j.reply || '（AIが少し考え中みたいや…）';
-            } catch (e) { Circuit.failOnce(); return '（ネットが不安定みたいや。もう一回頼むわ）'; }
-        }
-        async function sendSora() {
-            const q = (soraIn.value || '').trim(); if (!q) return;
-            pushSora('👤', q); soraIn.value = '';
-            const reply = await callSoraAPI(q);
-            pushSora('Sora', reply);
-        }
-        document.getElementById('soraSend').addEventListener('click', sendSora);
-        soraIn.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) sendSora(); });
-
+        async function analyze() { if (!TOKENS.length) { alert('アーティスト/曲を入れてください'); return } await renderMap().catch(() => { }); await drawEmotion([]).catch(() => { }); await calcLove().catch(() => { }); const v = randomVec(); await drawVector().catch(() => { }); await drawWork(v).catch(() => { }); await renderRecommendations().catch(() => { }) }
     </script>
 </body>
 
