@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>MusicLens — v9.3 Failsafe Crystal</title>
+    <title>MusicLens — v9.4 Failsafe Crystal</title>
     <style>
         :root {
             --gold: #ffcc33;
@@ -50,7 +50,8 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            text-align: center
+            text-align: center;
+            padding: 16px
         }
 
         .hero {
@@ -59,11 +60,7 @@
             border-radius: 24px;
             background: rgba(255, 255, 255, .08);
             backdrop-filter: blur(16px);
-            box-shadow: 0 0 25px rgba(255, 255, 255, .1);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: center
+            box-shadow: 0 0 25px rgba(255, 255, 255, .1)
         }
 
         .logo {
@@ -71,10 +68,41 @@
             font-weight: 900;
             background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
             -webkit-background-clip: text;
-            color: transparent
+            color: transparent;
+            animation: float 6s ease-in-out infinite, glow 3s ease-in-out infinite
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-6px)
+            }
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 0 rgba(255, 220, 120, 0))
+            }
+
+            50% {
+                filter: drop-shadow(0 0 16px rgba(255, 220, 120, .75))
+            }
+        }
+
+        .hero p {
+            margin-top: 12px;
+            line-height: 1.6
         }
 
         .cta {
+            margin-top: 18px;
             padding: 12px 26px;
             border: none;
             border-radius: 8px;
@@ -92,7 +120,7 @@
 
         .hero small {
             display: block;
-            margin-top: 4px;
+            margin-top: 10px;
             color: #ccc
         }
 
@@ -179,15 +207,16 @@
             color: #fff
         }
 
-        input[type=text] {
+        /* 入力欄：タップ/クリック確実化 */
+        #inputBox {
             width: 100%;
             padding: 10px 14px;
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, .25);
             background: rgba(255, 255, 255, .1);
             color: #fff;
-            pointer-events: auto;
-            z-index: 10
+            pointer-events: auto !important;
+            z-index: 10 !important
         }
 
         /* Ripple（波紋） */
@@ -226,6 +255,12 @@
             color: #fff;
             max-width: 100%;
             word-break: break-word
+        }
+
+        .chip .x {
+            margin-left: 8px;
+            cursor: pointer;
+            color: #ffd36b
         }
 
         /* Map */
@@ -313,7 +348,7 @@
             }
         }
 
-        /* Sora（TOPでは非表示、Appで表示） */
+        /* Soraボタン：PC=右上固定、スマホ=ヒーロー下にセンター */
         #chatSoraBtn {
             position: fixed;
             top: 14px;
@@ -326,18 +361,23 @@
             font-weight: 800;
             box-shadow: 0 8px 24px rgba(50, 120, 200, .35);
             cursor: pointer;
-            z-index: 10000;
-            display: none
+            z-index: 10000
         }
 
-        #soraOrb {
-            position: fixed;
-            top: 64px;
-            right: 28px;
-            z-index: 10000;
-            pointer-events: none;
-            display: none;
-            filter: drop-shadow(0 6px 22px rgba(255, 211, 107, .45))
+        @media (max-width:560px) {
+
+            /* TOP表示時はタイトル下センター */
+            #title #chatSoraBtn {
+                position: static;
+                display: inline-flex;
+                margin: 12px auto 0
+            }
+
+            /* App表示でも上部が重ならないように */
+            #app #chatSoraBtn {
+                top: 12px;
+                right: 12px
+            }
         }
 
         /* Suggest */
@@ -376,7 +416,7 @@
             }
         }
 
-        /* === Sora Modal (Siri風) === */
+        /* === Sora Modal (Siri風・モバイル最適化) === */
         .sora-aurora {
             position: absolute;
             inset: 0;
@@ -385,7 +425,7 @@
                 radial-gradient(700px 450px at 85% 80%, rgba(255, 170, 110, .16), transparent 60%),
                 radial-gradient(600px 400px at 50% 50%, rgba(160, 255, 220, .10), transparent 60%);
             filter: blur(22px) saturate(160%);
-            animation: aurora-move 16s ease-in-out infinite alternate;
+            animation: aurora-move 16s ease-in-out infinite alternate
         }
 
         @keyframes aurora-move {
@@ -401,12 +441,14 @@
         .sora-card {
             position: relative;
             width: min(720px, 92%);
+            max-height: 86vh;
+            overflow: auto;
             border-radius: 24px;
             padding: 18px 18px 14px;
             background: linear-gradient(180deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, .10));
             border: 1px solid rgba(255, 255, 255, .25);
             box-shadow: 0 18px 60px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .28);
-            backdrop-filter: blur(20px) saturate(160%);
+            backdrop-filter: blur(20px) saturate(160%)
         }
 
         .sora-header {
@@ -583,8 +625,12 @@
     <section id="title">
         <div class="hero">
             <div class="logo">MusicLens</div>
-            <p>好きなアーティスト/曲を入れるだけ。<br>音の嗜好→今日のコンディションと仕事の強みまで見える、“音の性格診断”。</p>
+            <p>好きなアーティスト/曲を入れるだけ。音の嗜好→今日のコンディションと仕事の強みまで見える、音楽の世界も広がる。さぁ、"sound journey"へ出かけよう！</p>
             <button id="startBtn" class="cta">SOUND JOURNEY ▶︎</button>
+
+            <!-- スマホ時はこのボタンがタイトル下にセンター表示（CSSで制御） -->
+            <button id="chatSoraBtn">💬 Chat with Sora AI</button>
+
             <small>Produced by Daijiro Majima</small>
         </div>
     </section>
@@ -678,26 +724,15 @@
                 <div id="recs">Analyze後に表示されます。</div>
             </section>
 
-            <section class="panel center">
-                <div class="muted">🎧 BGM: FKJ – TUI</div>
-                <!-- 要望により停止ボタンは不要なので非表示（CSSで消さず残しておく） -->
-                <button id="bgmToggle" class="btn btn-primary" style="display:none">🔇 停止</button>
-            </section>
-
-            <button id="chatSoraBtn">💬 Chat with Sora AI</button>
         </main>
     </section>
 
-    <!-- Sora オーブ（Appでのみ表示） -->
-    <canvas id="soraOrb" width="90" height="90"></canvas>
-
-    <!-- Sora モーダル（Siri風） -->
+    <!-- Sora モーダル -->
     <div id="soraMask" style="position:fixed;inset:0;display:none;place-items:center;z-index:9999">
         <div class="sora-aurora"></div>
         <div class="sora-card">
             <header class="sora-header">
-                <div class="sora-title"><span class="sora-orb"></span><strong>Sora</strong><span class="sora-sub"> —
-                        Music Intelligence</span></div>
+                <div class="sora-title"><strong>Sora</strong><span class="sora-sub"> — Music Intelligence</span></div>
                 <button id="soraClose" class="sora-icon-btn" title="Close">✕</button>
             </header>
             <div class="sora-hero">
@@ -715,17 +750,15 @@
 
     <!-- BGM：TOPから自動再生（停止UIなし） -->
     <audio id="bgm" preload="auto" loop>
-        <!-- ここにあなたのmp3を配置して使う（例：assets/fkj_tui.mp3） -->
         <source src="./assets/fkj_tui.mp3" type="audio/mpeg">
     </audio>
 
     <script>
         /*** 定数 ***/
         const SORA_ENDPOINT = 'https://tiny-fog-ae39.mjmdjr.workers.dev/chat';
-        const BGM_URLS = ['./assets/fkj_tui.mp3'];
 
-        /*** フェイルセーフ基礎 ***/
-        function withTimeout(promiseFactory, ms = 6000, label = 'op') {
+        /*** フェイルセーフ ***/
+        function withTimeout(promiseFactory, ms = 12000, label = 'op') {
             const controller = new AbortController(), timer = setTimeout(() => controller.abort(`Timeout:${label}`), ms);
             return promiseFactory(controller.signal).finally(() => clearTimeout(timer))
                 .catch(err => { if (err?.name === 'AbortError' || String(err).includes('Timeout')) throw new Error(`Timeout:${label}`); throw err; });
@@ -749,11 +782,16 @@
             addEventListener('resize', () => { size(); mk() }); size(); mk(); draw()
         })();
 
+        /*** BGM：TOPから自動再生（iOSはタップで解除） ***/
+        const bgmEl = document.getElementById("bgm"); bgmEl.loop = true;
+        async function autoStartBGM() { try { await bgmEl.play(); } catch (e) { const once = () => { bgmEl.play().catch(() => { }); document.removeEventListener('pointerdown', once); }; document.addEventListener('pointerdown', once, { once: true }); } }
+        document.addEventListener('DOMContentLoaded', autoStartBGM);
+
         /*** 入力/チップ & 予測変換 ***/
         let TOKENS = []; const input = document.getElementById('inputBox'), chips = document.getElementById('chips'), suggestBox = document.getElementById('suggestBox');
         function normalizeToken(s = '') { return s.replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/[，、]+/g, ',').replace(/\s+/g, ' ').trim() }
-        function renderChips() { chips.innerHTML = (TOKENS || []).map((t, i) => `<span class="chip" data-i="${i}">${t}<a class="chipDel" style="margin-left:8px;cursor:pointer;color:#ffd36b">✕</a></span>`).join('') }
-        document.addEventListener('click', e => { if (e.target.classList.contains('chipDel')) { const i = +e.target.parentElement.dataset.i; TOKENS.splice(i, 1); renderChips() } })
+        function renderChips() { chips.innerHTML = (TOKENS || []).map((t, i) => `<span class="chip" data-i="${i}">${t}<span class="x" data-i="${i}">✕</span></span>`).join('') }
+        document.addEventListener('click', e => { if (e.target.classList.contains('x')) { const i = +e.target.dataset.i; TOKENS.splice(i, 1); renderChips(); } })
 
         const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms) } };
         async function fetchSuggest(q) {
@@ -762,7 +800,7 @@
                 fetch(`https://itunes.apple.com/search?term=${e}&entity=musicArtist&limit=5`).then(r => r.json()),
                 fetch(`https://itunes.apple.com/search?term=${e}&entity=musicTrack&limit=5`).then(r => r.json())
             ]);
-            const names = new Set(); const list = [];
+            const names = new Set(), list = [];
             (art.value?.results || []).forEach(a => { if (a.artistName && !names.has(a.artistName.toLowerCase())) { names.add(a.artistName.toLowerCase()); list.push({ type: 'artist', name: a.artistName }) } });
             (trk.value?.results || []).forEach(t => { if (t.trackName && !names.has(t.trackName.toLowerCase())) { names.add(t.trackName.toLowerCase()); list.push({ type: 'track', name: t.trackName }) } });
             return list.slice(0, 8);
@@ -774,7 +812,7 @@
         }
         input.addEventListener('input', debounce(async (e) => {
             const q = e.target.value.trim(); if (!q) { suggestBox.style.display = 'none'; return }
-            try { renderSuggest(await withTimeout(() => fetchSuggest(q), 4000, 'suggest')) } catch { suggestBox.style.display = 'none' }
+            try { renderSuggest(await withTimeout(() => fetchSuggest(q), 6000, 'suggest')) } catch { suggestBox.style.display = 'none' }
         }, 220))
         suggestBox.addEventListener('click', e => { const li = e.target.closest('li'); if (!li) return; TOKENS.push(li.dataset.name); renderChips(); input.value = ''; suggestBox.style.display = 'none' })
         input.addEventListener('keydown', e => {
@@ -783,28 +821,23 @@
             else if (e.key === 'Enter') { e.preventDefault(); if (suggestIndex >= 0) { TOKENS.push(suggestItems[suggestIndex].name); renderChips(); input.value = ''; suggestBox.style.display = 'none' } }
         })
         function mark() { [...suggestBox.children].forEach((li, i) => li.classList.toggle('active', i === suggestIndex)) }
-
-        /* Add/Analyze を確実に動かす（iOS pointerup／候補を外側タップで閉じ） */
         document.addEventListener('pointerdown', (e) => { if (suggestBox.style.display !== 'none') { if (!suggestBox.contains(e.target) && e.target !== input) suggestBox.style.display = 'none'; } });
         function addTokensFromInput() { const v = (input.value || '').trim(); if (!v) return; const list = normalizeToken(v).split(',').map(s => s.trim()).filter(Boolean); const seen = new Set((TOKENS || []).map(s => s.toLowerCase())); list.forEach(n => { if (!seen.has(n.toLowerCase())) TOKENS.push(n) }); input.value = ''; renderChips() }
         document.getElementById('addBtn').addEventListener('click', addTokensFromInput);
         document.getElementById('addBtn').addEventListener('pointerup', addTokensFromInput);
-        document.getElementById('analyzeBtn').addEventListener('click', () => startProgress(analyze));
-        document.getElementById('analyzeBtn').addEventListener('pointerup', () => startProgress(analyze));
 
-        /*** 画像（曲→アルバム→アーティスト） ***/
+        /*** 画像 → Map & Emotion ***/
         async function fetchBestImage(name) {
             const q = encodeURIComponent(name);
             const pull = async (entity) => { try { const r = await fetch(`https://itunes.apple.com/search?term=${q}&entity=${entity}&limit=1`); const j = await r.json(); return j.results?.[0]?.artworkUrl100?.replace('100x100', '300x300') || '' } catch { return '' } };
             return (await pull('musicTrack')) || (await pull('album')) || (await pull('musicArtist')) || `https://picsum.photos/seed/${q}/300/300`
         }
 
-        /*** Map & Emotion ***/
         function artistColor(name) { const h = [...name].reduce((a, c) => a + c.charCodeAt(0), 0) % 360; return `hsl(${h} 90% 65%)` }
         async function renderMap() {
             const area = document.getElementById('mapArea'); area.innerHTML = ''; const pts = [];
             for (const n of TOKENS) {
-                const img = await withTimeout(() => fetchBestImage(n), 5000, 'img').catch(() => `https://picsum.photos/seed/${encodeURIComponent(n)}/300/300`);
+                const img = await withTimeout(() => fetchBestImage(n), 6000, 'img').catch(() => `https://picsum.photos/seed/${encodeURIComponent(n)}/300/300`);
                 const color = artistColor(n); const seed = [...n].reduce((a, c) => a + c.charCodeAt(0), 0), rnd = m => ((Math.sin(seed * m + 1) * 10000) % 1 + 1) % 1;
                 const x = 0.1 + rnd(2) * 0.8, y = 0.2 + rnd(3) * 0.6;
                 const b = document.createElement('div'); b.className = 'bubble'; b.style.boxShadow = `0 0 22px ${color}`;
@@ -851,7 +884,7 @@
             });
             drawDonut('vectorPie', VEC_COLORS.map(o => v[o.key]), VEC_COLORS.map(o => o.color), 0.04, true);
             const top = VEC_COLORS.slice().sort((a, b) => v[b.key] - v[a.key])[0].label;
-            const tips = { 'エネルギー': '最初の一歩を大きく。勢いが活きる日やで。', '洗練': '仕上げの精度で差がつくで。丁寧に行こ。', 'ノリ': '手を動かしてリズム作ろ。軽快に回せる。', '構成力': '逆算設計で迷いが消える。段取り勝ち。', '実験性': '小さく試す→学ぶ→改善。回転数が鍵。', '都会感': '情報の解像度を上げて世界が広がるで。', 'グローバル感': '視野を広げるとアイデアが湧く。' };
+            const tips = { 'エネルギー': '最初の一歩を大きく。勢いが活きる日やで。', '洗練': '仕上げの精度で差がつくで。丁寧に行こ。', 'ノリ': '手を動かしてリズム作ろ。軽快に回せる。', '構成力': '逆算設計で迷いが消える。段取り勝ち。', '実験性': '小さく試す→学ぶ→改善。回転数が鍵。', '都会感': '情報の解像度を上げると世界が広がるで。', 'グローバル感': '視野を広げるとアイデアが湧く。' };
             document.getElementById('vectorNote').textContent = `${top} が光る日。${tips[top] || ''}`;
         }
         function drawAbilities(obj) {
@@ -927,41 +960,10 @@
             }
         }
 
-        /*** BGM（TOPから確実に再生） ***/
-        const bgmEl = document.getElementById("bgm"); bgmEl.loop = true;
-        async function autoStartBGM() { try { await bgmEl.play(); console.log('🎶 BGM auto-started'); } catch (e) { console.warn('Autoplay blocked; awaiting user gesture'); const once = () => { bgmEl.play().catch(() => { }); document.removeEventListener('pointerdown', once); }; document.addEventListener('pointerdown', once, { once: true }); } }
-        document.addEventListener('DOMContentLoaded', autoStartBGM);
-
-        /*** 扉＆TOP/APPのSora UI表示制御 ***/
-        const chatBtn = document.getElementById('chatSoraBtn'); const orbCv = document.getElementById('soraOrb');
-        function showAppUI() { if (chatBtn) chatBtn.style.display = 'inline-flex'; if (orbCv) orbCv.style.display = 'block' }
-        function hideTopUI() { if (chatBtn) chatBtn.style.display = 'none'; if (orbCv) orbCv.style.display = 'none' }
-        hideTopUI();
-        document.getElementById("startBtn").addEventListener("click", () => { document.body.classList.add("doors-open"); setTimeout(() => { document.getElementById("title").style.display = "none"; document.getElementById("app").classList.add("show"); showAppUI(); }, 3200) });
-        document.getElementById("backTop").addEventListener("click", () => { document.getElementById("app").classList.remove("show"); document.getElementById("title").style.display = "flex"; document.body.classList.remove("doors-open"); hideTopUI(); RAF.clear(); window.scrollTo(0, 0) });
-
-        /*** Gold Sora Orb（SORA文字・色変化） ***/
-        const SORA_MOOD = { thinking: '#9b8cff', info: '#6dd5fa', success: '#ffd36b', warn: '#ff8a66', error: '#ff5c7a' };
-        const SoraOrb = (function () {
-            const cv = document.getElementById('soraOrb'); if (!cv) return { set: () => { } }; const ctx = cv.getContext('2d'); const W = cv.width, H = cv.height, cx = W / 2, cy = H / 2; let t = 0, cur = [255, 211, 107], tgt = [255, 211, 107];
-            const lerp = (a, b, s) => a + (b - a) * s; const hexToRgb = h => { const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h); return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : null };
-            function set(hex) { const rgb = hexToRgb(hex); if (rgb) tgt = rgb; }
-            function draw() {
-                ctx.clearRect(0, 0, W, H); cur = [lerp(cur[0], tgt[0], 0.08), lerp(cur[1], tgt[1], 0.08), lerp(cur[2], tgt[2], 0.08)]; const r = 26 + Math.sin(t) * 4;
-                const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r + 16); g.addColorStop(0, `rgba(${cur[0]},${cur[1]},${cur[2]},.92)`); g.addColorStop(1, `rgba(${cur[0]},${cur[1]},${cur[2]},0)`); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r + 16, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = `rgba(${cur[0]},${cur[1]},${cur[2]},.98)`; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
-                ctx.save(); ctx.translate(cx, cy); ctx.scale(1 + Math.sin(t * 1.2) * 0.03, 1 + Math.cos(t * 1.1) * 0.03); ctx.fillStyle = '#221a00'; ctx.font = 'bold 16px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('SORA', 0, 0); ctx.restore();
-                t += 0.04; RAF.add(requestAnimationFrame(draw));
-            } draw(); return { set };
-        })();
-        function moodFromReply(text = '') { const s = text.toLowerCase(); if (/error|fail|混雑|無理|later|あとで/.test(s)) return SORA_MOOD.error; if (/注意|気を付け|深呼吸|落ち着|整えて/.test(s)) return SORA_MOOD.warn; if (/天気|気温|今日は|wikipedia|について|説明|情報/.test(s)) return SORA_MOOD.info; if (/おすすめ|聴け|最高|good|nice|楽しい|シンクロ|ええ|合う/.test(s)) return SORA_MOOD.success; return SORA_MOOD.info }
-
-        /*** Sora モーダル & Siri風波形 ***/
+        /*** Soraモーダル（開閉 & 波形） ***/
         const soraMask = document.getElementById('soraMask'), soraLog = document.getElementById('soraLog'), soraIn = document.getElementById('soraIn');
-        function pushSora(who, text) {
-            const wrap = document.createElement('div'); wrap.className = 'sora-msg' + (who === '👤' ? ' you' : ''); const bubble = document.createElement('div'); bubble.className = 'sora-bubble';
-            bubble.innerHTML = `<div style="opacity:.7;font-size:12px;margin-bottom:2px">${who}</div>${text}`; wrap.appendChild(bubble); soraLog.appendChild(wrap); soraLog.scrollTop = soraLog.scrollHeight
-        }
+        document.getElementById('chatSoraBtn').addEventListener('click', () => { soraMask.style.display = 'grid'; soraIn.focus(); startSoraWave() });
+        document.getElementById('soraClose').addEventListener('click', () => { soraMask.style.display = 'none'; stopSoraWave() });
         let _waveRAF = 0; function startSoraWave() {
             const cvs = document.getElementById('soraWave'); if (!cvs) return; const ctx = cvs.getContext('2d'); let t = 0; function grad() { const g = ctx.createLinearGradient(0, 0, cvs.width, 0); g.addColorStop(0, 'rgba(255,211,107,.95)'); g.addColorStop(.5, 'rgba(255,255,255,.75)'); g.addColorStop(1, 'rgba(255,160,90,.95)'); return g; }
             function loop() {
@@ -971,79 +973,60 @@
             } cancelAnimationFrame(_waveRAF); loop();
         }
         function stopSoraWave() { cancelAnimationFrame(_waveRAF); _waveRAF = 0; }
-        document.getElementById('chatSoraBtn').addEventListener('click', () => { soraMask.style.display = 'grid'; soraIn.focus(); startSoraWave() });
-        document.getElementById('soraClose').addEventListener('click', () => { soraMask.style.display = 'none'; stopSoraWave() });
+        function pushSora(who, text) {
+            const wrap = document.createElement('div'); wrap.className = 'sora-msg' + (who === '👤' ? ' you' : ''); const bubble = document.createElement('div'); bubble.className = 'sora-bubble';
+            bubble.innerHTML = `<div style="opacity:.7;font-size:12px;margin-bottom:2px">${who}</div>${text}`; wrap.appendChild(bubble); soraLog.appendChild(wrap); soraLog.scrollTop = soraLog.scrollHeight
+        }
 
-        /*** Sora 通信（timeout+retry+CircuitBreaker） ***/
-        const Circuit = { fail: 0, open: false, resetAfter: 0, canRun() { return !this.open || Date.now() > this.resetAfter }, failOnce() { this.fail++; if (this.fail >= 3) { this.open = true; this.resetAfter = Date.now() + 15000; showRecovery('AI混雑中。15秒後に再試行します。') } }, success() { this.fail = 0; this.open = false; } };
+        /*** Sora通信（statusプリフライト + timeout+retry+CB + エラー内容表示） ***/
+        const Circuit = { fail: 0, open: false, resetAfter: 0, canRun() { return !this.open || Date.now() > this.resetAfter }, failOnce() { this.fail++; if (this.fail >= 2) { this.open = true; this.resetAfter = Date.now() + 15000; showRecovery('AI混雑中。15秒後に再試行します。') } }, success() { this.fail = 0; this.open = false; } };
         async function callSoraAPI(message) {
             if (!Circuit.canRun()) return '（Sora混雑中。少し待ってや）';
-            try {
-                const r = await withTimeout((signal) => fetch(SORA_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message }), signal }), 9000, 'sora');
-                if (!r.ok) { const text = await r.text(); console.warn('Sora HTTP Error:', r.status, text); Circuit.failOnce(); return '（Sora応答がエラー：' + r.status + '。あとで試してな）' }
-                Circuit.success(); const j = await r.json(); return j.reply || '（応答が空です）';
-            } catch (e) { console.warn('Sora fetch failed:', e); Circuit.failOnce(); return '（ネットが不安定みたいや。あとで試してや）'; }
+            // ① /status プリフライト
+            try { const s = await withTimeout((signal) => fetch(SORA_ENDPOINT.replace('/chat', '/status'), { signal }), 6000, 'status'); if (!s.ok) throw new Error('Status ' + s.status); } catch (e) { showRecovery('Sora接続チェックNG：/status'); }
+            // ② /chat へ POST （3回まで）
+            for (let i = 0; i < 3; i++) {
+                try {
+                    const r = await withTimeout((signal) => fetch(SORA_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message }), signal }), 12000, 'sora');
+                    if (!r.ok) { const txt = await r.text(); console.warn('Sora HTTP Error:', r.status, txt); continue; }
+                    Circuit.success(); const j = await r.json(); return j.reply || '（応答が空です）';
+                } catch (e) { console.warn('Sora fetch failed:', e); }
+                await new Promise(res => setTimeout(res, 500 * (i + 1)));
+            }
+            Circuit.failOnce(); return '（今はAI応答が取りにくいみたいや。あとで試してや）';
         }
         async function openDataAnswer(q) { try { if (/天気|weather/i.test(q)) { const m = q.match(/(東京|大阪|名古屋|札幌|仙台|横浜|福岡|京都|神戸)/); if (!m) return "どこの天気か教えてや（例：大阪の天気）。"; const city = m[1]; const url = `https://wttr.in/${encodeURIComponent(city)}?format=j1`; const r = await fetch(url, { headers: { 'Accept': 'application/json' } }); const j = await r.json(); const c = j.current_condition?.[0]; if (!c) return ""; return `${city} は ${c.weatherDesc?.[0]?.value || '—'}、気温 ${c.temp_C}℃（体感 ${c.FeelsLikeC}℃）や。` } if (q.length <= 20) { const w = await fetch(`https://ja.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`).then(r => r.json()).catch(() => null); return w?.extract || "" } return "" } catch { return "" } }
         async function sendSora() {
-            const q = (soraIn.value || '').trim(); if (!q) return; pushSora('👤', q); soraIn.value = ''; SoraOrb.set('#9b8cff'); // thinking
-            let reply = await callSoraAPI(q); if (/混雑中|エラー|不安定/.test(reply)) { const od = await openDataAnswer(q); if (od) reply = od; }
-            pushSora('Sora', reply); SoraOrb.set(moodFromReply(reply));
+            const q = (soraIn.value || '').trim(); if (!q) return;
+            pushSora('👤', q); soraIn.value = '';
+            let reply = await callSoraAPI(q);
+            if (/混雑中|取りにくい|エラー/.test(reply)) { const od = await openDataAnswer(q); if (od) reply = od; }
+            pushSora('Sora', reply);
         }
         document.getElementById('soraSend').addEventListener('click', sendSora);
         soraIn.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) sendSora() });
 
         /*** Analyze（進捗ラップ） ***/
-        function startProgress(cb) {
-            const box = document.getElementById('progressWrap'), fill = document.getElementById('progfill'), txt = document.getElementById('progtext');
-            box.style.display = 'block'; fill.style.width = '0%'; txt.textContent = '0%';
-            let p = 0; const id = setInterval(() => { p = Math.min(100, p + 6); fill.style.width = p + '%'; txt.textContent = p + '%' }, 70); window.__intervals.add(id);
-            cb().finally(() => { clearInterval(id); window.__intervals.delete(id); setTimeout(() => { box.style.display = 'none' }, 120) })
-        }
+        function startProgress(cb) { const box = document.getElementById('progressWrap'), fill = document.getElementById('progfill'), txt = document.getElementById('progtext'); box.style.display = 'block'; fill.style.width = '0%'; txt.textContent = '0%'; let p = 0; const id = setInterval(() => { p = Math.min(100, p + 6); fill.style.width = p + '%'; txt.textContent = p + '%' }, 70); window.__intervals.add(id); cb().finally(() => { clearInterval(id); window.__intervals.delete(id); setTimeout(() => { box.style.display = 'none' }, 120) }) }
         async function analyze() {
             if (!TOKENS.length) { alert('アーティスト/曲を入れてください'); return; }
-            await safeWrap(() => withTimeout(() => renderMap(), 6000, 'renderMap'), null, 'renderMap');
-            await safeWrap(() => withTimeout(() => drawEmotion([]), 2000, 'drawEmotion'), null, 'drawEmotion');
-            await safeWrap(() => withTimeout(() => calcLove(), 1000, 'calcLove'), null, 'calcLove');
-            const v = await safeWrap(() => withTimeout(() => randomVec(), 500, 'randomVec'), () => randomVec(), 'randomVec');
-            await safeWrap(() => withTimeout(() => drawVector(), 1200, 'drawVector'), null, 'drawVector');
-            await safeWrap(() => withTimeout(() => drawWork(v), 1500, 'drawWork'), null, 'drawWork');
-            await safeWrap(() => withTimeout(() => renderRecommendations(), 2500, 'recs'), null, 'recs');
+            await withTimeout(() => renderMap(), 6000, 'renderMap').catch(() => { });
+            await withTimeout(() => drawEmotion([]), 2000, 'drawEmotion').catch(() => { });
+            await withTimeout(() => calcLove(), 1000, 'calcLove').catch(() => { });
+            const v = await withTimeout(() => randomVec(), 500, 'randomVec').catch(() => randomVec());
+            await withTimeout(() => drawVector(), 1200, 'drawVector').catch(() => { });
+            await withTimeout(() => drawWork(v), 1500, 'drawWork').catch(() => { });
+            await withTimeout(() => renderRecommendations(), 2500, 'recs').catch(() => { });
         }
 
         /*** クリック座標 ripple / 例外 / SW ***/
-        document.querySelectorAll('.panel').forEach(p => { p.addEventListener('pointerdown', e => { const r = p.getBoundingClientRect(); p.style.setProperty('--x', ((e.clientX - r.left) / r.width * 100).toFixed(2) + '%'); p.style.setProperty('--y', ((e.clientY - r.top) / r.height * 100).toFixed(2) + '%'); }); });
+        document.querySelectorAll('.panel').forEach(p => {
+            p.addEventListener('pointerdown', e => { const r = p.getBoundingClientRect(); p.style.setProperty('--x', ((e.clientX - r.left) / r.width * 100).toFixed(2) + '%'); p.style.setProperty('--y', ((e.clientY - r.top) / r.height * 100).toFixed(2) + '%'); });
+        });
         window.addEventListener('error', e => { console.warn('WindowError:', e.message); showRecovery('一部機能でエラー。安全に続行します。') });
         window.addEventListener('unhandledrejection', e => { console.warn('UnhandledRejection:', e.reason); showRecovery('ネットワークが不安定かも。再試行中…') });
-
-        /* Service Worker 登録（プロジェクトサイト想定で相対パス） */
-        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => { }) }) }
+        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => { }) }); }
     </script>
-
-    const VERSION = 'mlens-v1';
-    const ASSETS = ['./', './index.html']; // 必要なら画像など追加
-
-    self.addEventListener('install', e=>{
-    e.waitUntil(caches.open(VERSION).then(c=>c.addAll(ASSETS)));
-    });
-
-    self.addEventListener('activate', e=>{
-    e.waitUntil(caches.keys().then(keys=>Promise.all(keys.map(k=>k!==VERSION && caches.delete(k)))));
-    });
-
-    self.addEventListener('fetch', e=>{
-    if (e.request.method !== 'GET') return;
-    e.respondWith(
-    caches.match(e.request).then(cached=>{
-    const net = fetch(e.request).then(r=>{
-    if (r.ok) caches.open(VERSION).then(c=>c.put(e.request, r.clone()));
-    return r;
-    }).catch(()=>cached);
-    return cached || net;
-    })
-    );
-    });
-
 </body>
 
 </html>
