@@ -4,798 +4,1152 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>MusicLens PRO MAX</title>
+    <title>MusicLens – SORA Edition v12.0</title>
     <style>
         :root {
-            --gold: #ffcc33;
-            --gold2: #ff8800;
-            --ink: #0a0a0e;
-            --ink2: #151722;
-            --txt: #fffef8;
+            --bg0: #0b0f14;
+            --bg1: #0f141b;
+            --txt: #f7fafc;
+            --gold: #ffd36b;
+            --amber: #ff9f1c;
+            --teal: #7fd1ff;
+            --mint: #89ffe3;
+            --rose: #ff6b6b;
+            --violet: #9b7bff;
         }
 
         * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", Roboto, sans-serif;
-            background: linear-gradient(180deg, var(--ink), var(--ink2));
+            margin: 0;
+            background: radial-gradient(1200px 800px at 70% -10%, rgba(127, 209, 255, .08), transparent 60%),
+                radial-gradient(900px 600px at 10% 20%, rgba(255, 211, 107, .06), transparent 65%),
+                linear-gradient(180deg, var(--bg0), var(--bg1));
             color: var(--txt);
+            font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
             overflow-x: hidden;
-            min-height: 100vh;
         }
 
-        /* パーティクル背景 */
+        /* ===== 背景パーティクル ===== */
         #fx {
             position: fixed;
             inset: 0;
             z-index: 0;
-            width: 100%;
-            height: 100%;
             pointer-events: none
         }
 
         /* ===== TOP ===== */
         #title {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-            padding: 16px;
             position: relative;
-            z-index: 1000;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
         }
 
         .hero {
-            padding: 36px;
-            border: 1px solid rgba(255, 255, 255, .2);
+            width: min(920px, 92vw);
+            padding: 40px 48px;
             border-radius: 24px;
             background: rgba(255, 255, 255, .08);
-            backdrop-filter: blur(16px);
-            box-shadow: 0 0 25px rgba(255, 255, 255, .1);
+            backdrop-filter: blur(18px) saturate(140%);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .06);
+            position: relative;
+            z-index: 2;
         }
 
         .logo {
-            font-size: 56px;
-            font-weight: 900;
-            background: linear-gradient(90deg, #fff3b0, #ffd166, #ff9f1c);
+            font-size: clamp(40px, 7vw, 72px);
+            line-height: 1.1;
+            margin: 0 0 12px 0;
+            background: linear-gradient(90deg, #f7e8b3, #ffd36b, #ff9f1c);
             -webkit-background-clip: text;
+            background-clip: text;
             color: transparent;
-            animation: float 6s ease-in-out infinite, glow 3s ease-in-out infinite;
+            text-shadow: 0 2px 12px rgba(255, 211, 107, .25);
         }
 
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0)
-            }
-
-            50% {
-                transform: translateY(-6px)
-            }
+        .tagline {
+            font-size: clamp(14px, 1.9vw, 20px);
+            opacity: .92;
+            line-height: 1.8;
+            margin: 8px 0 18px;
         }
 
-        @keyframes glow {
-
-            0%,
-            100% {
-                filter: drop-shadow(0 0 0 rgba(255, 220, 120, 0))
-            }
-
-            50% {
-                filter: drop-shadow(0 0 16px rgba(255, 220, 120, .75))
-            }
-        }
-
-        .hero p {
-            margin-top: 12px;
-            line-height: 1.6
-        }
-
-        /* CTA */
         .cta {
-            margin: 14px auto 10px;
-            padding: 12px 26px;
-            border: none;
-            border-radius: 8px;
-            background: linear-gradient(90deg, #ffd766, #ff9f1c);
-            color: #111;
-            font-weight: 900;
-            cursor: pointer;
-            transition: .3s;
-        }
-
-        .cta:hover {
-            transform: scale(1.05);
-            filter: brightness(1.2)
-        }
-
-        .hero small {
-            display: block;
-            margin-top: 10px;
-            color: #ccc
-        }
-
-        /* ===== Soraボタン（センター配置 / Siri風） ===== */
-        .soraBtnCenter {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            margin: 14px auto 0;
+            padding: 14px 24px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(270deg, #ffd36b, #ff9f1c);
+            color: #111;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 211, 107, .25);
+            transform: translateZ(0);
+            transition: transform .25s ease, filter .25s ease;
+        }
+
+        .cta:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05)
+        }
+
+        .credit {
+            margin-top: 16px;
+            opacity: .85;
+            font-size: 14px
+        }
+
+        /* ===== 常駐 Sora AI ボタン（Siri風＋グラデ流体アニメ＋リップル） ===== */
+        .sora-fab {
+            position: fixed;
+            top: 16px;
+            right: 18px;
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 18px;
             border: none;
             border-radius: 999px;
-            padding: 12px 20px;
-            cursor: pointer;
+            background: linear-gradient(270deg, var(--teal), var(--mint), var(--gold), var(--amber));
+            background-size: 800% 800%;
             color: #0b132b;
-            font-weight: 900;
-            letter-spacing: .3px;
-            background: linear-gradient(135deg, #7fd1ff 0%, #89ffe3 100%);
-            box-shadow: 0 12px 28px rgba(80, 200, 255, .35), inset 0 1px 0 rgba(255, 255, 255, .6);
-            position: relative;
+            font-weight: 800;
+            letter-spacing: .35px;
+            animation: fabFlow 10s ease infinite;
+            box-shadow: 0 0 24px rgba(127, 209, 255, .35), inset 0 1px 0 rgba(255, 255, 255, .5);
+            cursor: pointer;
             overflow: hidden;
         }
 
-        .soraBtnCenter .halo {
+        .sora-fab:hover {
+            filter: brightness(1.12)
+        }
+
+        .sora-fab:active::after {
+            content: "";
             position: absolute;
-            inset: -30px;
+            inset: 0;
             border-radius: 999px;
-            filter: blur(22px);
-            background: conic-gradient(from 0deg, rgba(140, 200, 255, .25), rgba(255, 210, 120, .25), rgba(140, 200, 255, .25));
-            animation: halo 6.2s linear infinite;
+            background: radial-gradient(circle, rgba(255, 255, 255, .5) 0, transparent 60%);
+            animation: fabRipple .8s ease-out;
         }
 
-        .soraBtnCenter .label {
-            position: relative
-        }
-
-        .soraBtnCenter:active {
-            filter: brightness(1.1)
-        }
-
-        @keyframes halo {
+        @keyframes fabFlow {
             0% {
-                transform: rotate(0)
+                background-position: 0% 50%
+            }
+
+            50% {
+                background-position: 100% 50%
             }
 
             100% {
+                background-position: 0% 50%
+            }
+        }
+
+        @keyframes fabPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 28px rgba(127, 209, 255, .35)
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(255, 211, 107, .45)
+            }
+        }
+
+        @keyframes fabRipple {
+            0% {
+                transform: scale(.85);
+                opacity: .7
+            }
+
+            100% {
+                transform: scale(2.2);
+                opacity: 0
+            }
+        }
+
+        .sora-fab .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 99px;
+            background: radial-gradient(circle at 40% 40%, #fff, #7fd1ff 60%);
+            box-shadow: 0 0 10px rgba(127, 209, 255, .7);
+            animation: dotBreath 3s ease-in-out infinite;
+        }
+
+        @keyframes dotBreath {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1
+            }
+
+            50% {
+                transform: scale(1.35);
+                opacity: .7
+            }
+        }
+
+        /* --- iOS Safari対策（固定位置の確実化） --- */
+        .sora-fab,
+        #fx {
+            will-change: transform
+        }
+
+        .sora-fab {
+            transform: translateZ(0)
+        }
+
+        /* 小画面では上部中央に固定 */
+        @media (max-width: 768px) {
+            .sora-fab {
+                left: 50%;
+                right: auto;
+                transform: translate(-50%, 0)
+            }
+        }
+
+        /* ===== Sora モーダル（Liquid + 状態連動グロー） ===== */
+        #sora-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 4000;
+            display: none;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 12, 16, .55);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sora-card {
+            position: relative;
+            width: min(680px, 92vw);
+            max-width: 820px;
+            border-radius: 18px;
+            padding: 22px 24px 18px;
+            background: rgba(18, 22, 30, .72);
+            backdrop-filter: blur(20px) saturate(140%);
+            box-shadow: 0 8px 35px rgba(0, 0, 0, .35);
+            overflow: hidden;
+        }
+
+        .sora-card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 動くグラデ境界 + 状態依存 */
+        .sora-card::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            padding: 2px;
+            background: conic-gradient(from 0deg, #7fd1ff, #89ffe3, #ffd36b, #ff9f1c, #7fd1ff);
+            -webkit-mask:
+                linear-gradient(#000 0 0) content-box,
+                linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: cardSpin 12s linear infinite;
+        }
+
+        .sora-card[data-state="idle"]::before {
+            background: conic-gradient(from 0deg, #7fd1ff, #89ffe3, #7fd1ff);
+            animation-duration: 16s;
+            filter: brightness(1);
+        }
+
+        .sora-card[data-state="thinking"]::before {
+            background: conic-gradient(from 0deg, #66aaff, #9b7bff, #66aaff);
+            animation-duration: 9s;
+            filter: brightness(1.25);
+        }
+
+        .sora-card[data-state="reply"]::before {
+            background: conic-gradient(from 0deg, #ffd36b, #ff9f1c, #ffd36b);
+            animation-duration: 12s;
+            filter: brightness(1.15);
+        }
+
+        .sora-card[data-state="error"]::before {
+            background: conic-gradient(from 0deg, #ff6b6b, #ff4b4b, #ff6b6b);
+            animation-duration: 6s;
+            filter: brightness(1.4);
+        }
+
+        @keyframes cardSpin {
+            to {
                 transform: rotate(360deg)
             }
         }
 
-        /* ===== APP ===== */
-        #app {
-            display: none;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1.2s ease, transform 1.2s ease
+        /* 内部オーラ */
+        .sora-card::after {
+            content: "";
+            position: absolute;
+            inset: -48px;
+            border-radius: inherit;
+            background:
+                radial-gradient(120px 120px at 15% 25%, rgba(137, 255, 227, .18), transparent 60%),
+                radial-gradient(160px 160px at 85% 35%, rgba(255, 211, 107, .20), transparent 60%),
+                radial-gradient(160px 160px at 60% 85%, rgba(127, 209, 255, .20), transparent 60%);
+            filter: blur(30px);
+            pointer-events: none;
+            opacity: .8;
+            animation: auraBreath 10s ease-in-out infinite;
         }
 
-        #app.show {
-            display: block;
-            opacity: 1;
-            transform: translateY(0)
+        @keyframes auraBreath {
+
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: .6
+            }
+
+            50% {
+                transform: translateY(-8px);
+                opacity: .9
+            }
         }
 
-        .container {
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 18px
+        /* スキャンライン */
+        .scan-line {
+            position: absolute;
+            left: -10%;
+            right: -10%;
+            top: -12%;
+            height: 4px;
+            opacity: .18;
+            pointer-events: none;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .55), transparent);
+            filter: blur(4px);
+            animation: scanMove 7s linear infinite;
         }
 
-        .panel {
-            position: relative;
-            margin-top: 14px;
-            padding: 16px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, .08);
-            border: 1px solid rgba(255, 255, 255, .2)
+        @keyframes scanMove {
+            0% {
+                top: -12%;
+                opacity: 0
+            }
+
+            20% {
+                opacity: .35
+            }
+
+            50% {
+                top: 100%
+            }
+
+            80% {
+                opacity: 0
+            }
+
+            100% {
+                top: 100%
+            }
         }
 
-        .section-title {
-            font-weight: 800;
-            color: #ffd36b;
-            margin-bottom: 8px;
-            font-size: 14px
-        }
-
-        /* Inputs */
-        #inputBox {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, .25);
-            background: rgba(255, 255, 255, .1);
-            color: #fff;
-        }
-
-        .btn {
-            border: none;
-            border-radius: 10px;
-            padding: 10px 18px;
-            cursor: pointer;
-            font-weight: 900
-        }
-
-        .btn-primary {
-            background: linear-gradient(90deg, #ffd766, #ff9f1c);
-            color: #111
-        }
-
-        .btn-ghost {
-            background: rgba(255, 255, 255, .1);
-            border: 1px solid rgba(255, 255, 255, .3);
-            color: #fff
-        }
-
-        /* Chips */
-        #chips {
+        .sora-header {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .sora-title {
+            font-weight: 800;
+            letter-spacing: .4px;
+            background: linear-gradient(90deg, #c6f0ff, #89ffe3, #ffd36b, #ff9f1c, #c6f0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: titleGlow 14s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 10px rgba(255, 255, 255, .35));
+            }
+        }
+
+        .sora-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 58vh;
+            overflow: auto;
+        }
+
+        .sora-log {
+            border-radius: 12px;
+            padding: 14px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            min-height: 120px;
+            max-height: 40vh;
+            overflow: auto;
+        }
+
+        .sora-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
             margin-top: 8px
         }
 
-        .chip {
-            background: rgba(255, 255, 255, .12);
-            border: 1px solid rgba(255, 255, 255, .22);
-            border-radius: 999px;
-            padding: 6px 10px;
-            color: #fff
+        .sora-input input {
+            flex: 1;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, .2);
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, .06);
+            color: var(--txt);
+            outline: none
         }
 
-        .chip .x {
-            margin-left: 8px;
+        .sora-send {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(270deg, #7fd1ff, #89ffe3);
+            color: #0b132b;
+            font-weight: 800;
             cursor: pointer;
-            color: #ffd36b
+            box-shadow: 0 6px 16px rgba(127, 209, 255, .35);
         }
 
-        /* Map Bubbles */
-        #mapArea {
+        .sora-msg {
+            margin: 8px 0;
             display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
-            justify-content: center
+            gap: 10px;
+            align-items: flex-start
         }
 
-        .bubble {
-            position: relative;
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            overflow: hidden;
-            box-shadow: 0 0 22px rgba(255, 255, 180, .4);
-            transition: .35s;
-        }
-
-        .bubble:hover {
-            transform: scale(1.06)
-        }
-
-        .bubbleName {
-            position: absolute;
-            left: 6px;
-            right: 6px;
-            bottom: 8px;
-            text-align: center;
-            color: #fff;
-            font-weight: 700;
-            font-size: 12px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, .6);
-            pointer-events: none;
-        }
-
-        /* Emotion / Love / Graph 共通 */
-        #emotion {
-            width: 100%;
-            height: 260px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, .05)
-        }
-
-        #loveSvg {
-            width: 180px;
-            height: 180px;
-            margin: 8px auto 0;
-            display: block
-        }
-
-        .kpi {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 6px;
-            margin: 6px 0
-        }
-
-        .bar {
+        .sora-msg::before {
+            content: "";
+            flex: 0 0 8px;
             height: 8px;
-            background: rgba(255, 255, 255, .12);
+            width: 8px;
             border-radius: 999px;
-            overflow: hidden;
-            position: relative
+            background: var(--teal);
+            box-shadow: 0 0 8px rgba(127, 209, 255, .5)
         }
 
-        .fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ffcc33, #ff8800);
-            width: 0%;
-            transition: width 1.2s ease
+        .sora-msg .bubble {
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: #1117;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, .08)
+        }
+
+        /* 扉のレイヤー保障 */
+        #doorContainer,
+        .door {
+            z-index: 999
+        }
+
+        /* iOS 固有のクリック取りこぼし対策 */
+        .clickable {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
     </style>
 </head>
 
 <body>
+
     <canvas id="fx"></canvas>
 
+    <!-- Top / Hero -->
     <section id="title">
+        <button id="soraFab" class="sora-fab clickable" aria-label="Chat with Sora AI">
+            <span class="dot"></span>
+            <span>Chat with Sora AI</span>
+        </button>
         <div class="hero">
-            <div class="logo">MusicLens</div>
-            <p>好きなアーティスト/曲を入れるだけ。音の嗜好→今日のコンディションと仕事の強みまで見える。<br>さぁ、"SOUND JOURNEY"へ出かけよう！</p>
-            <button id="startBtn" class="cta">SOUND JOURNEY ▶︎</button>
-            <button id="chatSoraBtnTop" class="soraBtnCenter"><span class="halo"></span><span class="label">💬 Chat with
-                    Sora AI</span></button>
-            <small>Produced by Daijiro Majima</small>
+            <h1 class="logo">MusicLens</h1>
+            <p class="tagline">好きなアーティスト/曲を入れるだけ。音の嗜好→今日のコンディションと仕事の強みまで見える、“音の性格診断”。</p>
+            <button id="startBtn" class="cta clickable">SOUND JOURNEY ▶︎</button>
+            <p class="credit">Produced by Daijiro Majima</p>
         </div>
     </section>
 
+    <!-- Door animation -->
     <div id="doorContainer">
         <div class="door left"></div>
         <div class="door right"></div>
     </div>
 
-    <section id="app">
-        <main class="container">
-            <header style="text-align:center;margin-bottom:12px">
-                <div class="logo" style="font-size:44px">MusicLens</div>
-                <div id="backTop" style="color:#ffd36b;cursor:pointer;margin-top:4px">← TOPへ戻る</div>
-                <button id="chatSoraBtnApp" class="soraBtnCenter"><span class="halo"></span><span class="label">💬 Chat
-                        with Sora AI</span></button>
-            </header>
+    <!-- App main -->
+    <main id="app" style="display:none; opacity:0">
+        <section style="position:relative; padding:28px 24px">
+            <button id="soraFabTop" class="sora-fab clickable" aria-label="Chat with Sora AI"
+                style="right:24px; top:24px">
+                <span class="dot"></span><span>Chat with Sora AI</span>
+            </button>
+            <h2 class="logo" style="text-align:center">MusicLens</h2>
+        </section>
 
-            <!-- Today's Feeling -->
-            <section class="panel" id="tfPanel">
-                <div class="section-title">Today's Feeling（アーティスト/曲名）</div>
-                <input id="inputBox" type="text" placeholder="例：Daft Punk, SZA, Get Lucky（カンマ区切りOK）">
-                <div style="margin-top:8px">
-                    <button id="addBtn" class="btn btn-ghost">Add</button>
-                    <button id="analyzeBtn" class="btn btn-primary">Analyze</button>
+        <section style="max-width:1000px; margin: 0 auto; padding: 0 24px 64px">
+            <!-- Input -->
+            <div class="panel">
+                <div class="section-title">Today's Feeling（アーティスト / 曲名）</div>
+                <input id="inputBox" placeholder="例: Daft Punk, SZA, ずっと真夜中でいいのに。">
+                <div style="display:flex; gap:10px; margin-top:12px">
+                    <button id="addBtn" class="cta clickable" style="padding:12px 18px">Add</button>
+                    <button id="analyzeBtn" class="cta clickable"
+                        style="padding:12px 18px; background: linear-gradient(270deg, #ffd36b, #ff9f1c)">
+                        Analyze
+                    </button>
                 </div>
-                <ul id="suggestBox"></ul>
-                <div id="chips"></div>
-                <div id="progressWrap">
-                    <div id="progbar">
-                        <div id="progfill"></div>
+                <div id="chips" style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap"></div>
+                <div id="progressWrap" style="display:none; margin-top:14px">
+                    <div style="height:10px; background:#ffffff1f; border-radius: 999px; overflow:hidden">
+                        <div id="progfill"
+                            style="height:10px; width:0%; background: linear-gradient(270deg,#7fd1ff,#89ffe3); transition: width .28s ease">
+                        </div>
                     </div>
-                    <div id="progtext">0%</div>
+                    <div id="progtext" style="font-weight:700; margin-top:8px">0%</div>
                 </div>
-            </section>
+            </div>
 
             <!-- Listening Map -->
-            <section class="panel">
+            <div class="panel">
                 <div class="section-title">Listening Map（アーティストバブル）</div>
                 <div id="mapArea"></div>
-            </section>
+            </div>
 
-            <!-- Emotion Map -->
-            <section class="panel">
+            <!-- Emotion -->
+            <div class="panel">
                 <div class="section-title">Emotion Map（Valence × Arousal）</div>
-                <canvas id="emotion" width="900" height="260"></canvas>
-                <p class="hint" style="font-size:12px;opacity:.9;margin-top:6px">
-                    X：穏やか → 高揚　／　Y：静 → 動（ジャンルに応じて色分け）
-                </p>
-                <div id="emotionTip" style="text-align:center;margin-top:6px;opacity:.95;color:#ffd36b"></div>
-            </section>
+                <canvas id="emotion" height="360" style="width:100%; display:block"></canvas>
+                <div id="emotionTip" style="margin-top:8px; text-align:center; opacity:.9"></div>
+            </div>
 
-            <!-- Music Love -->
-            <section class="panel" style="text-align:center">
+            <!-- Love -->
+            <div class="panel" style="text-align:center">
                 <div class="section-title">Music Love（音楽愛）</div>
-                <svg id="loveSvg" viewBox="0 0 200 200">
+                <svg id="loveSvg" viewBox="0 0 200 200" width="260" height="260">
                     <defs>
-                        <linearGradient id="liquidGrad" x1="0" y1="1" x2="0" y2="0">
+                        <linearGradient id="loveGrad" x1="0" y1="1" x2="0" y2="0">
                             <stop offset="0%" stop-color="#ff9f1c" />
-                            <stop offset="100%" stop-color="#fff3b0" />
+                            <stop offset="100%" stop-color="#ffd36b" />
                         </linearGradient>
-                        <clipPath id="heartClip">
-                            <path
-                                d="M100 175c-3 0-6-.9-8.2-2.9C75 160 30 123 30 85 30 60 50 40 73 40c12 0 24 6 31 15 7-9 19-15 31-15 23 0 43 20 43 45 0 38-45 75-61.8 87.1-2.2 2-5.2 2.9-8.2 2.9z" />
-                        </clipPath>
                     </defs>
-                    <!-- ゴールド輪郭 -->
-                    <path
-                        d="M100 175c-3 0-6-.9-8.2-2.9C75 160 30 123 30 85 30 60 50 40 73 40c12 0 24 6 31 15 7-9 19-15 31-15 23 0 43 20 43 45 0 38-45 75-61.8 87.1-2.2 2-5.2 2.9-8.2 2.9z"
-                        fill="none" stroke="#ffd36b" stroke-width="2.5" />
-                    <!-- 液体（下端から％に応じて上がる） -->
-                    <g clip-path="url(#heartClip)">
-                        <rect id="liquid" x="20" y="160" width="160" height="0" fill="url(#liquidGrad)" />
-                    </g>
+                    <path id="heartLine" d="M100 175c-3 0-6 -1 -8.2 -2.9 C75 158 30 123 30 85
+                                 c0 -25 20 -45 43 -45 c12 0 24 6 31 15 c7 -9 19 -15 31 -15
+                                 c23 0 43 20 43 45 c0 38 -45 73 -61.8 87.1 c-2.2 2 -5.2 2.9 -8.2 2.9 z" fill="none"
+                        stroke="#ffd36b" stroke-width="3" />
+                    <clipPath id="loveClip">
+                        <use href="#heartLine" />
+                    </clipPath>
+                    <rect id="loveFill" x="36" y="160" width="128" height="0" fill="url(#loveGrad)"
+                        clip-path="url(#loveClip)" />
                 </svg>
-                <div id="lovePercent" style="font-size:18px;margin-top:6px">—%</div>
-                <div id="loveComment" style="font-size:13px;opacity:.9;margin-top:4px"></div>
-            </section>
+                <div id="lovePercent" style="font-size:20px; margin-top:10px">—%</div>
+                <div id="loveComment" style="opacity:.9; margin-top:6px"></div>
+            </div>
 
-            <!-- Your Music Vector -->
-            <section class="panel">
+            <!-- Vector -->
+            <div class="panel">
                 <div class="section-title">Your Music Vector</div>
                 <div id="profileBars"></div>
-                <canvas id="vectorPie" width="300" height="300" style="display:block;margin:20px auto"></canvas>
-                <div id="vectorNote" class="muted" style="margin-top:8px"></div>
-            </section>
+                <canvas id="vectorPie" width="320" height="320" style="display:block; margin:20px auto"></canvas>
+                <div id="vectorLegend" style="text-align:center; margin-top:6px; opacity:.9"></div>
+            </div>
 
             <!-- Work Strengths -->
-            <section class="panel">
+            <div class="panel">
                 <div class="section-title">Work Strengths</div>
                 <div id="abilities"></div>
-                <canvas id="workPie" width="300" height="300" style="display:block;margin:20px auto"></canvas>
-                <div id="workNote" class="muted" style="margin-top:8px"></div>
-                <div id="workLegend" class="hint" style="font-size:12px;text-align:center"></div>
-            </section>
+                <canvas id="workPie" width="320" height="320" style="display:block; margin:20px auto"></canvas>
+                <div id="workLegend" style="text-align:center; margin-top:6px; opacity:.9"></div>
+            </div>
 
-            <!-- Music Recommendations -->
-            <section class="panel">
+            <!-- Recommendations -->
+            <div class="panel">
                 <div class="section-title">Music Recommendations</div>
-                <div id="recs">Analyze後に表示されます。</div>
-            </section>
+                <div id="recs"></div>
+            </div>
+        </section>
+    </main>
 
-        </main>
-    </section>
-
-    <!-- ===== Sora モーダル（リキッドグラス） ===== -->
-    <div id="soraMask"
-        style="position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);z-index:3000">
-        <div class="sora-card"
-            style="
-    position:relative;width:min(720px,92%);max-height:min(86vh,680px);overflow:auto;border-radius:24px;padding:18px;
-    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.10));border:1px solid rgba(255,255,255,.25);
-    box-shadow:0 18px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.28);backdrop-filter: blur(20px) saturate(160%)">
-            <div class="sora-header"
-                style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-                <div class="sora-title" style="display:flex;align-items:center;gap:10px;font-size:16px">
-                    <strong>Sora</strong><span class="sora-sub" style="opacity:.7;font-weight:400;font-size:13px">—
-                        Music Intelligence</span>
+    <!-- Sora Modal -->
+    <div id="sora-overlay" class="clickable" aria-hidden="true">
+        <div class="sora-card" data-state="idle">
+            <span class="scan-line"></span>
+            <div class="sora-header">
+                <div class="sora-title">Sora AI</div>
+                <button id="soraClose" class="cta" style="padding:8px 12px">Close</button>
+            </div>
+            <div class="sora-body">
+                <div id="soraLog" class="sora-log"></div>
+                <div class="sora-input">
+                    <input id="soraInput" placeholder="例: 大阪の天気は？ / 次は何聴く？" />
+                    <button id="soraSend" class="cta" style="padding:10px 16px">Send</button>
                 </div>
-                <button id="soraClose" class="btn-ghost">✕</button>
-            </div>
-            <div id="soraLog" class="sora-log"
-                style="height:240px;overflow:auto;border-radius:14px;padding:10px 12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18)">
-            </div>
-            <div class="sora-input" style="margin-top:10px;display:flex;gap:10px">
-                <input id="soraIn" class="sora-text" placeholder="たとえば：『夜作業に合う曲は？』"
-                    style="flex:1;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff" />
-                <button id="soraSend" class="btn btn-primary">送信</button>
             </div>
         </div>
     </div>
 
     <script>
-        /* ====== 定数・アイコン ====== */
-        const SORA_ENDPOINT = 'https://tiny-fog-ae39.mjmdjr.workers.dev/chat';
-        const ICON_APPLE = `<svg width="22" height="22" viewBox="0 0 24 24" fill="#ffd36b"><path d="M16.365 1.43a5.32 5.32 0 0 1-1.128 3.81c-.77.962-2.03 1.76-3.29 1.645a4.565 4.565 0 0 1 1.185-3.667c.82-.922 2.22-1.65 3.233-1.788ZM20.75 17.661c-.274.618-.6 1.196-.976 1.737-.641.919-1.39 1.982-2.42 1.997-1.003.015-1.283-.644-2.392-.644-1.108 0-1.418.63-2.41.66-1.004.03-1.77-.992-2.413-1.911-1.315-1.88-2.318-5.302-1.02-7.613.708-1.231 1.963-2.021 3.396-2.042 1.015-.02 1.977.694 2.392.694.412 0 1.589-.857 2.676-.732.392.016 1.912.16 2.825 1.54-.073.048-1.681.98-1.663 2.948.022 2.35 2.047 3.133 2.07 3.164Z"/></svg>`;
-        const ICON_YT = `<svg width="24" height="24" viewBox="0 0 24 24" fill="#ff6666"><path d="M23.5 6.2s-.2-1.6-.8-2.3c-.7-.8-1.5-.8-1.9-.8C17.2 3 12 3 12 3h0s-5.2 0-8.8.1c-.4 0-1.2 0-1.9.8C.7 4.6.5 6.2.5 6.2S.3 8 .3 9.7v1.6C.3 13 0.5 14.8.5 14.8s.2 1.6.8 2.3c.7.8 1.7.8 2.1.9 1.5.1 8.6.1 8.6.1s5.2 0 8.8-.1c.4 0 1.2 0 1.9-.8.6-.7.8-2.3.8-2.3s.2-1.8.2-3.5V9.7c0-1.7-.2-3.5-.2-3.5ZM9.8 13.9V7.9l5.5 3-5.5 3Z"/></svg>`;
+        /* ========== 基本ユーティリティ ========== */
+        const raf = () => new Promise(r => requestAnimationFrame(r));
+        function onTap(el, fn) { if (!el) return; el.addEventListener('click', fn); el.addEventListener('pointerup', e => { e.preventDefault(); fn(e) }, { passive: false }); }
+        function uniqueTokens(arr) { const s = new Set(), out = []; (arr || []).forEach(t => { const v = (t || '').trim(); if (!v) return; const k = v.toLowerCase(); if (!s.has(k)) { s.add(k); out.push(v) } }); return out; }
 
-        /* ====== タップ（iOS安全） ====== */
-        function onTap(el, fn) { if (!el) return; el.addEventListener('click', fn); el.addEventListener('pointerup', (e) => { e.preventDefault(); fn(e) }, { passive: false }); }
-
-        /* ====== 背景パーティクル ====== */
-        (function () {
-            const c = document.getElementById('fx'), x = c.getContext('2d', { alpha: true }); let W = 0, H = 0, ps = [];
-            function size() { W = c.width = innerWidth; H = c.height = innerHeight }
-            function mk() { ps = Array.from({ length: 120 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25, r: 1 + Math.random() * 2, a: .3 })) }
-            function draw() { x.clearRect(0, 0, W, H); for (const p of ps) { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1; const g = x.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 8); g.addColorStop(0, `rgba(255,255,200,${p.a})`); g.addColorStop(1, 'transparent'); x.fillStyle = g; x.beginPath(); x.arc(p.x, p.y, p.r * 8, 0, 6.283); x.fill() } requestAnimationFrame(draw) }
-            addEventListener('resize', () => { size(); mk() }); size(); mk(); draw();
+        /* ========== 背景パーティクル ========== */
+        (() => {
+            const c = document.getElementById('fx'), ctx = c.getContext('2d', { alpha: true });
+            let W = innerWidth, H = innerHeight; c.width = W; c.height = H;
+            const pts = Array.from({ length: 130 }).map(() => ({ x: Math.random() * W, y: Math.random() * H, dx: (Math.random() - .5) * .25, dy: (Math.random() - .5) * .25, r: 1 + Math.random() * 2, a: .25 + Math.random() * .3 }));
+            const step = () => {
+                ctx.clearRect(0, 0, W, H);
+                for (const p of pts) {
+                    p.x += p.dx; p.y += p.dy; if (p.x < 0 || p.x > W) p.dx *= -1; if (p.y < 0 || p.y > H) p.dy *= -1;
+                    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 10);
+                    g.addColorStop(0, `rgba(135,200,255,${p.a})`); g.addColorStop(1, 'transparent');
+                    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 10, 0, Math.PI * 2); ctx.fill();
+                } requestAnimationFrame(step);
+            }; step();
+            addEventListener('resize', () => { W = innerWidth; H = innerHeight; c.width = W; c.height = H; })
         })();
 
-        /* ====== 画面遷移 ====== */
-        onTap(document.getElementById('startBtn'), () => {
-            document.body.classList.add("doors-open");
-            setTimeout(() => { document.getElementById("title").style.display = "none"; document.getElementById("app").classList.add("show"); }, 3000);
-        });
-        onTap(document.getElementById('backTop'), () => {
-            document.getElementById("app").classList.remove("show");
-            document.getElementById("title").style.display = "flex";
-            document.body.classList.remove("doors-open");
-            window.scrollTo(0, 0);
+        /* ========== 扉アニメ ========== */
+        onTap(document.getElementById('startBtn'), async () => {
+            document.body.classList.add('doors-open');
+            setTimeout(async () => {
+                document.getElementById('title').style.display = 'none';
+                const app = document.getElementById('app');
+                app.style.display = 'block'; await raf(); app.style.opacity = 1;
+            }, 3000);
         });
 
-        /* ====== Sora モーダル ====== */
-        const soraMask = document.getElementById('soraMask'), soraLog = document.getElementById('soraLog'), soraIn = document.getElementById('soraIn');
-        function openSora() { document.body.classList.add('sora-open'); soraMask.style.display = 'grid'; setTimeout(() => soraIn?.focus(), 50); }
-        function closeSora() { soraMask.style.display = 'none'; document.body.classList.remove('sora-open'); }
-        onTap(document.getElementById('chatSoraBtnTop'), openSora);
-        onTap(document.getElementById('chatSoraBtnApp'), openSora);
+        /* ========== Sora モーダル & ボタン ========== */
+        const $overlay = document.getElementById('sora-overlay');
+        const $soraCard = () => document.querySelector('.sora-card');
+
+        function setSoraState(st) {
+            const card = $soraCard(); if (!card) return; card.setAttribute('data-state', st);
+        }
+        function openSora() {
+            $overlay.style.display = 'flex';
+            setSoraState('idle');
+            document.body.style.overflow = 'hidden';
+            const input = document.getElementById('soraInput');
+            setTimeout(() => input && input.focus(), 50);
+        }
+        function closeSora() {
+            $overlay.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+        onTap(document.getElementById('soraFab'), openSora);
+        onTap(document.getElementById('soraFabTop'), openSora);
         onTap(document.getElementById('soraClose'), closeSora);
 
-        function pushSora(who, text) {
-            const line = document.createElement('div');
-            line.className = 'sora-msg' + (who === '👤' ? ' you' : '');
-            line.innerHTML = `<div class='sora-bubble' style="max-width:78%;padding:10px 12px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.10));border:1px solid rgba(255,255,255,.28);box-shadow:0 10px 20px rgba(0,0,0,.12);backdrop-filter: blur(12px)"><div style="opacity:.7;font-size:12px;margin-bottom:2px">${who}</div>${text}</div>`;
-            soraLog.appendChild(line); soraLog.scrollTop = soraLog.scrollHeight;
+        /* ========== Sora 応答・状態連動 ========== */
+        const SORA_ENDPOINT = 'https://tiny-fog-ae39.mjmdjr.workers.dev/';
+        const soraLog = document.getElementById('soraLog');
+        const soraInput = document.getElementById('soraInput');
+
+        function appendLog(who, text) {
+            const row = document.createElement('div'); row.className = 'sora-msg';
+            row.innerHTML = `<div class="bubble"><strong>${who}：</strong> ${text}</div>`;
+            soraLog.appendChild(row); soraLog.scrollTop = soraLog.scrollHeight;
         }
 
-        const Circuit = {
-            fail: 0, open: false, resetAfter: 0,
-            canRun() { return !this.open || Date.now() > this.resetAfter },
-            failOnce() { this.fail++; if (this.fail >= 2) { this.open = true; this.resetAfter = Date.now() + 15000; } },
-            success() { this.fail = 0; this.open = false; }
-        };
-
-        async function callSoraAPI(message) {
-            if (!Circuit.canRun()) return '（Sora混雑中。少し待ってや）';
+        async function callSora(message) {
+            setSoraState('thinking');
             try {
-                const r = await fetch(SORA_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message }) });
-                if (!r.ok) { Circuit.failOnce(); return `（Sora応答がエラー:${r.status}）` }
-                Circuit.success(); const j = await r.json(); return j.reply || '（AIが少し考え中みたいや…）';
-            } catch (e) { Circuit.failOnce(); return '（ネットが不安定みたいや。もう一回頼むわ）'; }
+                const ctrl = new AbortController();
+                const t = setTimeout(() => ctrl.abort(), 15000);
+                const res = await fetch(SORA_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message }),
+                    signal: ctrl.signal
+                });
+                clearTimeout(t);
+                if (!res.ok) { setSoraState('error'); return '今は混み合ってるみたい…ちょい待ってや。' }
+                const data = await res.json().catch(() => ({}));
+                setSoraState('reply');
+                setTimeout(() => setSoraState('idle'), 3000);
+                return data && (data.reply || data.message) ? (data.reply || data.message) : 'うん！了解やで。';
+            } catch (e) {
+                setSoraState('error');
+                return 'ネットが不安定みたいや。もう一回試してみてな。';
+            }
         }
-        async function sendSora() { const q = (soraIn.value || '').trim(); if (!q) return; pushSora('👤', q); soraIn.value = ''; const reply = await callSoraAPI(q); pushSora('Sora', reply); }
-        onTap(document.getElementById('soraSend'), sendSora);
-        soraIn.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) sendSora(); });
 
-        /* ====== ユーティリティ ====== */
-        function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms) } }
-        function uniqueTokens(arr) { const seen = new Set(); const out = []; (arr || []).forEach(n => { const k = (n || '').trim().toLowerCase(); if (!k || seen.has(k)) return; seen.add(k); out.push((n || '').trim()); }); return out; }
-        async function raf() { return new Promise(r => requestAnimationFrame(r)) }
-
-        /* ====== サジェスト/入力/削除 ====== */
-        const input = document.getElementById('inputBox'), suggestBox = document.getElementById('suggestBox'); let TOKENS = [];
-        async function fetchSuggest(q) {
-            const e = encodeURIComponent(q);
-            const [art, trk] = await Promise.allSettled([
-                fetch(`https://itunes.apple.com/search?term=${e}&entity=musicArtist&limit=5`).then(r => r.json()),
-                fetch(`https://itunes.apple.com/search?term=${e}&entity=musicTrack&limit=5`).then(r => r.json())
-            ]);
-            const names = new Set(); const list = [];
-            (art.value?.results || []).forEach(a => { if (a.artistName && !names.has(a.artistName.toLowerCase())) { names.add(a.artistName.toLowerCase()); list.push({ type: 'artist', name: a.artistName }) } });
-            (trk.value?.results || []).forEach(t => { if (t.trackName && !names.has(t.trackName.toLowerCase())) { names.add(t.trackName.toLowerCase()); list.push({ type: 'track', name: t.trackName }) } });
-            return list.slice(0, 8);
-        }
-        function renderChips() { document.getElementById('chips').innerHTML = (TOKENS || []).map((t, i) => `<span class='chip'>${t}<span class='x' data-i='${i}'>✕</span></span>`).join(''); }
-        function renderSuggest(items) { if (!items.length) { suggestBox.style.display = 'none'; return } suggestBox.innerHTML = items.map(it => `<li data-name="${it.name}">${it.type === 'artist' ? '👤' : '🎵'} ${it.name}</li>`).join(''); suggestBox.style.display = 'block'; }
-        input.addEventListener('input', debounce(async (e) => { const q = e.target.value.trim(); if (!q) { suggestBox.style.display = 'none'; return } try { renderSuggest(await fetchSuggest(q)) } catch { suggestBox.style.display = 'none' } }, 220));
-        suggestBox.addEventListener('click', e => {
-            const li = e.target.closest('li'); if (!li) return;
-            TOKENS = uniqueTokens([...(TOKENS || []), li.dataset.name]); renderChips(); input.value = ''; suggestBox.style.display = 'none';
+        onTap(document.getElementById('soraSend'), async () => {
+            const q = (soraInput.value || '').trim();
+            if (!q) return;
+            appendLog('🙋‍♂️', q);
+            soraInput.value = '';
+            const ans = await callSora(q);
+            appendLog('Sora', ans);
         });
-        onTap(document.getElementById('addBtn'), () => { const addList = (input.value || '').split(',').map(v => v.trim()).filter(Boolean); TOKENS = uniqueTokens([...(TOKENS || []), ...addList]); renderChips(); input.value = ''; });
-        document.addEventListener('click', e => { if (e.target.classList.contains('x')) { TOKENS.splice(+e.target.dataset.i, 1); renderChips(); } });
 
-        /* ====== Listening Map（重複なし / アルバム優先 / ポップアップ） ====== */
-        async function bestImage(name) {
-            const e = encodeURIComponent(name);
+        /* ========== 入力/予測/追加 ========== */
+        let TOKENS = [];
+        const input = document.getElementById('inputBox');
+        const chips = document.getElementById('chips');
+
+        /* 予測補完（iTunes） */
+        async function suggest(q) {
+            const url = `https://itunes.apple.com/search?term=${encodeURIComponent(q)}&limit=7`;
             try {
-                let r = await fetch(`https://itunes.apple.com/search?term=${e}&entity=album&attribute=artistTerm&limit=1`);
-                let j = await r.json(); let a = j.results?.[0]; if (a?.artworkUrl100) return a.artworkUrl100.replace("100x100", "300x300");
-                r = await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicTrack&attribute=artistTerm&limit=1`);
-                j = await r.json(); a = j.results?.[0]; if (a?.artworkUrl100) return a.artworkUrl100.replace("100x100", "300x300");
-                r = await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicArtist&limit=1`);
-                j = await r.json(); a = j.results?.[0]; if (a?.artworkUrl100) return a.artworkUrl100.replace("100x100", "300x300");
-            } catch { }
+                const r = await fetch(url);
+                const json = await r.json();
+                return (json.results || []).map(it => it.artistName || it.trackName).filter(Boolean);
+            } catch (e) { return [] }
+        }
+
+        const sugBox = document.createElement('div');
+        sugBox.style.cssText = 'margin-top:8px; display:none; background:#1117; border:1px solid #ffffff15; border-radius:12px; padding:8px;';
+        input.insertAdjacentElement('afterend', sugBox);
+
+        input.addEventListener('input', async e => {
+            const v = e.target.value.trim();
+            if (!v) { sugBox.style.display = 'none'; return }
+            const list = await suggest(v);
+            if (!list.length) { sugBox.style.display = 'none'; return }
+            sugBox.innerHTML = list.map(x => `<button class="clickable" style="margin:4px; padding:6px 10px; border-radius:999px; border:1px solid #ffffff22; background:#111a; color:#fff;">${x}</button>`).join('');
+            sugBox.style.display = 'block';
+        });
+        sugBox.addEventListener('click', e => {
+            if (e.target.tagName !== 'BUTTON') return;
+            const val = e.target.textContent.trim();
+            TOKENS = uniqueTokens([...TOKENS, val]);
+            renderChips();
+            sugBox.style.display = 'none';
+            input.value = '';
+        });
+
+        /* Add ボタン */
+        onTap(document.getElementById('addBtn'), () => {
+            const raw = (input.value || '').split(',').map(s => s.trim()).filter(Boolean);
+            TOKENS = uniqueTokens([...TOKENS, ...raw]);
+            renderChips();
+            input.value = '';
+        });
+
+        /* 表示更新 */
+        function renderChips() {
+            chips.innerHTML = '';
+            for (const t of uniqueTokens(TOKENS)) {
+                const b = document.createElement('button');
+                b.textContent = t + ' ✕';
+                b.className = 'clickable';
+                b.style.cssText = 'padding:6px 12px; margin:4px; border-radius:999px; border:1px solid #ffffff22; background:#1118; color:#fff;';
+                b.onclick = () => { TOKENS = uniqueTokens(TOKENS.filter(x => x.toLowerCase() !== t.toLowerCase())); renderChips(); };
+                chips.appendChild(b);
+            }
+        }
+
+        /* == APIユーティリティ == */
+        function safeJson(res) { return res.ok ? res.json() : Promise.reject(new Error(res.status)) }
+
+        /* Emotion Map（ジャンル色プロット） */
+        async function drawEmotion() {
+            const cv = document.getElementById('emotion'), ctx = cv.getContext('2d');
+            cv.width = cv.clientWidth; cv.height = cv.height; // ensure correct DPI
+            const W = cv.width, H = cv.height;
+            ctx.clearRect(0, 0, W, H);
+            ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.fillRect(0, 0, W, H);
+            ctx.strokeStyle = 'rgba(255,255,255,.25)'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(40, H - 40); ctx.lineTo(W - 20, H - 40); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(40, H - 40); ctx.lineTo(40, 20); ctx.stroke();
+            ctx.fillStyle = '#fff'; ctx.font = '14px sans-serif';
+            ctx.fillText('穏やか', 46, H - 12); ctx.fillText('高揚', W - 60, H - 12);
+            ctx.save(); ctx.translate(16, 28); ctx.rotate(-Math.PI / 2); ctx.fillText('静', 0, 0); ctx.restore();
+            ctx.fillText('動', 18, 28);
+
+            const colors = { Pop: '#ff66cc', Rock: '#ff6666', Jazz: '#66ccff', Electronic: '#aa88ff', HipHop: '#f39c12', World: '#2ecc71', Other: '#ffd966' };
+            const list = uniqueTokens(TOKENS);
+            for (const name of list) {
+                let g = 'Other';
+                try {
+                    const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=musicArtist&limit=1`);
+                    const j = await r.json();
+                    g = j.results?.[0]?.primaryGenreName || 'Other';
+                } catch (e) { g = 'Other' }
+                const col = colors[g] || colors.Other;
+                const x = 40 + Math.random() * (W - 80);
+                const y = 20 + Math.random() * (H - 80);
+                const grad = ctx.createRadialGradient(x, y, 0, x, y, 26);
+                grad.addColorStop(0, col);
+                grad.addBlue; // no-op (placeholder removed if present)
+                grad.addColorStop(1, 'transparent');
+                ctx.fillStyle = grad;
+                ctx.beginPath(); ctx.arc(x, y, 26, 0, Math.PI * 2); ctx.fill();
+            }
+            document.getElementById('emotionTip').textContent = 'ジャンルごとの色で気分を可視化。分布が右上ほど「アゲ」、左下ほど「チル」。';
+        }
+
+        /* Love (最下段から%に同期) */
+        function calcLove() {
+            const n = uniqueTokens(TOKENS).length;
+            const s = Math.min(100, Math.round(n * 6 + (n > 1 ? 20 : 0))); // ざっくり計算
+            const rect = document.getElementById('loveFill') || document.getElementById('loveFill') || document.getElementById('loveFill'); // backward compat
+            const fill = document.getElementById('loveFill') || document.getElementById('loveFill');
+        }
+
+        <script>
+/* ========== ユーティリティ ========== */
+const raf = () => new Promise(r => requestAnimationFrame(r));
+            function onTap(el, fn){ if(!el) return; el.addEventListener('click',fn); el.addEventListener('pointerup',e=>{e.preventDefault(); fn(e)}, {passive:false}); }
+            function uniqueTokens(arr){ const s=new Set(), out=[]; (arr||[]).forEach(t=>{ const v=(t||'').trim(); if(!v) return; const k=v.toLowerCase(); if(!s.has(k)){s.add(k); out.push(v)} }); return out; }
+
+/* ========== 背景パーティクル ========== */
+(()=>{ const c=document.getElementById('fx'),ctx=c.getContext('2d',{alpha:true});
+            let W=innerWidth, H=innerHeight; c.width=W; c.height=H;
+            const pts=Array.from({length:130}).map(()=>({x:Math.random()*W,y:Math.random()*H,dx:(Math.random()-.5)*.25,dy:(Math.random()-.5)*.25,r:1+Math.random()*2,a:.25+Math.random()*.3}));
+            (function step(){ctx.clearRect(0, 0, W, H);
+            for(const p of pts){p.x += p.dx; p.y+=p.dy; if(p.x<0||p.x>W) p.dx*=-1; if(p.y<0||p.y>H) p.dy*=-1;
+            const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*10);
+            g.addColorStop(0,`rgba(135,200,255,${p.a})`); g.addColorStop(1,'transparent');
+            ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,p.r*10,0,Math.PI*2); ctx.fill();
+    } requestAnimationFrame(step);
+  })();
+  addEventListener('resize',()=>{W = innerWidth;H=innerHeight;c.width=W;c.height=H;})
+})();
+
+/* ========== 扉アニメ ========== */
+onTap(document.getElementById('startBtn'), async ()=>{
+                document.body.classList.add('doors-open');
+  setTimeout(async ()=>{
+                document.getElementById('title').style.display = 'none';
+            const app=document.getElementById('app');
+            app.style.display='block'; await raf(); app.style.opacity=1;
+  }, 3000);
+});
+
+            /* ========== Sora モーダル & ボタン（状態連動） ========== */
+            const $overlay = document.getElementById('sora-overlay');
+const $soraCard = () => document.querySelector('.sora-card');
+            const soraLog = document.getElementById('soraLog');
+            const soraInput = document.getElementById('soraInput');
+            const SORA_ENDPOINT = 'https://tiny-fog-ae39.mjmdjr.workers.dev/';
+
+            function setSoraState(st){ const card=$soraCard(); if(card) card.dataset.state = st; }
+            function openSora(){$overlay.style.display = 'flex'; setSoraState('idle'); document.body.style.overflow='hidden'; setTimeout(()=>soraInput?.focus(), 50); }
+            function closeSora(){$overlay.style.display = 'none'; document.body.style.overflow=''; }
+
+            onTap(document.getElementById('soraFab'),     openSora);
+            onTap(document.getElementById('soraFabTop'),  openSora);
+            onTap(document.getElementById('soraClose'),   closeSora);
+
+            function appendLog(who, text){
+  const row=document.createElement('div'); row.className='sora-msg';
+            row.innerHTML = `<div class="bubble"><strong>${who}：</strong> ${text}</div>`;
+            soraLog.appendChild(row); soraLog.scrollTop=soraLog.scrollHeight;
+}
+            async function callSora(message){
+                setSoraState('thinking');
+            try{
+    const ctrl = new AbortController(); const t = setTimeout(()=> ctrl.abort(), 15000);
+            const res  = await fetch(SORA_ENDPOINT, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message}), signal:ctrl.signal });
+            clearTimeout(t);
+            if(!res.ok){setSoraState('error'); return '今は混み合ってるみたい…ちょい待ってや。' }
+    const data = await res.json().catch(()=> ({ }));
+    setSoraState('reply'); setTimeout(()=> setSoraState('idle'), 3000);
+            return data?.reply || data?.message || '了解やで。';
+  }catch(e){setSoraState('error'); return 'ネットが不安定みたいや。もう一回試してな。' }
+}
+onTap(document.getElementById('soraSend'), async ()=>{
+  const q=(soraInput.value||'').trim(); if(!q) return;
+            appendLog('🙋‍♂️', q); soraInput.value='';
+            const ans = await callSora(q); appendLog('Sora', ans);
+});
+
+            /* ========== 入力・予測補完・チップ ========== */
+            let TOKENS = [];
+            const input = document.getElementById('inputBox');
+            const chips = document.getElementById('chips');
+
+            async function suggest(q){
+  const url = `https://itunes.apple.com/search?term=${encodeURIComponent(q)}&limit=7`;
+            try{ const r=await fetch(url); const j=await r.json(); return (j.results||[]).map(it=> it.artistName || it.trackName).filter(Boolean); }
+            catch{ return [] }
+}
+            const sugBox = document.createElement('div');
+            sugBox.style.cssText='margin-top:8px; display:none; background:#1117; border:1px solid #ffffff15; border-radius:12px; padding:8px;';
+            input.insertAdjacentElement('afterend', sugBox);
+
+input.addEventListener('input', async e=>{
+  const v=e.target.value.trim(); if(!v){sugBox.style.display = 'none'; return;}
+            const list = await suggest(v); if(!list.length){sugBox.style.display = 'none'; return;}
+  sugBox.innerHTML = list.map(x=>`<button class="clickable" style="margin:4px; padding:6px 10px; border-radius:999px; border:1px solid #ffffff22; background:#111a; color:#fff;">${x}</button>`).join('');
+            sugBox.style.display='block';
+});
+sugBox.addEventListener('click', e=>{
+  if(e.target.tagName!=='BUTTON') return;
+            const val=e.target.textContent.trim(); TOKENS=uniqueTokens([...TOKENS,val]); renderChips(); sugBox.style.display='none'; input.value='';
+});
+onTap(document.getElementById('addBtn'), ()=>{
+  const raw=(input.value||'').split(',').map(s=>s.trim()).filter(Boolean);
+            TOKENS=uniqueTokens([...TOKENS, ...raw]); renderChips(); input.value='';
+});
+            function renderChips(){
+                chips.innerHTML = ''; for(const t of uniqueTokens(TOKENS)){
+    const b=document.createElement('button'); b.textContent=`${t} ✕`;
+            b.className='clickable'; b.style.cssText='padding:6px 12px; margin:4px; border-radius:999px; border:1px solid #ffffff22; background:#1118; color:#fff;';
+    b.onclick=()=>{TOKENS = uniqueTokens(TOKENS.filter(x => x.toLowerCase() !== t.toLowerCase())); renderChips(); };
+            chips.appendChild(b);
+  }
+}
+
+            /* ========== Listening Map（重複なし / アルバム優先 / ポップアップ） ========== */
+            async function bestImage(name){
+  const e=encodeURIComponent(name);
+            try{
+                let r=await fetch(`https://itunes.apple.com/search?term=${e}&entity=album&attribute=artistTerm&limit=1`);
+            let j=await r.json(); let a=j.results?.[0]; if(a?.artworkUrl100) return a.artworkUrl100.replace("100x100","300x300");
+            r=await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicTrack&attribute=artistTerm&limit=1`);
+            j=await r.json(); a=j.results?.[0]; if(a?.artworkUrl100) return a.artworkUrl100.replace("100x100","300x300");
+            r=await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicArtist&limit=1`);
+            j=await r.json(); a=j.results?.[0]; if(a?.artworkUrl100) return a.artworkUrl100.replace("100x100","300x300");
+  }catch{ }
             return `https://picsum.photos/seed/${e}/300/300`;
-        }
-        async function artistSummary(name) {
-            try { const j = await fetch(`https://ja.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`).then(r => r.json()); return j.extract || ''; }
-            catch { return '' }
-        }
-        async function showPopup(name) {
-            const img = await bestImage(name); const sum = await artistSummary(name);
-            let apple = `https://music.apple.com/us/search?term=${encodeURIComponent(name)}&app=music`;
-            try {
-                const info = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=musicArtist&limit=1`).then(r => r.json());
-                if (info.results?.[0]?.artistLinkUrl) apple = info.results[0].artistLinkUrl;
-            } catch { }
-            const yt = `https://www.youtube.com/results?search_query=${encodeURIComponent(name + ' official')}`;
-            const p = document.createElement('div');
-            p.style.cssText = "position:fixed;inset:0;display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);z-index:4000";
-            p.innerHTML = `<div style="max-width:440px;width:92%;border-radius:18px;padding:16px;border:1px solid rgba(255,255,255,.25);
-    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.08));box-shadow:0 10px 30px rgba(0,0,0,.25)">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <strong style="font-size:16px">🎵 ${name}</strong>
-      <button id="popClose" class="btn-ghost" style="padding:6px 10px">×</button>
-    </div>
+}
+            async function artistSummary(name){
+  try{ const j=await fetch(`https://ja.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`).then(r=>r.json()); return j.extract || ''; }
+            catch{ return '' }
+}
+            function showPopup(name){(async () => {
+                const img = await bestImage(name); const sum = await artistSummary(name);
+                let apple = `https://music.apple.com/us/search?term=${encodeURIComponent(name)}&app=music`;
+                try {
+                    const info = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=musicArtist&limit=1`).then(r => r.json());
+                    if (info.results?.[0]?.artistLinkUrl) apple = info.results[0].artistLinkUrl;
+                } catch { }
+                const yt = `https://www.youtube.com/results?search_query=${encodeURIComponent(name + ' official')}`;
+                const p = document.createElement('div'); p.style.cssText = "position:fixed;inset:0;display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);z-index:4000";
+                p.innerHTML = `<div style="max-width:440px;width:92%;border-radius:18px;padding:16px;border:1px solid rgba(255,255,255,.25);background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.08));box-shadow:0 10px 30px rgba(0,0,0,.25)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong style="font-size:16px">🎵 ${name}</strong><button id="popClose" class="cta" style="padding:6px 10px">×</button></div>
     <img src="${img}" style="width:100%;max-height:240px;object-fit:cover;border-radius:12px;box-shadow:0 0 25px rgba(255,255,180,.5)">
     <p style="margin-top:8px;font-size:13px;opacity:.95;line-height:1.6">${sum || '（概要情報が見つかりませんでした）'}</p>
     <div style="display:flex;gap:16px;align-items:center;justify-content:center;margin-top:10px">
-      <a href="${apple}" target="_blank" title="Apple Music">${ICON_APPLE}</a>
-      <a href="${yt}" target="_blank" title="YouTube">${ICON_YT}</a>
+      <a href="${apple}" target="_blank" title="Apple Music" style="display:inline-flex;align-items:center">${ICON_APPLE}</a>
+      <a href="${yt}" target="_blank"  title="YouTube"     style="display:inline-flex;align-items:center">${ICON_YT}</a>
     </div>
   </div>`;
-            p.addEventListener('click', e => { if (e.target.id === 'popClose' || e.target === p) p.remove(); });
-            const esc = (ev) => { if (ev.key === 'Escape') { p.remove(); document.removeEventListener('keydown', esc); } }; document.addEventListener('keydown', esc);
-            document.body.appendChild(p);
-        }
-        async function renderMap() {
-            const area = document.getElementById('mapArea'); area.innerHTML = '';
-            const list = uniqueTokens(TOKENS || []);
-            for (const n of list) {
-                const img = await bestImage(n);
-                const color = `hsl(${[...n].reduce((a, c) => a + c.charCodeAt(0), 0) % 360} 90% 65%)`;
-                const b = document.createElement('div'); b.className = 'bubble'; b.style.boxShadow = `0 0 22px ${color}`;
-                b.innerHTML = `<img src="${img}" alt="${n}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
-      <span class="bubbleName">${n}</span>`;
-                b.onclick = () => showPopup(n); area.appendChild(b);
-            }
-        }
+                p.addEventListener('click', e => { if (e.target.id === 'popClose' || e.target === p) p.remove(); });
+                const esc = (ev) => { if (ev.key === 'Escape') { p.remove(); document.removeEventListener('keydown', esc); } }; document.addEventListener('keydown', esc);
+                document.body.appendChild(p);
+            })(); }
 
-        /* ====== Emotion / Love / Vector / Work ====== */
-        async function drawEmotion() {
-            const cv = document.getElementById('emotion'), ctx = cv.getContext('2d');
-            const W = cv.width = cv.clientWidth, H = cv.height = cv.clientHeight;
-            ctx.clearRect(0, 0, W, H);
-            ctx.fillStyle = "rgba(255,255,255,.05)"; ctx.fillRect(0, 0, W, H);
-            ctx.strokeStyle = "rgba(255,255,255,.25)"; ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.moveTo(40, H - 40); ctx.lineTo(W - 10, H - 40); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(40, H - 40); ctx.lineTo(40, 10); ctx.stroke();
-            ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.font = '12px system-ui';
-            ctx.fillText('穏やか', 44, H - 18); ctx.fillText('高揚', W - 60, H - 18);
-            ctx.save(); ctx.translate(14, H - 44); ctx.rotate(-Math.PI / 2); ctx.fillText('静', 0, 0); ctx.restore(); ctx.fillText('動', 18, 20);
+            async function renderMap(){
+  const area=document.getElementById('mapArea'); area.innerHTML='';
+            const list=uniqueTokens(TOKENS||[]);
+            for(const n of list){
+    const img=await bestImage(n);
+            const color=`hsl(${[...n].reduce((a, c) => a + c.charCodeAt(0), 0) % 360} 90% 65%)`;
+            const b=document.createElement('div'); b.className='bubble'; b.style.boxShadow=`0 0 22px ${color}`;
+            b.innerHTML=`<img src="${img}" alt="${n}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"><span class="bubbleName">${n}</span>`;
+    b.onclick=()=>showPopup(n); area.appendChild(b);
+  }
+}
 
-            // アーティストごとにジャンル色
-            for (const n of uniqueTokens(TOKENS || [])) {
-                let g = 'Other';
-                try {
-                    const j = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(n)}&entity=musicArtist&limit=1`).then(r => r.json());
-                    g = j.results?.[0]?.primaryGenreName || 'Other';
-                } catch { }
-                const colors = { Pop: '#ff66cc', Rock: '#ff6666', Jazz: '#66ccff', Electronic: '#aa88ff', HipHop: '#ff9f1c', World: '#77ff88', Other: '#ffd966' };
-                const col = colors[g] || colors.Other;
-                const x = 40 + (W - 60) * (0.2 + 0.6 * Math.random());
-                const y = (H - 40) - (H - 60) * (0.2 + 0.6 * Math.random());
-                const grad = ctx.createRadialGradient(x, y, 0, x, y, 22);
+                /* ========== Emotion（ジャンル色プロット） ========== */
+                async function drawEmotion(){
+  const cv=document.getElementById('emotion'), ctx=cv.getContext('2d');
+                cv.width=cv.clientWidth; const W=cv.width, H=cv.height;
+                ctx.clearRect(0,0,W,H);
+                ctx.fillStyle="rgba(255,255,255,.06)"; ctx.fillRect(0,0,W,H);
+                ctx.strokeStyle="rgba(255,255,255,.25)"; ctx.lineWidth=1;
+                ctx.beginPath(); ctx.moveTo(40,H-40); ctx.lineTo(W-20,H-40); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(40,H-40); ctx.lineTo(40,20); ctx.stroke();
+                ctx.fillStyle='#fff'; ctx.font='14px system-ui';
+                ctx.fillText('穏やか',46,H-12); ctx.fillText('高揚',W-60,H-12);
+                ctx.save(); ctx.translate(16, 28); ctx.rotate(-Math.PI/2); ctx.fillText('静',0,0); ctx.restore(); ctx.fillText('動',18,28);
+                const colors={Pop:'#ff66cc',Rock:'#ff6666',Jazz:'#66ccff',Electronic:'#aa88ff',HipHop:'#f39c12',World:'#2ecc71',Other:'#ffd966'};
+                for(const name of uniqueTokens(TOKENS||[])){
+                    let g='Other';
+                try{ const j=await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=musicArtist&limit=1`).then(r=>r.json()); g=j.results?.[0]?.primaryGenreName||'Other' }catch{ }
+                const col=colors[g]||colors.Other;
+                const x=40+(W-60)*(0.2+0.6*Math.random());
+                const y=20+(H-60)*(0.2+0.6*Math.random());
+                const grad=ctx.createRadialGradient(x,y,0,x,y,26);
                 grad.addColorStop(0, col); grad.addColorStop(1, 'transparent');
-                ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill();
-            }
-            document.getElementById('emotionTip').textContent = 'ジャンルカラーで今日のムードを可視化しました。';
-        }
+                ctx.fillStyle=grad; ctx.beginPath(); ctx.arc(x,y,26,0,Math.PI*2); ctx.fill();
+  }
+                document.getElementById('emotionTip').textContent='ジャンルカラーでムードを可視化（右上=アゲ／左下=チル）。';
+}
 
-        function calcLove() {
-            const u = new Set((TOKENS || []).map(t => t.toLowerCase())).size;
-            const s = Math.min(100, Math.round((TOKENS || []).length * 9 + u * 6));
-            const h = (120 * s / 100), y = 160 - h; // 120pxの可動域を%で埋める
-            document.getElementById('lovePercent').textContent = s + '%';
-            const rect = document.getElementById('liquid'); rect.setAttribute('y', y); rect.setAttribute('height', Math.max(0, h));
-            document.getElementById('loveComment').textContent = s < 40 ? '静かに整うムード。音のディテールを。'
-                : s < 70 ? '心拍と音が寄り添い出してる。' : '音楽と気分がシンクロ！';
-        }
+                /* ========== Love（下から%に同期） ========== */
+                function calcLove(){
+  const u = new Set(uniqueTokens(TOKENS).map(t=>t.toLowerCase())).size;
+                const n = uniqueTokens(TOKENS).length;
+                const s = Math.min(100, Math.round(n*7 + u*5)); // 雑味を抑えたスコア
+                const h = 120 * (s/100), y = 160 - h;           // 下端160から満たす
+                document.getElementById('lovePercent').textContent = s + '%';
+                const rect = document.getElementById('loveFill'); rect.setAttribute('y', y); rect.setAttribute('height', Math.max(0,h));
+                document.getElementById('loveComment').textContent =
+                s<40 ? '静かに整うムード。ディテールを味わおう。' :
+                s<70 ? '心拍と音が寄り添い始めた。好奇心のアンテナを。' :
+                '音と気持ちが完全にシンクロ！最高のコンディション。';
+}
 
-        const VEC_COLORS = [{ key: 'energy', label: 'エネルギー', color: '#ffcc33' }, { key: 'sophistication', label: '洗練', color: '#ff9933' }, { key: 'groove', label: 'ノリ', color: '#ffaa66' }, { key: 'structure', label: '構成力', color: '#66ccff' }, { key: 'experiment', label: '実験性', color: '#aa88ff' }, { key: 'urban', label: '都会感', color: '#77ff88' }, { key: 'global', label: 'グローバル感', color: '#ffd966' }];
-        const WORK_PAL = ['#ffcc33', '#ff8a33', '#66ccff', '#77ff88', '#aa88ff'];
+                /* ========== Vector / Work（バー＋ドーナツ） ========== */
+                const VEC_COLORS=[{key:'energy',label:'エネルギー',color:'#ffcc33'},{key:'sophistication',label:'洗練',color:'#ff9933'},{key:'groove',label:'ノリ',color:'#ffaa66'},{key:'structure',label:'構成力',color:'#66ccff'},{key:'experiment',label:'実験性',color:'#aa88ff'},{key:'urban',label:'都会感',color:'#77ff88'},{key:'global',label:'グローバル感',color:'#ffd966'}];
+                const WORK_PAL=['#ffcc33','#ff8a33','#66ccff','#77ff88','#aa88ff'];
+                function randomVec(){return{energy:Math.random(),sophistication:Math.random(),groove:Math.random(),structure:Math.random(),experiment:Math.random(),urban:Math.random(),global:Math.random()}}
+                function drawDonut(id,vals,colors,step=0.05,legend){
+  const cv=document.getElementById(id); if(!cv) return; const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=Math.min(W,H)*.42,r=Math.min(W,H)*.22,total=vals.reduce((a,b)=>a+b,0)||1;
+                let prog=0; (function frame(){
+                    ctx.clearRect(0, 0, W, H); let st=-Math.PI/2;
+    vals.forEach((v,i)=>{ const full=(v/total)*Math.PI*2,arc=full*Math.min(1,prog);
+                ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,R,st,st+arc); ctx.closePath(); ctx.fillStyle=colors[i%colors.length]; ctx.fill(); st+=full;
+    });
+                ctx.globalCompositeOperation='destination-out'; ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill(); ctx.globalCompositeOperation='source-over';
+                if(legend){
+      const L = document.getElementById(id==='vectorPie' ? 'vectorLegend':'workLegend');
+                if(L){L.innerHTML = id === 'vectorPie'
+                    ? '凡例：' + VEC_COLORS.map(o => `<span style="display:inline-block;width:10px;height:10px;background:${o.color};border-radius:2px;margin:0 6px 0 10px"></span>${o.label}`).join('')
+                    : '凡例：<span style="display:inline-block;width:10px;height:10px;background:#ffcc33;border-radius:2px;margin:0 6px 0 10px"></span>協働力' +
+                    '<span style="display:inline-block;width:10px;height:10px;background:#ff8a33;border-radius:2px;margin:0 6px 0 10px"></span>計画力' +
+                    '<span style="display:inline-block;width:10px;height:10px;background:#66ccff;border-radius:2px;margin:0 6px 0 10px"></span>創造力' +
+                    '<span style="display:inline-block;width:10px;height:10px;background:#77ff88;border-radius:2px;margin:0 6px 0 10px"></span>共感力' +
+                    '<span style="display:inline-block;width:10px;height:10px;background:#aa88ff;border-radius:2px;margin:0 6px 0 10px"></span>リーダーシップ';
+      }
+    }
+                prog+=step; if(prog<1) requestAnimationFrame(frame);
+  })();
+}
+                function drawVector(){
+  const v=randomVec(); const bars=document.getElementById('profileBars'); bars.innerHTML='';
+                VEC_COLORS.forEach(({key, label, color})=>{
+    const pct=Math.round(v[key]*100);
+                const w=document.createElement('div');
+                w.innerHTML=`<div class="kpi"><div>${label}</div><div>${pct}%</div></div><div class="bar"><div class="fill" style="width:0%;background:${color}"></div></div>`;
+    bars.appendChild(w); setTimeout(()=> w.querySelector('.fill').style.width=pct+'%', 100);
+  });
+  drawDonut('vectorPie', VEC_COLORS.map(o=>v[o.key]), VEC_COLORS.map(o=>o.color), 0.05, true);
+}
+                function drawAbilities(v){
+  const el=document.getElementById('abilities'); el.innerHTML='';
+                const s={協働力:(v.groove+v.urban)/2,計画力:(v.structure+v.sophistication)/2,創造力:(v.experiment+v.energy)/2,共感力:(v.urban+v.global)/2,リーダーシップ:(v.energy+v.structure)/2};
+  Object.entries(s).forEach(([k,val])=>{
+    const pct=Math.round(val*100);
+                const row=document.createElement('div');
+                row.innerHTML=`<div class="kpi"><div>${k}</div><div>${pct}%</div></div><div class="bar"><div class="fill" style="width:0%"></div></div>`;
+    el.appendChild(row); setTimeout(()=> row.querySelector('.fill').style.width=pct+'%', 100);
+  });
+                drawDonut('workPie', Object.values(s), WORK_PAL, 0.06, true);
+}
 
-        function randomVec() { return { energy: Math.random(), sophistication: Math.random(), groove: Math.random(), structure: Math.random(), experiment: Math.random(), urban: Math.random(), global: Math.random() } }
-
-        function drawDonut(id, vals, colors, step = 0.05, legend = false) {
-            const cv = document.getElementById(id); if (!cv) return; const ctx = cv.getContext('2d');
-            const W = cv.width, H = cv.height, cx = W / 2, cy = H / 2, R = Math.min(W, H) * .42, r = Math.min(W, H) * .22, total = vals.reduce((a, b) => a + b, 0) || 1;
-            let prog = 0; (function frame() {
-                ctx.clearRect(0, 0, W, H);
-                let st = -Math.PI / 2;
-                vals.forEach((v, i) => {
-                    const full = (v / total) * Math.PI * 2, arc = full * Math.min(1, prog);
-                    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, st, st + arc); ctx.closePath();
-                    ctx.fillStyle = colors[i % colors.length]; ctx.fill(); st += full;
-                });
-                ctx.globalCompositeOperation = 'destination-out'; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill(); ctx.globalCompositeOperation = 'source-over';
-                if (legend) {
-                    ctx.font = '12px system-ui'; ctx.fillStyle = 'rgba(255,255,255,.9)'; let y = H - 10;
-                    VEC_COLORS.forEach((o, i) => { ctx.fillStyle = colors[i]; ctx.fillRect(8, y - 10, 10, 10); ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillText(' ' + o.label, 20, y); y -= 14 });
-                }
-                prog += step; if (prog < 1) requestAnimationFrame(frame);
-            })();
-        }
-
-        function drawVector() {
-            const v = randomVec(); const bars = document.getElementById('profileBars'); bars.innerHTML = '';
-            VEC_COLORS.forEach(({ key, label }) => {
-                const pct = Math.round(v[key] * 100); const row = document.createElement('div');
-                row.innerHTML = `<div class="kpi"><div>${label}</div><div>${pct}%</div></div><div class="bar"><div class="fill" style="width:0%"></div></div>`;
-                bars.appendChild(row); setTimeout(() => row.querySelector('.fill').style.width = pct + '%', 250);
-            });
-            drawDonut('vectorPie', VEC_COLORS.map(o => v[o.key]), VEC_COLORS.map(o => o.color), 0.05, true);
-            document.getElementById('vectorNote').textContent = 'あなたの音楽傾向（エネルギー/洗練/ノリ/構成力/実験性/都会感/グローバル感）の強弱を示しています。';
-        }
-
-        function drawAbilities(v) {
-            const el = document.getElementById('abilities'); el.innerHTML = '';
-            const s = { 協働力: (v.groove + v.urban) / 2, 計画力: (v.structure + v.sophistication) / 2, 創造力: (v.experiment + v.energy) / 2, 共感力: (v.urban + v.global) / 2, リーダーシップ: (v.energy + v.structure) / 2 };
-            Object.entries(s).forEach(([k, val]) => {
-                const pct = Math.round(val * 100); const row = document.createElement('div');
-                row.innerHTML = `<div class="kpi"><div>${k}</div><div>${pct}%</div></div><div class="bar"><div class="fill" style="width:0%"></div></div>`;
-                el.appendChild(row); setTimeout(() => row.querySelector('.fill').style.width = pct + '%', 250);
-            });
-            drawDonut('workPie', Object.values(s), WORK_PAL, 0.06, false);
-            document.getElementById('workNote').textContent = '各スコアはあなたの「仕事の強み」を示します。今日の重心を意識して動くと効果的です。';
-            document.getElementById('workLegend').textContent = '凡例：協働力 / 計画力 / 創造力 / 共感力 / リーダーシップ';
-        }
-
-        /* ====== Recommendations（Apple直リンク＋試聴＋被りなし） ====== */
-        async function getArtistInfo(nm) {
-            const e = encodeURIComponent(nm);
-            try {
-                const r = await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicArtist&limit=1`);
-                const j = await r.json(); const a = j.results?.[0]; if (!a) return null;
-                return {
-                    id: a.artistId, name: a.artistName, genre: a.primaryGenreName || "Other",
-                    link: a.artistLinkUrl || `https://music.apple.com/us/search?term=${e}&app=music`,
-                    img: a.artworkUrl100 ? a.artworkUrl100.replace('100x100', '300x300') : `https://picsum.photos/seed/${e}/300/300`
-                };
-            } catch { return null }
-        }
-        async function getPreviewUrl(nm) {
-            const e = encodeURIComponent(nm);
-            try {
-                const r = await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicTrack&attribute=artistTerm&limit=1`);
-                const j = await r.json(); return j.results?.[0]?.previewUrl || "";
-            } catch { return "" }
-        }
-        async function getSimilarArtists(tokens, max = 6) {
-            const exclude = new Set(tokens.map(s => s.toLowerCase())), genres = new Set(), pool = [];
-            for (const n of tokens) { const info = await getArtistInfo(n); if (info?.genre) genres.add(info.genre); }
-            for (const g of genres) {
-                const e = encodeURIComponent(g);
-                try {
-                    const j = await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicArtist&limit=30`).then(r => r.json());
-                    (j.results || []).forEach(a => {
-                        if (!a.artistName) return;
-                        const nm = a.artistName.trim(); if (exclude.has(nm.toLowerCase())) return;
-                        pool.push({
-                            id: a.artistId, name: nm, link: a.artistLinkUrl || `https://music.apple.com/us/search?term=${encodeURIComponent(nm)}&app=music`,
-                            img: a.artworkUrl100 ? a.artworkUrl100.replace('100x100', '300x300') : `https://picsum.photos/seed/${encodeURIComponent(nm)}/300/300`
-                        });
-                    });
-                } catch { }
-            }
-            const seen = new Set(), out = [];
-            for (const a of pool) { const k = (a.name + ':' + a.id).toLowerCase(); if (seen.has(k)) continue; seen.add(k); out.push(a); }
-            return out.slice(0, max);
-        }
-        async function renderRecommendations() {
-            const box = document.getElementById('recs'); box.innerHTML = '<div style="opacity:.7">類似アーティストを探索中…</div>';
-            if (!(TOKENS || []).length) { box.innerHTML = '<div style="opacity:.7">アーティストを入力してAnalyzeを押してください。</div>'; return; }
-            const recs = await getSimilarArtists(uniqueTokens(TOKENS || []), 6);
-            if (!recs.length) { box.innerHTML = '<div style="opacity:.7">おすすめが見つかりませんでした。</div>'; return; }
-            const rows = await Promise.all(recs.map(async a => {
-                const preview = await getPreviewUrl(a.name);
-                const yt = `https://www.youtube.com/results?search_query=${encodeURIComponent(a.name + ' official')}`;
+                /* ========== Recommendations（30秒試聴つき） ========== */
+                async function getArtistInfo(nm){
+  const e=encodeURIComponent(nm);
+                try{ const r=await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicArtist&limit=1`);
+                const j=await r.json(); const a=j.results?.[0]; if(!a) return null;
+                return {id:a.artistId, name:a.artistName, genre:a.primaryGenreName||'Other',
+                link:a.artistLinkUrl||`https://music.apple.com/us/search?term=${e}&app=music`,
+                img:a.artworkUrl100 ? a.artworkUrl100.replace('100x100','300x300') : `https://picsum.photos/seed/${e}/300/300` };
+  }catch{ return null }
+}
+                async function getPreviewUrl(artist){
+  const e=encodeURIComponent(artist);
+                try{ const r=await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicTrack&attribute=artistTerm&limit=1`);
+       const j=await r.json(); return j.results?.[0]?.previewUrl || ""; }
+                catch{ return "" }
+}
+                async function getSimilarArtists(tokens, max=6){
+  const exclude=new Set(tokens.map(x=>x.toLowerCase())), genres=new Set(), pool=[];
+                for(const n of tokens){ const info=await getArtistInfo(n); if(info?.genre) genres.add(info.genre); }
+                for(const g of genres){
+    const e=encodeURIComponent(g);
+                try{
+      const j=await fetch(`https://itunes.apple.com/search?term=${e}&entity=musicArtist&limit=30`).then(r=>r.json());
+      (j.results||[]).forEach(a=>{
+        if(!a.artistName) return; const nm=a.artistName.trim();
+                if(exclude.has(nm.toLowerCase())) return;
+                pool.push({id:a.artistId, name:nm, link:a.artistLinkUrl||`https://music.apple.com/us/search?term=${encodeURIComponent(nm)}&app=music`,
+                img:a.artworkUrl100 ? a.artworkUrl100.replace('100x100','300x300') : `https://picsum.photos/seed/${encodeURIComponent(nm)}/300/300` });
+      });
+    }catch{ }
+  }
+                const seen=new Set(), out=[];
+                for(const a of pool){ const k=(a.name+':'+a.id).toLowerCase(); if(seen.has(k)) continue; seen.add(k); out.push(a); }
+                return out.slice(0, max);
+}
+                async function renderRecommendations(){
+  const box=document.getElementById('recs'); box.innerHTML='';
+                const list = uniqueTokens(TOKENS||[]);
+                if(!list.length){box.innerHTML = '<div style="opacity:.75">アーティストを入力して Analyze を押してください。</div>'; return; }
+                const recs = await getSimilarArtists(list, 6);
+                if(!recs.length){box.innerHTML = '<div style="opacity:.75">おすすめが見つかりませんでした。</div>'; return; }
+  const rows = await Promise.all(recs.map(async a=>{
+    const preview = await getPreviewUrl(a.name); // ← 30秒試聴
+                const yt=`https://www.youtube.com/results?search_query=${encodeURIComponent(a.name + ' official')}`;
                 return `<div style="display:flex;align-items:center;gap:12px;margin:10px 0">
-      <img src="${a.img}" alt="${a.name}" style="width:56px;height:56px;border-radius:10px;object-fit:cover">
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:800">${a.name}</div>
-        <div style="display:flex;gap:12px;align-items:center;margin-top:6px">
-          <a href="${a.link}" target="_blank" title="Apple Music" style="display:inline-flex;align-items:center">${ICON_APPLE}</a>
-          <a href="${yt}" target="_blank" title="YouTube" style="display:inline-flex;align-items:center">${ICON_YT}</a>
-        </div>
-        ${preview ? `<audio controls preload="none" style="margin-top:6px;width:100%;max-width:340px"><source src="${preview}"></audio>` : `<div style="margin-top:6px;opacity:.6">（プレビューなし）</div>`}
-      </div>
-    </div>`;
-            }));
-            box.innerHTML = rows.join('');
-        }
+                    <img src="${a.img}" alt="${a.name}" style="width:56px;height:56px;border-radius:10px;object-fit:cover">
+                        <div style="flex:1;min-width:0">
+                            <div style="font-weight:800">${a.name}</div>
+                            <div style="display:flex;gap:12px;align-items:center;margin-top:6px">
+                                <a href="${a.link}" target="_blank" title="Apple Music" style="display:inline-flex;align-items:center">${ICON_APPLE}</a>
+                                <a href="${yt}" target="_blank" title="YouTube" style="display:inline-flex;align-items:center">${ICON_YT}</a>
+                            </div>
+                            ${preview ? `<audio controls preload="none" style="margin-top:6px;width:100%;max-width:340px"><source src="${preview}"></audio>`
+                                : `<div style="margin-top:6px;opacity:.65">（プレビューなし）</div>`}
+                        </div>
+                </div>`;
+  }));
+  box.innerHTML = rows.join('');
+}
 
-        /* ====== Analyze（進捗→描画順序を厳密化） ====== */
-        function startProgress(cb) {
-            const wrap = document.getElementById('progressWrap'), fill = document.getElementById('progfill'), txt = document.getElementById('progtext');
-            wrap.style.display = 'block'; fill.style.width = '0%'; txt.textContent = '0%';
-            let p = 0; const id = setInterval(() => { p = Math.min(100, p + 6); fill.style.width = p + '%'; txt.textContent = p + '%'; }, 70);
-            cb().finally(() => { clearInterval(id); setTimeout(() => wrap.style.display = 'none', 120); });
-        }
-        onTap(document.getElementById('analyzeBtn'), () => startProgress(analyze));
-        async function analyze() {
-            if (!(TOKENS || []).length) { alert('アーティスト/曲を入れてください'); return; }
-            TOKENS = uniqueTokens(TOKENS);
+/* ========== Analyze（進捗→描画順序） ========== */
+const progWrap=document.getElementById('progressWrap'), progFill=document.getElementById('progfill'), progText=document.getElementById('progtext');
+function startProgress(cb){
+  progWrap.style.display='block'; progFill.style.width='0%'; progText.textContent='0%';
+  let p=0; const id=setInterval(()=>{ p=Math.min(100,p+6); progFill.style.width=p+'%'; progText.textContent=p+'%'; }, 70);
+  cb().finally(()=>{ clearInterval(id); setTimeout(()=> progWrap.style.display='none', 120); });
+}
+onTap(document.getElementById('analyzeBtn'), ()=> startProgress(analyze));
 
-            await renderMap().catch(() => { }); await raf();
-            await drawEmotion().catch(() => { }); await raf();
-            await calcLove().catch(() => { }); await raf();
+async function analyze(){
+  if(!TOKENS.length){ alert('アーティスト/曲を入れてください'); return; }
+  TOKENS = uniqueTokens(TOKENS);
 
-            const v = randomVec();
-            await drawVector().catch(() => { }); await raf();
-            await drawAbilities(v).catch(() => { }); await raf();
+  await renderMap().catch(()=>{}); await raf();
+  await drawEmotion().catch(()=>{}); await raf();
+  await calcLove().catch(()=>{});    await raf();
 
-            await renderRecommendations().catch(() => { });
-        }
+  const v=randomVec();
+  await drawVector().catch(()=>{});  await raf();
+  await drawAbilities(v).catch(()=>{}); await raf();
+
+  await renderRecommendations().catch(()=>{});
+}
     </script>
-</body>
-
-</html>
