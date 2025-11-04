@@ -5,7 +5,378 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>MusicLens PRO MAX</title>
-    <link rel="stylesheet" href="./styles.css?v=20251105a" />
+
+    <style>
+        :root {
+            --bg: radial-gradient(1200px 600px at 30% -10%, #0e2a3a 0%, transparent 60%),
+                radial-gradient(1200px 800px at 110% 30%, #3c2a12 0%, transparent 60%),
+                #0b1117;
+            --panel: rgba(255, 255, 255, .06);
+            --panel-border: rgba(255, 255, 255, .15);
+            --text: #eaf6ff;
+            --muted: #a7c0d1;
+            --ml-pink-gold-1: #ffb6c1;
+            --ml-pink-gold-2: #ffd29a;
+            --ml-pink-gold-3: #ffe8c9;
+            --brand: #ffe07a;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            color: var(--text);
+            background: var(--bg);
+            font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+        }
+
+        /* hero */
+        .hero {
+            max-width: 1200px;
+            margin: 40px auto 24px;
+            padding: 48px 24px 32px;
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid var(--panel-border);
+            border-radius: 28px;
+            backdrop-filter: blur(10px) saturate(140%);
+        }
+
+        .hero-title {
+            margin: 0 0 8px;
+            font-size: clamp(36px, 6vw, 88px);
+            font-weight: 800;
+            letter-spacing: .02em;
+            color: var(--brand);
+            position: relative;
+            filter: drop-shadow(0 0 12px rgba(255, 225, 130, .35));
+            animation: floatY 6s ease-in-out infinite, glowPulse 3.2s ease-in-out infinite;
+            will-change: transform, filter;
+        }
+
+        @keyframes floatY {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-10px)
+            }
+        }
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                text-shadow: 0 0 .35rem rgba(255, 230, 140, .6), 0 0 1.1rem rgba(255, 200, 90, .25)
+            }
+
+            50% {
+                text-shadow: 0 0 .6rem rgba(255, 230, 140, .9), 0 0 1.6rem rgba(255, 200, 90, .45)
+            }
+        }
+
+        .hero-subtitle {
+            margin: 12px 0 20px;
+            color: var(--muted);
+            font-size: clamp(14px, 2.2vw, 18px)
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+
+        .credit {
+            opacity: .6;
+            margin: 8px 0 0
+        }
+
+        /* buttons */
+        .btn {
+            appearance: none;
+            border: 1px solid var(--panel-border);
+            background: rgba(255, 255, 255, .06);
+            color: var(--text);
+            padding: 12px 18px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: transform .06s ease, background .2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px)
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(.98)
+        }
+
+        .btn.primary {
+            background: linear-gradient(180deg, #ffeaa0, #ffd36a);
+            color: #2a2100;
+            border-color: transparent
+        }
+
+        .btn.ghost {
+            background: rgba(255, 255, 255, .08)
+        }
+
+        .btn.pill {
+            background: linear-gradient(180deg, #ffeaa0, #ffd36a);
+            color: #2a2100;
+            border-color: transparent;
+            padding: 10px 16px
+        }
+
+        /* panels */
+        .panel {
+            max-width: 1100px;
+            margin: 18px auto;
+            padding: 20px;
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            backdrop-filter: blur(8px) saturate(140%);
+        }
+
+        .panel h2 {
+            margin: 4px 0 10px
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .input-row input {
+            flex: 1;
+            min-width: 220px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--panel-border);
+            background: rgba(255, 255, 255, .06);
+            color: var(--text)
+        }
+
+        .hint {
+            margin: 8px 0 12px;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        /* bubbles */
+        .bubble-wrap {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .bubble {
+            position: relative;
+            padding: 10px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .18);
+            background: rgba(255, 255, 255, .08);
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            user-select: none;
+            pointer-events: auto;
+        }
+
+        .bubble a {
+            pointer-events: auto;
+            text-decoration: none;
+            color: #bfe2ff;
+            border-bottom: 1px dotted rgba(191, 226, 255, .5)
+        }
+
+        .bubble .x {
+            opacity: .7;
+            cursor: pointer
+        }
+
+        /* Music Love */
+        .liquid-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            border: 1px solid var(--panel-border);
+            height: 180px;
+            background: rgba(255, 255, 255, .04)
+        }
+
+        .liquid {
+            position: absolute;
+            inset: -20% -10% auto -10%;
+            height: 140%;
+            background:
+                radial-gradient(60% 40% at 40% 40%, var(--ml-pink-gold-1), transparent 60%),
+                radial-gradient(70% 50% at 70% 60%, var(--ml-pink-gold-2), transparent 65%),
+                radial-gradient(60% 50% at 30% 70%, var(--ml-pink-gold-3), transparent 55%);
+            filter: blur(26px) saturate(160%);
+            animation: goo 8s ease-in-out infinite;
+        }
+
+        @keyframes goo {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1)
+            }
+
+            50% {
+                transform: translateY(-6%) scale(1.03)
+            }
+        }
+
+        .liquid-msg {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, .35);
+            font-weight: 600;
+            font-size: 18px
+        }
+
+        .love-suggest {
+            margin-top: 8px;
+            font-size: 15px
+        }
+
+        /* vector/strengths/recos */
+        .vector-view {
+            border: 1px dashed rgba(255, 255, 255, .25);
+            border-radius: 14px;
+            padding: 12px;
+            min-height: 120px
+        }
+
+        .strengths,
+        .recos {
+            display: grid;
+            gap: 8px;
+            padding-left: 20px
+        }
+
+        .recos li a {
+            color: #bfe2ff
+        }
+
+        /* back to top */
+        .back-top-wrap {
+            display: flex;
+            justify-content: center;
+            margin: 26px 0 40px
+        }
+
+        .btn-back-top .arrow {
+            font-size: 1.25rem;
+            line-height: 1;
+            transform: translateY(-1px);
+            margin-right: 6px
+        }
+
+        /* modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            place-items: center
+        }
+
+        .modal[aria-hidden="false"] {
+            display: grid
+        }
+
+        .glass-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 40;
+            pointer-events: none;
+            background: radial-gradient(80% 70% at 50% -10%, rgba(255, 255, 255, .08), transparent 65%), rgba(0, 0, 0, .45);
+            backdrop-filter: blur(6px);
+        }
+
+        .modal-dialog {
+            position: relative;
+            z-index: 1000;
+            width: min(860px, 92vw);
+            min-height: 420px;
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 18px;
+            box-shadow: 0 30px 120px rgba(0, 0, 0, .45);
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px
+        }
+
+        .modal-head .title {
+            font-size: 22px;
+            font-weight: 700
+        }
+
+        .chat-log {
+            height: 280px;
+            overflow: auto;
+            border-radius: 12px;
+            border: 1px solid var(--panel-border);
+            padding: 10px;
+            background: rgba(0, 0, 0, .25)
+        }
+
+        .msg {
+            margin: 6px 0
+        }
+
+        .msg.me {
+            color: #bfe2ff
+        }
+
+        .msg.ai {
+            color: #ffeaa0
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px
+        }
+
+        .chat-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--panel-border);
+            background: rgba(255, 255, 255, .06);
+            color: var(--text)
+        }
+
+        @media (max-width:640px) {
+            .chat-log {
+                height: 220px
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -69,6 +440,7 @@
         </div>
     </main>
 
+    <!-- Chat with Sora AI Modal -->
     <div id="chat-modal" class="modal" aria-hidden="true">
         <div class="glass-overlay"></div>
         <div class="modal-dialog" role="dialog" aria-modal="true">
@@ -84,318 +456,206 @@
         </div>
     </div>
 
-    <script>
-        // 必要なら設定：window.ML_WORKER_BASE = "https://YOUR-WORKER.workers.dev";
+    <!-- 必要なら設定（末尾スラ無し）: window.ML_WORKER_BASE = "https://YOUR-WORKER.workers.dev"; -->
+    <script type="module">
+        // ========= アプリ本体 =========
+        const state = { artists: [], loveScore: 0 };
+        const $ = (s, r = document) => r.querySelector(s);
+
+        function normName(s) { return (s || "").toLowerCase().replace(/\s+/g, " ").trim().normalize("NFKC"); }
+        function dedupeArtists(list) {
+            const seen = new Set(), out = [];
+            for (const a of list) {
+                const obj = typeof a === "string" ? { name: a } : a;
+                const key = normName(obj.name);
+                if (!key || seen.has(key)) continue;
+                seen.add(key); out.push(obj);
+            } return out;
+        }
+        function appleMusicURL(name) {
+            return `https://music.apple.com/jp/search?term=${encodeURIComponent(name)}&l=ja-jp&platform=web`;
+        }
+
+        /* UI */
+        const input = $('#artist-input');
+        $('#btn-add').addEventListener('click', onAdd);
+        $('#btn-clear').addEventListener('click', () => { state.artists = []; renderBubbles(); setSectionsHidden(true); });
+        $('#btn-start').addEventListener('click', () => input?.focus());
+        $('#back-top').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') onAdd(); });
+
+        function onAdd() {
+            const raw = input.value.trim(); if (!raw) return;
+            const list = raw.split(',').map(s => s.trim()).filter(Boolean).map(n => ({ name: n }));
+            state.artists = dedupeArtists([...state.artists, ...list]);
+            input.value = ''; renderBubbles(); computeAll();
+        }
+
+        function renderBubbles() {
+            const wrap = $('#bubble-wrap'); wrap.innerHTML = '';
+            const artists = dedupeArtists(state.artists);
+            artists.forEach((artist, idx) => {
+                const div = document.createElement('div'); div.className = 'bubble';
+                const label = document.createElement('span'); label.textContent = artist.name;
+
+                const a = document.createElement('a'); a.textContent = 'Apple Music';
+                a.href = artist.appleUrl ?? appleMusicURL(artist.name);
+                a.target = '_blank'; a.rel = 'noopener noreferrer';
+                a.addEventListener('click', ev => { ev.stopPropagation(); }, { passive: true });
+
+                const x = document.createElement('span'); x.className = 'x'; x.textContent = '✕';
+                x.addEventListener('click', () => { state.artists.splice(idx, 1); renderBubbles(); computeAll(); });
+
+                div.append(label, ' ', a, ' ', x); wrap.appendChild(div);
+            });
+            $('#input-hint').textContent = artists.length ? 'バブルを削除して調整できます' : 'まずアーティストを入力してね';
+        }
+
+        /* Love（関西弁） */
+        function loveMessageKansai(score) {
+            if (score >= 90) return 'めっちゃ相思相愛やん。今日、その音と一緒やったら無敵やで。';
+            if (score >= 70) return 'だいぶええ感じ。もう一歩踏み込んで聴いてみ？世界広がるで。';
+            if (score >= 50) return 'まだ仲良し手前やな。新曲かライブ映像で距離縮めよか。';
+            if (score >= 30) return '気になるんは気になる。別曲で相性チェックしてみぃ。';
+            return '今日はちゃうかも。気分転換に別ジャンル、どや？';
+        }
+        function renderLove(score) {
+            state.loveScore = Math.max(0, Math.min(100, Math.round(score)));
+            $('#love-score').textContent = state.loveScore;
+            $('#love-suggest').textContent = loveMessageKansai(state.loveScore);
+        }
+
+        /* Vector / Strengths / Recos（安定表示版） */
+        function calcMusicVector(artists) {
+            let e = 0, w = 0, g = 0, n = 0;
+            artists.forEach(a => {
+                const k = normName(a.name);
+                for (let i = 0; i < k.length; i++) { const v = k.charCodeAt(i); e += (v % 7); w += (v % 5); g += (v % 3); n += (v % 11); }
+            });
+            const sum = Math.max(1, e + w + g + n);
+            return { energy: +(e / sum * 100).toFixed(1), warmth: +(w / sum * 100).toFixed(1), edge: +(g / sum * 100).toFixed(1), nostalgia: +(n / sum * 100).toFixed(1) };
+        }
+        function renderVector(v) {
+            $('#vector-view').innerHTML = `
+        <div>Energy: <b>${v.energy}</b></div>
+        <div>Warmth: <b>${v.warmth}</b></div>
+        <div>Edge: <b>${v.edge}</b></div>
+        <div>Nostalgia: <b>${v.nostalgia}</b></div>`;
+        }
+        function deriveWorkStrengths(v) {
+            const out = []; if (v.energy > 28) out.push('推進力／スピード感');
+            if (v.warmth > 22) out.push('共感力／ファシリテーション');
+            if (v.edge > 20) out.push('革新性／クリエイティブジャンプ');
+            if (v.nostalgia > 18) out.push('再編集力／ナレッジ活用');
+            return out.length ? out : ['着実性／安定実装'];
+        }
+        function renderStrengths(list) {
+            const ul = $('#strengths'); ul.innerHTML = '';
+            list.forEach(s => { const li = document.createElement('li'); li.textContent = '・' + s; ul.appendChild(li); });
+        }
+        function recommendFromVector(v, { limit = 12 } = {}) {
+            const db = [
+                ['高Energy×Edge', ['The Chemical Brothers', 'Justice', 'Prodigy', 'Nine Inch Nails']],
+                ['高Warmth', ['FKJ', 'Tom Misch', 'Nujabes', 'SIRUP']],
+                ['高Nostalgia', ['Daft Punk', 'Cornelius', 'YMO', 'UNDERWORLD']],
+            ];
+            const list = [];
+            if (v.energy > v.warmth && v.energy > v.nostalgia) list.push(...db[0][1]);
+            if (v.warmth >= 22) list.push(...db[1][1]);
+            if (v.nostalgia >= 18) list.push(...db[2][1]);
+            return Array.from(new Set(list)).slice(0, limit).map(n => ({ name: n, url: appleMusicURL(n) }));
+        }
+        function renderRecos(items) {
+            const ul = $('#recos'); ul.innerHTML = '';
+            items.forEach(r => {
+                const li = document.createElement('li'); const a = document.createElement('a');
+                a.href = r.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = r.name;
+                li.appendChild(a); ul.appendChild(li);
+            });
+        }
+
+        function setSectionsHidden(on) {
+            $('#section-vector').hidden = on; $('#section-strengths').hidden = on; $('#section-recos').hidden = on;
+        }
+        async function computeAll() {
+            const artists = dedupeArtists(state.artists);
+            renderLove(Math.min(100, 40 + artists.length * 12));
+            if (!artists.length) { setSectionsHidden(true); return; }
+            try {
+                const v = calcMusicVector(artists); renderVector(v);
+                renderStrengths(deriveWorkStrengths(v));
+                renderRecos(recommendFromVector(v, { limit: 16 }));
+                setSectionsHidden(false);
+            } catch (e) { console.error('[computeAll]', e); setSectionsHidden(false); }
+        }
+
+        /* 初期 */
+        renderBubbles(); renderLove(0);
     </script>
-    <script src="./app.js?v=20251105a" type="module"></script>
-    <script src="./chat.js?v=20251105a" type="module"></script>
+
+    <script type="module">
+        // ========= チャット =========
+        const modal = document.getElementById('chat-modal');
+        const logEl = document.getElementById('chat-log');
+        const inputEl = document.getElementById('sora-input');
+        const openBtn = document.getElementById('btn-open-chat');
+        const closeBtn = document.getElementById('chat-close');
+        const sendBtn = document.getElementById('chat-send');
+
+        const WORKER_BASE = (window.ML_WORKER_BASE ?? '').replace(/\/+$/, '');
+
+        function openModal() { modal.setAttribute('aria-hidden', 'false'); setTimeout(() => inputEl?.focus(), 50); }
+        function closeModal() { modal.setAttribute('aria-hidden', 'true'); }
+        openBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+
+        sendBtn.addEventListener('click', sendMsg);
+        inputEl.addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
+
+        function appendMsg(text, who = 'me') {
+            const div = document.createElement('div'); div.className = `msg ${who}`; div.textContent = text;
+            logEl.appendChild(div); logEl.scrollTop = logEl.scrollHeight;
+        }
+        function showChatError(text) { appendMsg(text, 'ai'); }
+
+        async function sendMsg() {
+            const text = inputEl.value.trim(); if (!text) return;
+            inputEl.value = ''; appendMsg(text, 'me');
+
+            if (!WORKER_BASE) { showChatError('WORKER_BASEが未設定です。window.ML_WORKER_BASE にURLを設定してください。'); return; }
+
+            const ac = new AbortController(); const timer = setTimeout(() => ac.abort(), 58000);
+            try {
+                const res = await fetch(`${WORKER_BASE}/chat`, {
+                    method: 'POST', mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ messages: [{ role: 'user', content: text }] }),
+                    signal: ac.signal,
+                });
+                if (!res.ok) {
+                    const body = await res.text().catch(() => '(no body)');
+                    console.error('CHAT ERR', res.status, body);
+                    showChatError(`エラー ${res.status}: ${body.slice(0, 180)}`);
+                    return;
+                }
+                const reader = res.body.getReader(); const dec = new TextDecoder();
+                let buf = '', ai = ''; appendMsg('…', 'ai'); const ph = logEl.lastElementChild;
+                while (true) {
+                    const { done, value } = await reader.read(); if (done) break;
+                    buf += dec.decode(value, { stream: true });
+                    const parts = buf.split('\n\n'); buf = parts.pop() ?? '';
+                    for (const p of parts) {
+                        if (p.startsWith('data: ')) {
+                            try { const j = JSON.parse(p.slice(6)); if (j.delta) { ai += j.delta; ph.textContent = ai; } } catch { }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+                showChatError('ネットワーク/タイムアウトで失敗しました。');
+            } finally { clearTimeout(timer); }
+        }
+    </script>
 </body>
 
 </html>
-:root{
---bg: radial-gradient(1200px 600px at 30% -10%, #0e2a3a 0%, transparent 60%),
-radial-gradient(1200px 800px at 110% 30%, #3c2a12 0%, transparent 60%),
-#0b1117;
---panel: rgba(255,255,255,.06);
---panel-border: rgba(255,255,255,.15);
---text: #eaf6ff;
---muted: #a7c0d1;
---ml-pink-gold-1: #ffb6c1;
---ml-pink-gold-2: #ffd29a;
---ml-pink-gold-3: #ffe8c9;
---brand: #ffe07a;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-margin:0;color:var(--text);background:var(--bg);
-font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Noto Sans JP","Helvetica Neue",Arial,"Apple
-Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji",sans-serif;
-}
-
-/* hero */
-.hero{
-max-width:1200px;margin:40px auto 24px;padding:48px 24px 32px;
-background:rgba(255,255,255,.03);border:1px solid var(--panel-border);
-border-radius:28px;backdrop-filter:blur(10px) saturate(140%);
-}
-.hero-title{
-margin:0 0 8px;font-size:clamp(36px,6vw,88px);font-weight:800;letter-spacing:.02em;color:var(--brand);
-position:relative;filter:drop-shadow(0 0 12px rgba(255,225,130,.35));
-animation:floatY 6s ease-in-out infinite, glowPulse 3.2s ease-in-out infinite;will-change:transform,filter;
-}
-@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-@keyframes glowPulse{
-0%,100%{text-shadow:0 0 .35rem rgba(255,230,140,.6),0 0 1.1rem rgba(255,200,90,.25)}
-50%{text-shadow:0 0 .6rem rgba(255,230,140,.9),0 0 1.6rem rgba(255,200,90,.45)}
-}
-.hero-subtitle{margin:12px 0 20px;color:var(--muted);font-size:clamp(14px,2.2vw,18px)}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
-.credit{opacity:.6;margin:8px 0 0}
-
-/* buttons */
-.btn{
-appearance:none;border:1px solid var(--panel-border);background:rgba(255,255,255,.06);color:var(--text);
-padding:12px 18px;border-radius:999px;cursor:pointer;transition:transform .06s ease,background .2s ease;
-}
-.btn:hover{transform:translateY(-1px)}
-.btn:active{transform:translateY(0) scale(.98)}
-.btn.primary{background:linear-gradient(180deg,#ffeaa0,#ffd36a);color:#2a2100;border-color:transparent}
-.btn.ghost{background:rgba(255,255,255,.08)}
-.btn.pill{background:linear-gradient(180deg,#ffeaa0,#ffd36a);color:#2a2100;border-color:transparent;padding:10px 16px}
-
-/* panels */
-.panel{
-max-width:1100px;margin:18px auto;padding:20px;background:var(--panel);border:1px solid var(--panel-border);
-border-radius:20px;backdrop-filter:blur(8px) saturate(140%);
-}
-.panel h2{margin:4px 0 10px}
-.input-row{display:flex;gap:8px;flex-wrap:wrap}
-.input-row input{flex:1;min-width:220px;padding:12px 14px;border-radius:12px;border:1px solid
-var(--panel-border);background:rgba(255,255,255,.06);color:var(--text)}
-.hint{margin:8px 0 12px;color:var(--muted);font-size:13px}
-
-/* bubbles */
-.bubble-wrap{display:flex;gap:10px;flex-wrap:wrap}
-.bubble{
-position:relative;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);
-background:rgba(255,255,255,.08);display:inline-flex;gap:8px;align-items:center;user-select:none;pointer-events:auto;
-}
-.bubble a{pointer-events:auto;text-decoration:none;color:#bfe2ff;border-bottom:1px dotted rgba(191,226,255,.5)}
-.bubble .x{opacity:.7;cursor:pointer}
-
-/* Music Love */
-.liquid-card{position:relative;overflow:hidden;border-radius:20px;border:1px solid
-var(--panel-border);height:180px;background:rgba(255,255,255,.04)}
-.liquid{
-position:absolute;inset:-20% -10% auto -10%;height:140%;
-background:
-radial-gradient(60% 40% at 40% 40%,var(--ml-pink-gold-1),transparent 60%),
-radial-gradient(70% 50% at 70% 60%,var(--ml-pink-gold-2),transparent 65%),
-radial-gradient(60% 50% at 30% 70%,var(--ml-pink-gold-3),transparent 55%);
-filter:blur(26px) saturate(160%);animation:goo 8s ease-in-out infinite;
-}
-@keyframes goo{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-6%) scale(1.03)}}
-.liquid-msg{position:absolute;inset:0;display:grid;place-items:center;text-shadow:0 2px 4px
-rgba(0,0,0,.35);font-weight:600;font-size:18px}
-.love-suggest{margin-top:8px;font-size:15px}
-
-/* vector/strengths/recos */
-.vector-view{border:1px dashed rgba(255,255,255,.25);border-radius:14px;padding:12px;min-height:120px}
-.strengths,.recos{display:grid;gap:8px;padding-left:20px}
-.recos li a{color:#bfe2ff}
-
-/* back to top */
-.back-top-wrap{display:flex;justify-content:center;margin:26px 0 40px}
-.btn-back-top .arrow{font-size:1.25rem;line-height:1;transform:translateY(-1px);margin-right:6px}
-
-/* modal */
-.modal{position:fixed;inset:0;display:none;place-items:center}
-.modal[aria-hidden="false"]{display:grid}
-.glass-overlay{
-position:absolute;inset:0;z-index:40;pointer-events:none;
-background:radial-gradient(80% 70% at 50% -10%,rgba(255,255,255,.08),transparent 65%),rgba(0,0,0,.45);
-backdrop-filter:blur(6px);
-}
-.modal-dialog{
-position:relative;z-index:1000;width:min(860px,92vw);min-height:420px;background:rgba(255,255,255,.08);
-border:1px solid var(--panel-border);border-radius:24px;padding:18px;box-shadow:0 30px 120px rgba(0,0,0,.45);
-}
-.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.modal-head .title{font-size:22px;font-weight:700}
-.chat-log{height:280px;overflow:auto;border-radius:12px;border:1px solid
-var(--panel-border);padding:10px;background:rgba(0,0,0,.25)}
-.msg{margin:6px 0}.msg.me{color:#bfe2ff}.msg.ai{color:#ffeaa0}
-.chat-input-row{display:flex;gap:10px;margin-top:10px}
-.chat-input{flex:1;min-width:200px;padding:12px 14px;border-radius:12px;border:1px solid
-var(--panel-border);background:rgba(255,255,255,.06);color:var(--text)}
-@media (max-width:640px){.chat-log{height:220px}}
-const state = { artists: [], loveScore: 0 };
-const $ = (s, r=document)=>r.querySelector(s);
-
-function normName(s){ return (s||"").toLowerCase().replace(/\s+/g," ").trim().normalize("NFKC"); }
-function dedupeArtists(list){
-const seen=new Set(), out=[];
-for(const a of list){
-const obj=typeof a==="string"?{name:a}:a;
-const key=normName(obj.name);
-if(!key||seen.has(key)) continue;
-seen.add(key); out.push(obj);
-} return out;
-}
-function appleMusicURL(name){
-return `https://music.apple.com/jp/search?term=${encodeURIComponent(name)}&l=ja-jp&platform=web`;
-}
-
-/* UI */
-const input=$('#artist-input');
-$('#btn-add').addEventListener('click', onAdd);
-$('#btn-clear').addEventListener('click', ()=>{ state.artists=[]; renderBubbles(); setSectionsHidden(true); });
-$('#btn-start').addEventListener('click', ()=> input?.focus());
-$('#back-top').addEventListener('click', e=>{ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); });
-input.addEventListener('keydown', e=>{ if(e.key==='Enter') onAdd(); });
-
-function onAdd(){
-const raw=input.value.trim(); if(!raw) return;
-const list=raw.split(',').map(s=>s.trim()).filter(Boolean).map(n=>({name:n}));
-state.artists=dedupeArtists([...state.artists,...list]);
-input.value=''; renderBubbles(); computeAll();
-}
-
-function renderBubbles(){
-const wrap=$('#bubble-wrap'); wrap.innerHTML='';
-const artists=dedupeArtists(state.artists);
-artists.forEach((artist,idx)=>{
-const div=document.createElement('div'); div.className='bubble';
-const label=document.createElement('span'); label.textContent=artist.name;
-
-const a=document.createElement('a'); a.textContent='Apple Music';
-a.href=artist.appleUrl ?? appleMusicURL(artist.name);
-a.target='_blank'; a.rel='noopener noreferrer';
-a.addEventListener('click',ev=>{ ev.stopPropagation(); },{passive:true});
-
-const x=document.createElement('span'); x.className='x'; x.textContent='✕';
-x.addEventListener('click',()=>{ state.artists.splice(idx,1); renderBubbles(); computeAll(); });
-
-div.append(label,' ',a,' ',x); wrap.appendChild(div);
-});
-$('#input-hint').textContent=artists.length?'バブルを削除して調整できます':'まずアーティストを入力してね';
-}
-
-/* Love（関西弁） */
-function loveMessageKansai(score){
-if(score>=90) return 'めっちゃ相思相愛やん。今日、その音と一緒やったら無敵やで。';
-if(score>=70) return 'だいぶええ感じ。もう一歩踏み込んで聴いてみ？世界広がるで。';
-if(score>=50) return 'まだ仲良し手前やな。新曲かライブ映像で距離縮めよか。';
-if(score>=30) return '気になるんは気になる。別曲で相性チェックしてみぃ。';
-return '今日はちゃうかも。気分転換に別ジャンル、どや？';
-}
-function renderLove(score){
-state.loveScore=Math.max(0,Math.min(100,Math.round(score)));
-$('#love-score').textContent=state.loveScore;
-$('#love-suggest').textContent=loveMessageKansai(state.loveScore);
-}
-
-/* Vector / Strengths / Recos（ダミー安定表示） */
-function calcMusicVector(artists){
-let e=0,w=0,g=0,n=0;
-artists.forEach(a=>{
-const k=normName(a.name);
-for(let i=0;i<k.length;i++){const v=k.charCodeAt(i); e+=(v%7); w+=(v%5); g+=(v%3); n+=(v%11);} }); const
-    sum=Math.max(1,e+w+g+n); return
-    {energy:+(e/sum*100).toFixed(1),warmth:+(w/sum*100).toFixed(1),edge:+(g/sum*100).toFixed(1),nostalgia:+(n/sum*100).toFixed(1)};
-    } function renderVector(v){ $('#vector-view').innerHTML=` <div>Energy: <b>${v.energy}</b></div>
-    <div>Warmth: <b>${v.warmth}</b></div>
-    <div>Edge: <b>${v.edge}</b></div>
-    <div>Nostalgia: <b>${v.nostalgia}</b></div>`;
-    }
-    function deriveWorkStrengths(v){
-    const out=[]; if(v.energy>28) out.push('推進力／スピード感');
-    if(v.warmth>22) out.push('共感力／ファシリテーション');
-    if(v.edge>20) out.push('革新性／クリエイティブジャンプ');
-    if(v.nostalgia>18) out.push('再編集力／ナレッジ活用');
-    return out.length?out:['着実性／安定実装'];
-    }
-    function renderStrengths(list){
-    const ul=$('#strengths'); ul.innerHTML='';
-    list.forEach(s=>{ const li=document.createElement('li'); li.textContent='・'+s; ul.appendChild(li); });
-    }
-    function recommendFromVector(v,{limit=12}={}){
-    const db=[
-    ['高Energy×Edge',['The Chemical Brothers','Justice','Prodigy','Nine Inch Nails']],
-    ['高Warmth',['FKJ','Tom Misch','Nujabes','SIRUP']],
-    ['高Nostalgia',['Daft Punk','Cornelius','YMO','UNDERWORLD']],
-    ];
-    const list=[];
-    if(v.energy>v.warmth && v.energy>v.nostalgia) list.push(...db[0][1]);
-    if(v.warmth>=22) list.push(...db[1][1]);
-    if(v.nostalgia>=18) list.push(...db[2][1]);
-    return Array.from(new Set(list)).slice(0,limit).map(n=>({name:n,url:appleMusicURL(n)}));
-    }
-    function renderRecos(items){
-    const ul=$('#recos'); ul.innerHTML='';
-    items.forEach(r=>{ const li=document.createElement('li'); const a=document.createElement('a');
-    a.href=r.url; a.target='_blank'; a.rel='noopener'; a.textContent=r.name;
-    li.appendChild(a); ul.appendChild(li); });
-    }
-
-    /* compute */
-    function setSectionsHidden(on){
-    $('#section-vector').hidden=on; $('#section-strengths').hidden=on; $('#section-recos').hidden=on;
-    }
-    async function computeAll(){
-    const artists=dedupeArtists(state.artists);
-    renderLove(Math.min(100,40+artists.length*12));
-    if(!artists.length){ setSectionsHidden(true); return; }
-    try{
-    const v=calcMusicVector(artists); renderVector(v);
-    renderStrengths(deriveWorkStrengths(v));
-    renderRecos(recommendFromVector(v,{limit:16}));
-    setSectionsHidden(false);
-    }catch(e){ console.error('[computeAll]',e); setSectionsHidden(false); }
-    }
-
-    /* init */
-    renderBubbles(); renderLove(0);
-    const modal = document.getElementById('chat-modal');
-    const logEl = document.getElementById('chat-log');
-    const inputEl = document.getElementById('sora-input');
-    const openBtn = document.getElementById('btn-open-chat');
-    const closeBtn= document.getElementById('chat-close');
-    const sendBtn = document.getElementById('chat-send');
-
-    const WORKER_BASE = (window.ML_WORKER_BASE ?? '').replace(/\/+$/,'');
-
-    function openModal(){ modal.setAttribute('aria-hidden','false'); setTimeout(()=>inputEl?.focus(),50); }
-    function closeModal(){ modal.setAttribute('aria-hidden','true'); }
-    openBtn.addEventListener('click', openModal);
-    closeBtn.addEventListener('click', closeModal);
-
-    sendBtn.addEventListener('click', sendMsg);
-    inputEl.addEventListener('keydown', e=>{ if(e.key==='Enter') sendMsg(); });
-
-    function appendMsg(text, who='me'){
-    const div=document.createElement('div'); div.className=`msg ${who}`; div.textContent=text;
-    logEl.appendChild(div); logEl.scrollTop=logEl.scrollHeight;
-    }
-    function showChatError(text){ appendMsg(text, 'ai'); }
-
-    async function sendMsg(){
-    const text=inputEl.value.trim(); if(!text) return;
-    inputEl.value=''; appendMsg(text,'me');
-
-    if(!WORKER_BASE){ showChatError('WORKER_BASEが未設定です。window.ML_WORKER_BASE にURLを設定してください。'); return; }
-
-    const ac=new AbortController(); const timer=setTimeout(()=>ac.abort(),58000);
-    try{
-    const res=await fetch(`${WORKER_BASE}/chat`,{
-    method:'POST', mode:'cors',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({messages:[{role:'user',content:text}]}),
-    signal:ac.signal,
-    });
-    if(!res.ok){
-    const body=await res.text().catch(()=>'(no body)');
-    console.error('CHAT ERR',res.status,body);
-    showChatError(`エラー ${res.status}: ${body.slice(0,180)}`);
-    return;
-    }
-
-    const reader=res.body.getReader(); const dec=new TextDecoder();
-    let buf='', ai=''; appendMsg('…','ai'); const ph=logEl.lastElementChild;
-
-    while(true){
-    const {done,value}=await reader.read(); if(done) break;
-    buf+=dec.decode(value,{stream:true});
-    const parts=buf.split('\n\n'); buf=parts.pop() ?? '';
-    for(const p of parts){
-    if(p.startsWith('data: ')){
-    try{ const j=JSON.parse(p.slice(6)); if(j.delta){ ai+=j.delta; ph.textContent=ai; } }catch{}
-    }
-    }
-    }
-    }catch(e){
-    console.error(e);
-    showChatError('ネットワーク/タイムアウトで失敗しました。');
-    }finally{ clearTimeout(timer); }
-    }
