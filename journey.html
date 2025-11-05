@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>MusicLens – Sound Journey</title>
+    <link rel="stylesheet" href="./styles.css?v=20251105b" />
+</head>
+
+<body>
+    <header class="sub-hero">
+        <h1 class="hero-title small">MUSIC JOURNEY</h1>
+        <div class="sub-actions">
+            <a class="btn ghost btn-back-top" href="./index.html"><span class="arrow">↑</span> TOP画面に戻る</a>
+            <button id="btn-open-chat" class="btn ghost">💬 Chat with Sora AI</button>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="panel">
+            <h2>好きなアーティストを入力</h2>
+            <div class="input-row">
+                <input id="artist-input" type="text" placeholder="（例）Daft Punk, Justice, Underworld" />
+                <button id="btn-add" class="btn">追加</button>
+                <button id="btn-clear" class="btn ghost">クリア</button>
+            </div>
+            <p id="input-hint" class="hint">複数はカンマ区切りでOK</p>
+            <div id="bubble-wrap" class="bubble-wrap"></div>
+        </section>
+
+        <section id="section-love" class="panel">
+            <div class="panel-head">
+                <h2>Music Love</h2>
+            </div>
+            <div class="liquid-card">
+                <div class="liquid"></div>
+                <div class="liquid-msg">
+                    <div>LOVE度：<span id="love-score">--</span>%</div>
+                    <div id="love-suggest" class="love-suggest">…</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-vector" class="panel" hidden>
+            <h2>Your Music Vector</h2>
+            <div id="vector-view" class="vector-view"></div>
+        </section>
+
+        <section id="section-strengths" class="panel" hidden>
+            <h2>Work Strengths（音から見る仕事の強み）</h2>
+            <ul id="strengths" class="strengths"></ul>
+        </section>
+
+        <section id="section-recos" class="panel" hidden>
+            <h2>Music Recommendations</h2>
+            <ul id="recos" class="recos"></ul>
+        </section>
+
+        <!-- バブル用アクションシート -->
+        <div id="bubble-sheet" class="sheet hidden" role="dialog" aria-modal="true">
+            <div class="sheet-card">
+                <div class="sheet-title" id="sheet-title">Artist</div>
+                <div class="sheet-actions">
+                    <a id="open-apple" class="btn primary" target="_blank" rel="noopener">Apple Music を開く</a>
+                    <a id="open-youtube" class="btn ghost" target="_blank" rel="noopener">YouTube を開く</a>
