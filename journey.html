@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>MusicLens – Sound Journey</title>
-    <link rel="stylesheet" href="./styles.css?v=20251105b" />
+    <link rel="stylesheet" href="./styles.css?v=20251105c" />
 </head>
 
 <body>
@@ -23,13 +23,19 @@
             <div class="input-row">
                 <input id="artist-input" type="text" placeholder="（例）Daft Punk, Justice, Underworld" />
                 <button id="btn-add" class="btn">追加</button>
+                <button id="btn-analyze" class="btn primary">Analyze</button>
                 <button id="btn-clear" class="btn ghost">クリア</button>
             </div>
-            <p id="input-hint" class="hint">複数はカンマ区切りでOK</p>
+            <p id="input-hint" class="hint">複数はカンマ区切りでOK。バブルをタップするとApple/YouTubeを開けます。</p>
             <div id="bubble-wrap" class="bubble-wrap"></div>
         </section>
 
-        <section id="section-love" class="panel">
+        <section id="section-map" class="panel" hidden>
+            <h2>Listening Map</h2>
+            <div id="map-wrap" class="map-wrap"></div>
+        </section>
+
+        <section id="section-love" class="panel" hidden>
             <div class="panel-head">
                 <h2>Music Love</h2>
             </div>
@@ -56,11 +62,39 @@
             <h2>Music Recommendations</h2>
             <ul id="recos" class="recos"></ul>
         </section>
+    </main>
 
-        <!-- バブル用アクションシート -->
-        <div id="bubble-sheet" class="sheet hidden" role="dialog" aria-modal="true">
-            <div class="sheet-card">
-                <div class="sheet-title" id="sheet-title">Artist</div>
-                <div class="sheet-actions">
-                    <a id="open-apple" class="btn primary" target="_blank" rel="noopener">Apple Music を開く</a>
-                    <a id="open-youtube" class="btn ghost" target="_blank" rel="noopener">YouTube を開く</a>
+    <!-- アクションシート（Apple/YouTube） -->
+    <div id="bubble-sheet" class="sheet hidden" role="dialog" aria-modal="true">
+        <div class="sheet-card">
+            <div class="sheet-title" id="sheet-title">Artist</div>
+            <div class="sheet-actions">
+                <a id="open-apple" class="btn primary" target="_blank" rel="noopener">Apple Music を開く</a>
+                <a id="open-youtube" class="btn ghost" target="_blank" rel="noopener">YouTube を開く</a>
+            </div>
+            <button id="sheet-close" class="btn pill">Close</button>
+        </div>
+    </div>
+
+    <!-- Chat modal（Journeyでも動作） -->
+    <div id="chat-modal" class="modal" aria-hidden="true">
+        <div class="glass-overlay"></div>
+        <div class="modal-dialog" role="dialog" aria-modal="true">
+            <div class="modal-head">
+                <div class="title">Sora AI</div>
+                <button id="chat-close" class="btn pill">Close</button>
+            </div>
+            <div id="chat-log" class="chat-log"></div>
+            <div class="chat-input-row">
+                <input id="sora-input" class="chat-input" placeholder="例：大阪の天気 / 次に聴くべき曲" />
+                <button id="chat-send" class="btn pill">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>/* window.ML_WORKER_BASE="https://YOUR-worker.workers.dev"; */</script>
+    <script src="./app.js?v=20251105c" type="module"></script>
+    <script src="./chat.js?v=20251105c" type="module"></script>
+</body>
+
+</html>

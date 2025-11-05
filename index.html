@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>MusicLens PRO MAX</title>
-  <link rel="stylesheet" href="./styles.css?v=20251105b" />
+  <link rel="stylesheet" href="./styles.css?v=20251105c" />
 </head>
 
 <body>
@@ -22,7 +22,7 @@
     <p class="credit">Produced by Daijiro Majima</p>
   </header>
 
-  <!-- Chat with Sora AI Modal -->
+  <!-- Chat modal (TOPでも動作) -->
   <div id="chat-modal" class="modal" aria-hidden="true">
     <div class="glass-overlay"></div>
     <div class="modal-dialog" role="dialog" aria-modal="true">
@@ -38,10 +38,9 @@
     </div>
   </div>
 
-  <script>
-    // 必要に応じて設定：window.ML_WORKER_BASE = "https://YOUR-WORKER.workers.dev";
-  </script>
-  <script src="./chat.js?v=20251105b" type="module"></script>
+  <!-- WorkerのURL（任意）。無設定でもモック応答で動作 -->
+  <script>/* window.ML_WORKER_BASE="https://YOUR-worker.workers.dev"; */</script>
+  <script src="./chat.js?v=20251105c" type="module"></script>
 </body>
 
 </html>
