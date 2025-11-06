@@ -5,19 +5,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>MusicLens – Sound Journey</title>
-    <link rel="stylesheet" href="./styles.css?v=20251105c" />
+    <link rel="stylesheet" href="./styles.css?v=20251106a" />
 </head>
 
 <body>
-    <header class="sub-hero">
+    <header class="sub-hero hero--center">
         <h1 class="hero-title small">MUSIC JOURNEY</h1>
-        <div class="sub-actions">
+        <div class="sub-actions hero-actions--center">
             <a class="btn ghost btn-back-top" href="./index.html"><span class="arrow">↑</span> TOP画面に戻る</a>
             <button id="btn-open-chat" class="btn ghost">💬 Chat with Sora AI</button>
         </div>
     </header>
 
     <main id="main">
+        <!-- 入力 -->
         <section class="panel">
             <h2>好きなアーティストを入力</h2>
             <div class="input-row">
@@ -26,75 +27,87 @@
                 <button id="btn-analyze" class="btn primary">Analyze</button>
                 <button id="btn-clear" class="btn ghost">クリア</button>
             </div>
-            <p id="input-hint" class="hint">複数はカンマ区切りでOK。バブルをタップするとApple/YouTubeを開けます。</p>
+            <p id="input-hint" class="hint">複数はカンマ区切りでOK。バブルをタップでApple/YouTubeと詳細を開く。</p>
             <div id="bubble-wrap" class="bubble-wrap"></div>
         </section>
 
+        <!-- Listening Map（写真入り） -->
         <section id="section-map" class="panel" hidden>
             <h2>Listening Map</h2>
             <div id="map-wrap" class="map-wrap"></div>
         </section>
 
+        <!-- Music Love（ゴールドの器＋PG液体が満ちる） -->
         <section id="section-love" class="panel" hidden>
             <div class="panel-head">
                 <h2>Music Love</h2>
             </div>
-            <div class="liquid-card">
-                <div class="liquid"></div>
-                <div class="liquid-msg">
-                    <div>LOVE度：<span id="love-score">--</span>%</div>
-                    <div id="love-suggest" class="love-suggest">…</div>
+            <div class="heart-card">
+                <div class="heart-vessel">
+                    <div id="love-fill" class="heart-fill"></div>
+                    <svg class="heart-outline" viewBox="0 0 200 180" preserveAspectRatio="xMidYMid meet">
+                        <path
+                            d="M100 170 C20 110 20 60 55 40 C80 25 100 40 100 60 C100 40 120 25 145 40 C180 60 180 110 100 170 Z"
+                            fill="none" stroke="url(#gold)" stroke-width="4" />
+                        <defs>
+                            <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#ffd57a" />
+                                <stop offset="50%" stop-color="#ffba55" />
+                                <stop offset="100%" stop-color="#ffe6a8" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="heart-label">
+                        <div>LOVE度：<span id="love-score">--</span>%</div>
+                        <div id="love-suggest" class="love-suggest">…</div>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- Vector（横棒＋提言） -->
         <section id="section-vector" class="panel" hidden>
             <h2>Your Music Vector</h2>
-            <div id="vector-view" class="vector-view"></div>
+            <div id="vector-bars" class="bars"></div>
+            <p id="vector-tip" class="tip"></p>
         </section>
 
+        <!-- Work Strengths（横棒＋提言） -->
         <section id="section-strengths" class="panel" hidden>
             <h2>Work Strengths（音から見る仕事の強み）</h2>
-            <ul id="strengths" class="strengths"></ul>
+            <div id="strength-bars" class="bars"></div>
+            <p id="strength-tip" class="tip"></p>
         </section>
 
+        <!-- Recos（写真＋再生＋リンク） -->
         <section id="section-recos" class="panel" hidden>
             <h2>Music Recommendations</h2>
-            <ul id="recos" class="recos"></ul>
+            <div id="recos" class="recos-grid"></div>
         </section>
     </main>
 
-    <!-- アクションシート（Apple/YouTube） -->
+    <!-- アクションシート（写真＋説明＋リンク＋再生） -->
     <div id="bubble-sheet" class="sheet hidden" role="dialog" aria-modal="true">
         <div class="sheet-card">
-            <div class="sheet-title" id="sheet-title">Artist</div>
+            <div class="sheet-info">
+                <img id="sheet-art" class="sheet-art" alt="">
+                <div>
+                    <div class="sheet-title" id="sheet-title">Artist</div>
+                    <p id="sheet-desc" class="sheet-desc">…</p>
+                </div>
+            </div>
             <div class="sheet-actions">
-                <a id="open-apple" class="btn primary" target="_blank" rel="noopener">Apple Music を開く</a>
-                <a id="open-youtube" class="btn ghost" target="_blank" rel="noopener">YouTube を開く</a>
+                <a id="open-apple" class="btn primary" target="_blank" rel="noopener">Apple Music</a>
+                <a id="open-youtube" class="btn ghost" target="_blank" rel="noopener">YouTube</a>
+                <audio id="sheet-audio" controls style="width:260px;display:none;"></audio>
             </div>
             <button id="sheet-close" class="btn pill">Close</button>
         </div>
     </div>
 
-    <!-- Chat modal（Journeyでも動作） -->
-    <div id="chat-modal" class="modal" aria-hidden="true">
-        <div class="glass-overlay"></div>
-        <div class="modal-dialog" role="dialog" aria-modal="true">
-            <div class="modal-head">
-                <div class="title">Sora AI</div>
-                <button id="chat-close" class="btn pill">Close</button>
-            </div>
-            <div id="chat-log" class="chat-log"></div>
-            <div class="chat-input-row">
-                <input id="sora-input" class="chat-input" placeholder="例：大阪の天気 / 次に聴くべき曲" />
-                <button id="chat-send" class="btn pill">Send</button>
-            </div>
-        </div>
-    </div>
-
     <script>/* window.ML_WORKER_BASE="https://YOUR-worker.workers.dev"; */</script>
-    <script src="./app.js?v=20251105c" type="module"></script>
-    <script src="./chat.js?v=20251105c" type="module"></script>
+    <script src="./app.js?v=20251106a" type="module"></script>
+    <script src="./chat.js?v=20251106a" type="module"></script>
 </body>
 
 </html>

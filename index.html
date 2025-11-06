@@ -5,24 +5,24 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>MusicLens PRO MAX</title>
-  <link rel="stylesheet" href="./styles.css?v=20251105c" />
+  <link rel="stylesheet" href="./styles.css?v=20251106a" />
 </head>
 
 <body>
-  <header class="hero" id="top">
+  <header class="hero hero--center" id="top">
     <h1 class="hero-title">MUSIC JOURNEY</h1>
     <p class="hero-subtitle">
       好きなアーティストを入れるだけ。音の嗜好から今日のコンディションと仕事における強みまで見える。”音の性格診断”。<br />
       さあ、新たな自分と音楽を探求するSOUND JOURNEYへ出かけよう！
     </p>
-    <div class="hero-actions">
+    <div class="hero-actions hero-actions--center">
       <a class="btn primary" href="./journey.html">SOUND JOURNEY ▶</a>
       <button id="btn-open-chat" class="btn ghost">💬 Chat with Sora AI</button>
     </div>
-    <p class="credit">Produced by Daijiro Majima</p>
+    <p class="credit credit--center">Produced by Daijiro Majima</p>
   </header>
 
-  <!-- Chat modal (TOPでも動作) -->
+  <!-- Chat modal -->
   <div id="chat-modal" class="modal" aria-hidden="true">
     <div class="glass-overlay"></div>
     <div class="modal-dialog" role="dialog" aria-modal="true">
@@ -38,9 +38,8 @@
     </div>
   </div>
 
-  <!-- WorkerのURL（任意）。無設定でもモック応答で動作 -->
   <script>/* window.ML_WORKER_BASE="https://YOUR-worker.workers.dev"; */</script>
-  <script src="./chat.js?v=20251105c" type="module"></script>
+  <script src="./chat.js?v=20251106a" type="module"></script>
 </body>
 
 </html>

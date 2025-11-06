@@ -25,7 +25,6 @@ async function sendMsg() {
     const text = inputEl?.value.trim(); if (!text) return;
     inputEl.value = ''; appendMsg(text, 'me');
 
-    // モック応答（WORKER_BASE未設定でも動作）
     if (!WORKER_BASE) {
         setTimeout(() => appendMsg('（モック応答）Sora ready. 「' + text + '」受け取りました。', 'ai'), 120);
         return;
@@ -36,8 +35,7 @@ async function sendMsg() {
         const res = await fetch(`${WORKER_BASE}/chat`, {
             method: 'POST', mode: 'cors',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ messages: [{ role: 'user', content: text }] }),
-            signal: ac.signal
+            body: JSON.stringify({ messages: [{ role: 'user', content: text }] }), signal: ac.signal
         });
         if (!res.ok) { const body = await res.text().catch(() => '(no body)'); appendMsg(`エラー ${res.status}: ${body.slice(0, 160)}`, 'ai'); return; }
 
